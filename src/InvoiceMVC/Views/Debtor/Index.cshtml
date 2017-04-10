@@ -1,0 +1,76 @@
+@model IEnumerable<InvoiceMVC.Models.Debtor>
+
+@{
+    ViewData["Title"] = "Debtor Overview";
+}
+
+<h2>Debtor Overview</h2>
+
+<p>
+    <a asp-action="Create">Create New Debtor</a>
+
+    @using (Html.BeginForm())
+    {
+        <br />
+
+        <div class="form-inline">
+            @Html.TextBox("SearchString", null, htmlAttributes: new { @class = "form-control", @placeholder = "Find..." })
+            <input type="submit" value="Search" class="btn btn-primary" />
+
+            <br />
+            <br />
+
+        </div>
+    }
+</p>
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.ActionLink("Last Name", "Index", new { sortOrder = ViewBag.LastNameSortParm })
+            </th>
+            <th>
+                @Html.ActionLink("First Name", "Index", new { sortOrder = ViewBag.FirstNameSortParm })
+            </th>
+            <th>
+                @Html.ActionLink("Email", "Index", new { sortOrder = ViewBag.EmailSortParm })            
+            </th>
+            <th>
+                @Html.ActionLink("City", "Index", new { sortOrder = ViewBag.CitySortParm })
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Country)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.DebtorID">
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </a>
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.DebtorID">
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Country)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.DebtorID">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@item.DebtorID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

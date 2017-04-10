@@ -1,0 +1,88 @@
+@model InvoiceMVC.Models.Debtor
+
+@{
+    ViewData["Title"] = "Delete Debtor";
+}
+
+<h2>Delete Debtor</h2>
+
+<h3></h3>
+<div>
+    <h4></h4>
+    <hr />
+
+    <div class="row">
+        <!--LEFT COLUMN-->
+        <div class="col-sm-6 col-md-6" style="padding-right:5px;">
+
+            <table class="table table-hover table-bordered" style="font-size:14px;">
+                <tr>
+                    <td><b>@Html.DisplayNameFor(model => model.FirstName)</b></td>
+                    <td>@Html.DisplayFor(model => model.FirstName)</td>
+                </tr>
+                <tr>
+                    <td><b>@Html.DisplayNameFor(model => model.LastName)</b></td>
+                    <td>@Html.DisplayFor(model => model.LastName)</td>
+                </tr>
+                <tr>
+                    <td><b>@Html.DisplayNameFor(model => model.Email)</b></td>
+                    <td>@Html.DisplayFor(model => model.Email)</td>
+                </tr>
+                <tr>
+                    <td><b>@Html.DisplayNameFor(model => model.Phone)</b></td>
+                    <td>@Html.DisplayFor(model => model.Phone)</td>
+                </tr>
+                <tr>
+                    <td><b>@Html.DisplayNameFor(model => model.BankAccount)</b></td>
+                    <td>@Html.DisplayFor(model => model.BankAccount)</td>
+                </tr>
+            </table>
+
+        </div>
+        <!--END OF LEFT COLUMN-->
+        <!-------------------------------------------------------------------------------------------->
+        <!--RIGHT COLUMN-->
+        <div class="col-sm-6 col-md-6" style="padding-left:5px;">
+
+            <table class="table table-hover table-bordered" style="font-size:14px;">
+                <tr>
+                    <td><b>@Html.DisplayNameFor(model => model.Address)</b></td>
+                    <td>@Html.DisplayFor(model => model.Address)</td>
+                </tr>
+                <tr>
+                    <td><b>@Html.DisplayNameFor(model => model.PostalCode)</b></td>
+                    <td>@Html.DisplayFor(model => model.PostalCode)</td>
+                </tr>
+                <tr>
+                    <td><b>@Html.DisplayNameFor(model => model.City)</b></td>
+                    <td>@Html.DisplayFor(model => model.City)</td>
+                </tr>
+                <tr>
+                    <td><b>@Html.DisplayNameFor(model => model.Country)</b></td>
+                    <td>@Html.DisplayFor(model => model.Country)</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+            </table>
+
+            <form asp-action="Delete">
+                <div class="form-actions">
+                    <input id="delete_deb_btn" type="submit" value="Delete" class="btn btn-primary" />
+                </div>
+            </form>
+
+        </div>
+        <!--END OF RIGHT COLUMN-->
+
+    </div>
+
+    <!-------------------------------------------------------------------------------------------->
+</div>
+
+<div>
+    <br />
+
+    <a asp-action="Index">Back to Overview</a>
+</div>

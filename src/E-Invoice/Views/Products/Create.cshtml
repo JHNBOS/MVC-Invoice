@@ -1,0 +1,79 @@
+@model E_Invoice.Models.Product
+
+@{
+    ViewData["Title"] = "Create New Product";
+}
+
+<h2>Create New Product</h2>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4></h4>
+        <hr />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row">
+            <div class="col-sm-1 col-md-1"></div>
+            <div class="col-sm-6 col-md-6">
+                <!--BEGIN OF COLUMN 1-->
+                <!--------------------------------------->
+                <!--NAME-->
+                <div class="form-group">
+                    <label asp-for="Name" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger" />
+                    </div>
+                </div>
+
+                <!--DESCRIPTION-->
+                <div class="form-group">
+                    <label asp-for="Description" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger" />
+                    </div>
+                </div>
+
+                <!--PRICE-->
+                <div class="form-group">
+                    <label asp-for="Price" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Price" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger" />
+                    </div>
+                </div>
+
+                <!--TAX-->
+                <div class="form-group">
+                    <label asp-for="TaxPercentage" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="TaxPercentage" type="number" min="0" class="form-control" />
+                        <span asp-validation-for="TaxPercentage" class="text-danger" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-default" />
+                    </div>
+                </div>
+
+                <!--------------------------------------->
+                <!--END OF COLUMN 1-->
+            </div>
+            <div class="col-sm-4 col-md-4"></div>
+            <div class="col-sm-1 col-md-1"></div>
+        </div>
+
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to Overview</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
