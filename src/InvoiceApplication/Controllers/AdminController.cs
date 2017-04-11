@@ -23,7 +23,7 @@ namespace InvoiceApplication.Controllers
         // GET: Admin
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Accounts.Where(u => u.AccountType == "Admin").ToListAsync());
+            return View(await _context.Logins.Where(u => u.AccountType == "Admin").ToListAsync());
         }
 
         // GET: Admin/Details/5
@@ -34,7 +34,7 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Accounts.SingleOrDefaultAsync(m => m.ID == id);
+            var user = await _context.Logins.SingleOrDefaultAsync(m => m.ID == id);
             if (user == null)
             {
                 return NotFound();
@@ -61,7 +61,7 @@ namespace InvoiceApplication.Controllers
                 user.AccountType = "Admin";
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Login", "Accounts", new { area = "" });
+                return RedirectToAction("Login", "Logins", new { area = "" });
             }
             return View(user);
         }
@@ -74,7 +74,7 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Accounts.SingleOrDefaultAsync(m => m.ID == id);
+            var user = await _context.Logins.SingleOrDefaultAsync(m => m.ID == id);
             if (user == null)
             {
                 return NotFound();
@@ -125,7 +125,7 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Accounts.SingleOrDefaultAsync(m => m.ID == id);
+            var user = await _context.Logins.SingleOrDefaultAsync(m => m.ID == id);
             if (user == null)
             {
                 return NotFound();
@@ -139,15 +139,15 @@ namespace InvoiceApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.Accounts.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Accounts.Remove(user);
+            var user = await _context.Logins.SingleOrDefaultAsync(m => m.ID == id);
+            _context.Logins.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
         private bool UserExists(int id)
         {
-            return _context.Accounts.Any(e => e.ID == id);
+            return _context.Logins.Any(e => e.ID == id);
         }
 
 
@@ -163,7 +163,7 @@ namespace InvoiceApplication.Controllers
 
             try
             {
-                login = _context.Accounts.Where(u => u.Email == user.Email && u.Password == user.Password).FirstOrDefault();
+                login = _context.Logins.Where(u => u.Email == user.Email && u.Password == user.Password).FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -183,7 +183,7 @@ namespace InvoiceApplication.Controllers
         public ActionResult Logout()
         {
             HttpContext.Session.Remove("User");
-            return RedirectToAction("Login", "Accounts", new { area = "" });
+            return RedirectToAction("Login", "Logins", new { area = "" });
         }
 
 
