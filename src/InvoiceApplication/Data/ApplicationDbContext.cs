@@ -11,11 +11,7 @@ namespace InvoiceApplication.Data
         {
         }
 
-        public DbSet<Debtor> Debtors { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Invoice> Invoices { get; set; }
-        public DbSet<InvoiceItem> InvoiceItems { get; set; }
-
+       
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -23,5 +19,12 @@ namespace InvoiceApplication.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
+
+        public DbSet<Debtor> Debtors { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<InvoiceItem> InvoiceItems { get; set; }
+        public DbSet<User> User { get; set; }
+
     }
 }

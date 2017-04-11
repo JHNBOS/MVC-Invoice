@@ -1,52 +1,18 @@
 @model InvoiceApplication.Models.User
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Manage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit</h2>
+<h2>Manage</h2>
 
 <form asp-action="Edit">
     <div class="form-horizontal">
-        <h4>User</h4>
+        <h4></h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="ID" />
-        <div class="form-group">
-            <label asp-for="AccountType" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="AccountType" class="form-control" />
-                <span asp-validation-for="AccountType" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Address" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="City" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="City" class="form-control" />
-                <span asp-validation-for="City" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Country" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Country" class="form-control" />
-                <span asp-validation-for="Country" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Email" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger" />
-            </div>
-        </div>
+
         <div class="form-group">
             <label asp-for="FirstName" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -54,6 +20,7 @@
                 <span asp-validation-for="FirstName" class="text-danger" />
             </div>
         </div>
+
         <div class="form-group">
             <label asp-for="LastName" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -61,13 +28,15 @@
                 <span asp-validation-for="LastName" class="text-danger" />
             </div>
         </div>
+
         <div class="form-group">
-            <label asp-for="Password" class="col-md-2 control-label"></label>
+            <label asp-for="Address" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger" />
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger" />
             </div>
         </div>
+
         <div class="form-group">
             <label asp-for="PostalCode" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -75,18 +44,50 @@
                 <span asp-validation-for="PostalCode" class="text-danger" />
             </div>
         </div>
+
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+            <label asp-for="City" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger" />
             </div>
         </div>
+
+        <div class="form-group">
+            <label asp-for="Country" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Country" class="form-control" />
+                <span asp-validation-for="Country" class="text-danger" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Sace Changes" class="btn btn-primary" />
+            </div>
+        </div>
+
     </div>
 </form>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
 }

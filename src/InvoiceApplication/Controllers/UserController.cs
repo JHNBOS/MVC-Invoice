@@ -13,7 +13,7 @@ namespace InvoiceApplication.Controllers
 {
     public class UserController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private ApplicationDbContext _context;
 
         public UserController(ApplicationDbContext context)
         {
@@ -23,7 +23,7 @@ namespace InvoiceApplication.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Logins.ToListAsync());
+            return View(await _context.User.ToListAsync());
         }
 
         // GET: User/Details/5
@@ -34,7 +34,7 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Logins.SingleOrDefaultAsync(m => m.ID == id);
+            var user = await _context.User.SingleOrDefaultAsync(m => m.ID == id);
             if (user == null)
             {
                 return NotFound();
@@ -61,7 +61,7 @@ namespace InvoiceApplication.Controllers
                 user.AccountType = "Client";
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Login", "User", new { area = "" });
             }
             return View(user);
         }
@@ -74,7 +74,7 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Logins.SingleOrDefaultAsync(m => m.ID == id);
+            var user = await _context.User.SingleOrDefaultAsync(m => m.ID == id);
             if (user == null)
             {
                 return NotFound();
@@ -112,7 +112,7 @@ namespace InvoiceApplication.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home", new { area = "" });
             }
             return View(user);
         }
@@ -125,7 +125,7 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Logins.SingleOrDefaultAsync(m => m.ID == id);
+            var user = await _context.User.SingleOrDefaultAsync(m => m.ID == id);
             if (user == null)
             {
                 return NotFound();
@@ -139,15 +139,15 @@ namespace InvoiceApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.Logins.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Logins.Remove(user);
+            var user = await _context.User.SingleOrDefaultAsync(m => m.ID == id);
+            _context.User.Remove(user);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Login", "User", new { area = "" });
         }
 
         private bool UserExists(int id)
         {
-            return _context.Logins.Any(e => e.ID == id);
+            return _context.User.Any(e => e.ID == id);
         }
 
 
@@ -163,27 +163,29 @@ namespace InvoiceApplication.Controllers
 
             try
             {
-                login = _context.Logins.Where(u => u.Email == user.Email && u.Password == user.Password).FirstOrDefault();
+                login = _context.User.Where(u => u.Email == user.Email && u.Password == user.Password).FirstOrDefault();
             }
             catch (Exception ex)
             {
+                Debug.WriteLine("Oh shit...");
                 Debug.WriteLine(ex);
             }
 
             if (login != null)
             {
-                HttpContext.Session.Set("User", login);
+                Debug.WriteLine("User exists!");
+                HttpContext.Session.Set("User", (User)login);
 
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
 
-            return View(User);
+            return View(login);
         }
 
         public ActionResult Logout()
         {
             HttpContext.Session.Remove("User");
-            return RedirectToAction("Login", "Logins", new { area = "" });
+            return RedirectToAction("Login", "User", new { area = "" });
         }
 
         public ActionResult ForgotPassword()
@@ -198,7 +200,7 @@ namespace InvoiceApplication.Controllers
 
             try
             {
-                user = _context.Logins.SingleOrDefault(m => m.Email == email);
+                user = _context.User.SingleOrDefault(m => m.Email == email);
             }
             catch (Exception ex)
             {
@@ -216,7 +218,7 @@ namespace InvoiceApplication.Controllers
                 _context.Update(user);
                 _context.SaveChanges();
 
-                return RedirectToAction("Login");
+                return RedirectToAction("Login", "User", new { area=""});
             }
             catch (Exception ex)
             {

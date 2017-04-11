@@ -1,8 +1,11 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using InvoiceApplication.Models
+﻿@{
+    InvoiceApplication.Models.User user = null;
 
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
+    if (SessionHelper.IsExists(Context.Session, "User"))
+    {
+        user = (InvoiceApplication.Models.User)Context.Session.Get<InvoiceApplication.Models.User>("User");
+    }
+}
 
 <!DOCTYPE html>
 <html>
@@ -38,13 +41,17 @@
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
 
-                    @if (SignInManager.IsSignedIn(User))
+                    @if (user != null && user.AccountType == "Admin")
                     {
                         <li><a asp-area="" asp-controller="Debtor" asp-action="Index">Debtors</a></li>
                         <li><a asp-area="" asp-controller="Product" asp-action="Index">Products</a></li>
                         <li><a asp-area="" asp-controller="Invoice" asp-action="Index">Invoices</a></li>
                     }
 
+                    @if (user != null && user.AccountType == "Client")
+                    {
+                        <li><a asp-area="" asp-controller="Invoice" asp-action="Index">Invoices</a></li>
+                    }
 
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
@@ -57,7 +64,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2017 - InvoiceApplication</p>
+            <p>&copy; 2017 - Made by Johan Bos</p>
         </footer>
     </div>
 
