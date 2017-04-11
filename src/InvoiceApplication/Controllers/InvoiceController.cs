@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using InvoiceApplication.Data;
 using InvoiceApplication.Models;
+using System.Diagnostics;
 
 namespace InvoiceApplication.Controllers
 {
@@ -170,6 +171,13 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
+            var products = _context.Products
+                 .Select(s => new SelectListItem
+                 {
+                     Value = s.ProductID.ToString() + "_" + s.Price.ToString(),
+                     Text = s.Name
+                 });
+
             var invoice = await _context.Invoices
                 .Include(d => d.Debtor)
                 .Include(d => d.InvoiceItems)
@@ -179,14 +187,30 @@ namespace InvoiceApplication.Controllers
             var items = await _context.InvoiceItems
                 .Include(d => d.Product)
                 .Where(m => m.InvoiceNumber == id)
-                .ToListAsync();
+                .ToArrayAsync();
 
             if (invoice == null)
             {
                 return NotFound();
             }
 
+            var p = _context.Products;
+            string[] pids = new string[p.Count()];
 
+            int cnt = 0;
+            foreach (var pid in p)
+            {
+                string _id = pid.ProductID + "_" + pid.Price;
+                pids[cnt] = _id;
+                cnt++;
+            }
+
+            ViewBag.PIDs = pids;
+            ViewBag.Amounts = items.Select(s => s.Amount).ToArray();
+            ViewBag.Names = items.Select(s => s.Product.Name).ToArray();
+            ViewBag.Total = String.Format("{0:N2}", invoice.Total);
+
+            ViewBag.Products = new SelectList(products, "Value", "Text");
             ViewData["DebtorID"] = new SelectList(_context.Debtors, "DebtorID", "FullName", invoice.DebtorID);
             return View(invoice);
         }
@@ -196,8 +220,11 @@ namespace InvoiceApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("InvoiceNumber,CreatedOn,DebtorID,ExpirationDate")] Invoice invoice, string total)
+        public async Task<IActionResult> Edit(int id, [Bind("InvoiceNumber,CreatedOn,DebtorID,ExpirationDate")] Invoice invoice, string products, string amount, string total)
         {
+            Debug.WriteLine("pids: " + products);
+            Debug.WriteLine("amounts: " + amount);
+
             if (id != invoice.InvoiceNumber)
             {
                 return NotFound();
@@ -207,8 +234,56 @@ namespace InvoiceApplication.Controllers
             {
                 try
                 {
+                    invoice.Total = decimal.Parse(total);
                     _context.Update(invoice);
                     await _context.SaveChangesAsync();
+
+                    _context.InvoiceItems.RemoveRange(_context.InvoiceItems.Where(c => c.InvoiceNumber == invoice.InvoiceNumber));
+
+                    string[] pidArray = null;
+                    string[] amountArray = null;
+                    List<InvoiceItem> items = new List<InvoiceItem>();
+
+                    if (products.Split('_')[0].Length > 1)
+                    {
+                        pidArray = products.Split('_')[0].Split(',');
+                    }
+
+                    if (amount.Length > 1)
+                    {
+                        amountArray = amount.Split(',');
+                    }
+
+                    if (pidArray != null)
+                    {
+                        for (int i = 0; i < pidArray.Length; i++)
+                        {
+                            int _pid = int.Parse(pidArray[i]);
+                            int _amount = int.Parse(amountArray[i]);
+
+                            InvoiceItem item = new InvoiceItem();
+                            item.Amount = _amount;
+                            item.InvoiceNumber = invoice.InvoiceNumber;
+                            item.ProductID = _pid;
+
+                            items.Add(item);
+                        }
+
+                        _context.InvoiceItems.AddRange(items);
+                    }
+                    else
+                    {
+                        InvoiceItem item = new InvoiceItem();
+                        item.Amount = int.Parse(amount);
+                        item.InvoiceNumber = invoice.InvoiceNumber;
+                        item.ProductID = int.Parse(products.Split('_')[0]);
+
+                       _context.InvoiceItems.Add(item);
+                    }
+                    
+
+                    await _context.SaveChangesAsync();
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {

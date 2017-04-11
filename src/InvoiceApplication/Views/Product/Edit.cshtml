@@ -89,6 +89,10 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
+        $(document).ready(function () {
+            $("#price").val(@ViewBag.Price);
+        });
+
         $("#edit_btn").on("click", function () {
             var price = $("#price").val();
             $("#form").attr("asp-route-price", price);

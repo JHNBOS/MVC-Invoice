@@ -114,6 +114,8 @@ namespace InvoiceApplication.Controllers
             }
 
             var product = await _context.Products.SingleOrDefaultAsync(m => m.ProductID == id);
+            ViewBag.Price = String.Format("{0:N2}", product.Price);
+
             if (product == null)
             {
                 return NotFound();
