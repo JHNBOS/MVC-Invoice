@@ -27,7 +27,7 @@ namespace InvoiceApplication
             if (env.IsDevelopment())
             {
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
-                builder.AddUserSecrets();
+                builder.AddLoginsecrets();
             }
 
             builder.AddEnvironmentVariables();
@@ -54,6 +54,8 @@ namespace InvoiceApplication
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddDistributedMemoryCache();
+            services.AddSession();
             services.AddMvc();
 
             // Add application services.
@@ -79,8 +81,8 @@ namespace InvoiceApplication
             }
 
             app.UseStaticFiles();
-
             app.UseIdentity();
+            app.UseSession();
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
 
