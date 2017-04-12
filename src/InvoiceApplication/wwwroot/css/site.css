@@ -108,3 +108,31 @@ textarea {
     float: right;
     margin-top: 5px;
 }
+
+/* NAVBAR */
+.navbar-nav > li > a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    line-height: 24px;
+}
+
+#settings{
+    font-size:16px;
+    top:3px;
+}
+
+#logout-icon{
+    font-size:16px;
+    top:3px;
+}
+
+#logout-link{
+    font-family: Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size:13px;
+    font-weight:300;
+    padding-top:0;
+    padding-bottom:0;
+    top: 0px;
+    padding-left: 3px;
+    position: relative;
+}

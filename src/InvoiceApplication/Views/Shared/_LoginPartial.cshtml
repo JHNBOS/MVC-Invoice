@@ -19,13 +19,13 @@
             </li>
             @if (user.AccountType == "Admin")
             {
-                <li><a asp-area="" asp-controller="User" asp-action="Settings" style="padding-top: 15px;"><span class="glyphicon glyphicon-cog" style="font-size:16px;"></span></a></li>
+                <li><a asp-area="" asp-controller="User" asp-action="Settings"><span id="settings" class="glyphicon glyphicon-cog"></span></a></li>
             }
 
             <li>
-                <a asp-area="" asp-controller="User" asp-action="Logout" style="padding-top: 15px;">
-                    <span class="glyphicon glyphicon-log-out" style="font-size:16px;"></span>
-                    <span style="font-family: Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;font-size:13px;font-weight:300;">Log out</span>
+                <a asp-area="" asp-controller="User" asp-action="Logout">
+                    <span id="logout-icon" class="glyphicon glyphicon-log-out"></span>
+                    <span id="logout-link">Log out</span>
                 </a>
             </li>
 

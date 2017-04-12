@@ -1,0 +1,89 @@
+@model InvoiceApplication.Models.Invoice
+
+@{
+    ViewData["Title"] = "Invoice Details";
+}
+
+<h2>Invoice Details</h2>
+
+<div>
+    <h4></h4>
+    <hr />
+
+    <div class="row">
+        <!--BEGIN OF COLUMN 1-->
+        <div class="col-sm-6 col-md-6">
+
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.InvoiceNumber)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.InvoiceNumber)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Debtor)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Debtor.FullName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Total)
+                </dt>
+                <dd>
+                    @Html.Raw(String.Format("{0:C2}", Model.Total))
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CreatedOn)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CreatedOn)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.ExpirationDate)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.ExpirationDate)
+                </dd>
+            </dl>
+
+        </div>
+        <!--END OF COLUMN 1-->
+        <!------------------------------------------------->
+        <!--BEGIN OF COLUMN 2-->
+        <div class="col-sm-6 col-md-6">
+
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.Raw("Product(s)")
+                </dt>
+                <dd>
+                    <table class="table table-bordered table-hover">
+                        @foreach (var items in Model.InvoiceItems)
+                        {
+                            Product product = items.Product;
+                            @Html.Raw("<tr>")
+
+                            @Html.Raw("<td>" + product.Name + "</td>")
+                            @Html.Raw("<td>" + items.Amount + "x" + "</td>")
+                            @Html.Raw("<td>" + String.Format("{0:C2}", (product.Price * items.Amount)) + "</td>")
+
+                            @Html.Raw("</tr>")
+                        }
+                    </table>
+                </dd>
+            </dl>
+
+            <a id="pay_inv_btn" href="#" onclick="alert('Thank you for paying!')" class="btn btn-primary">Pay Invoice</a>
+
+        </div>
+        <!--END OF COLUMN 2-->
+    </div>
+
+
+</div>
+<div>
+    <br />
+
+    <a asp-action="Index">Back to Overview</a>
+</div>

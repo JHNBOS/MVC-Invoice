@@ -96,8 +96,14 @@ namespace InvoiceApplication.Services
 
             using (var client = new SmtpClient())
             {
-                client.Authenticate(company_email, password);
-                await client.ConnectAsync(smtp, port, SecureSocketOptions.None).ConfigureAwait(false);
+                client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+
+                await client.ConnectAsync(smtp, port, false).ConfigureAwait(false);
+
+                client.AuthenticationMechanisms.Remove("XOAUTH2");
+                await client.AuthenticateAsync(company_email, password)
+                    .ConfigureAwait(false);
+
                 await client.SendAsync(emailMessage).ConfigureAwait(false);
                 await client.DisconnectAsync(true).ConfigureAwait(false);
             }

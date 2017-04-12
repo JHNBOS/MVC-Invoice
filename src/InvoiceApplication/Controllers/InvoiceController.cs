@@ -137,7 +137,6 @@ namespace InvoiceApplication.Controllers
                     Debug.WriteLine(ex);
                 }
 
-
                 try
                 {
                     string[] pidArray = pids.Split(',');
@@ -164,9 +163,9 @@ namespace InvoiceApplication.Controllers
                     //SEND MAIL TO DEBTOR NOTIFYING ABOUT INVOICE
                     if (invoice.Type == "Final")
                     {
-                        string debtorEmail = invoice.Debtor.Email;
+                        Debtor debtor = _context.Debtors.Single(d => d.DebtorID == invoice.DebtorID);
                         AuthMessageSender email = new AuthMessageSender(mySettingsService);
-                        await email.SendInvoiceEmailAsync(debtorEmail);
+                        await email.SendInvoiceEmailAsync(debtor.Email);
                     }
                     
 

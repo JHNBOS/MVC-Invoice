@@ -219,8 +219,10 @@
                     totalPrice += (price * amount);
                 }
 
+                $("#total").prop("readonly", false);
                 $("#total").val(totalPrice.toLocaleString("nl-NL", { minimumFractionDigits: 2 }));
-                total = totalPrice.toLocaleString("nl-NL", { minimumFractionDigits: 2});
+                total = totalPrice.toLocaleString("nl-NL", { minimumFractionDigits: 2 });
+                $("#total").prop("readonly", true);
             }
 
 
