@@ -57,6 +57,9 @@
             <td>
                 @Html.Raw(String.Format("{0:C2}", item.Total))
             </td>
+            <td>
+                <a asp-action="PDF" asp-route-id="@item.InvoiceNumber">Download PDF</a>
+            </td>
             <td></td>
         </tr>
 }

@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETFramework,Version=v4.5.2/",
-    "signature": "2e62473076046d4f06d65f8fac481ea4e950aed5"
+    "signature": "3a06bba2406b389cf0e7b57da00ca57b5a26af47"
   },
   "compilationOptions": {
     "defines": [
@@ -39,6 +39,7 @@
           "Microsoft.Extensions.Logging.Debug": "1.0.0",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
           "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
+          "PDFsharp": "1.32.3057",
           "System.Runtime.Serialization.Json": "4.0.0.0"
         },
         "compile": {
@@ -1004,6 +1005,15 @@
           "lib/net40/NUglify.dll": {}
         }
       },
+      "PDFsharp/1.32.3057": {
+        "dependencies": {
+          "System.Drawing": "4.0.0.0"
+        },
+        "compile": {
+          "lib/net20/PdfSharp.Charting.dll": {},
+          "lib/net20/PdfSharp.dll": {}
+        }
+      },
       "Remotion.Linq/2.1.1": {
         "dependencies": {
           "System.Collections": "4.0.0.0",
@@ -1288,6 +1298,11 @@
           ".NETFramework/v4.5.2/System.ServiceModel.dll": {}
         }
       },
+      "System.Drawing/4.0.0.0": {
+        "compile": {
+          ".NETFramework/v4.5.2/System.Drawing.dll": {}
+        }
+      },
       "System.Diagnostics.Tracing/4.0.10.0": {
         "compile": {
           ".NETFramework/v4.5.2/Facades/System.Diagnostics.Tracing.dll": {}
@@ -1324,6 +1339,7 @@
           "Microsoft.Extensions.Logging.Debug": "1.0.0",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
           "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
+          "PDFsharp": "1.32.3057",
           "System.Runtime.Serialization.Json": "4.0.0.0"
         },
         "runtime": {
@@ -2285,6 +2301,23 @@
           "lib/net40/NUglify.dll": {}
         }
       },
+      "PDFsharp/1.32.3057": {
+        "dependencies": {
+          "System.Drawing": "4.0.0.0"
+        },
+        "runtime": {
+          "lib/net20/PdfSharp.Charting.dll": {},
+          "lib/net20/PdfSharp.dll": {}
+        },
+        "resources": {
+          "lib/net20/de/PdfSharp.Charting.resources.dll": {
+            "locale": "de"
+          },
+          "lib/net20/de/PdfSharp.resources.dll": {
+            "locale": "de"
+          }
+        }
+      },
       "Remotion.Linq/2.1.1": {
         "dependencies": {
           "System.Collections": "4.0.0.0",
@@ -2413,6 +2446,7 @@
       "System.IdentityModel/4.0.0.0": {},
       "System.Net.Http.WebRequest/4.0.0.0": {},
       "System.ServiceModel/4.0.0.0": {},
+      "System.Drawing/4.0.0.0": {},
       "System.Diagnostics.Tracing/4.0.10.0": {},
       "System.Reflection.Primitives/4.0.0.0": {}
     }
@@ -2893,6 +2927,11 @@
       "serviceable": true,
       "sha512": "sha512-XguQgUPUHMOmfOGlSgVRHIMVBJYz86cViTP8kiD1Oa4EKKUrvfL4a4BhWUxdg5rZBLrIAcoYu/V43F5iH/PucA=="
     },
+    "PDFsharp/1.32.3057": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-M8w6e4R+jA1j3ddPCY6jNnb8RG21ZgCr+ENapwaH5NPzNl600f1wOcCPY2hEO+jb0aCGjcMHrWk/K+PC1cw0PQ=="
+    },
     "Remotion.Linq/2.1.1": {
       "type": "package",
       "serviceable": true,
@@ -3144,6 +3183,11 @@
       "sha512": ""
     },
     "System.ServiceModel/4.0.0.0": {
+      "type": "referenceassembly",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Drawing/4.0.0.0": {
       "type": "referenceassembly",
       "serviceable": false,
       "sha512": ""

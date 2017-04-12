@@ -1,5 +1,5 @@
 {
-  "userSecretsId": "aspnet-WineShop-474cf831-8f20-428e-994a-4eb3474f4b6d",
+  "userSecretsId": "aspnet-InvoiceApplication-474cf831-8f20-428e-994a-4eb3474f4b6d",
 
   "dependencies": {
     "BundlerMinifier.Core": "2.4.337",
@@ -44,6 +44,7 @@
       "version": "1.0.0-preview2-final",
       "type": "build"
     },
+    "PDFsharp": "1.32.3057",
     "System.Runtime.Serialization.Json": "4.0.0"
   },
 

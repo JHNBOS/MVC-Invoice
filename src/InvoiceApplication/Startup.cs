@@ -25,6 +25,10 @@ namespace InvoiceApplication
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
 
+            Environment.rootPath = env.WebRootPath;
+            string sAppPath = env.ContentRootPath; //Application Base Path
+            string swwwRootPath = env.WebRootPath;  //wwwroot folder path
+
             if (env.IsDevelopment())
             {
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709

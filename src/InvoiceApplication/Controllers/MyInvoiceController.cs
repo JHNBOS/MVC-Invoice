@@ -7,16 +7,21 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InvoiceApplication.Data;
 using InvoiceApplication.Models;
+using Microsoft.AspNetCore.Hosting;
 
 namespace InvoiceApplication.Controllers
 {
     public class MyInvoiceController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private IMySettingsService mySettingsService;
+        private readonly IHostingEnvironment _env;
 
-        public MyInvoiceController(ApplicationDbContext context)
+        public MyInvoiceController(ApplicationDbContext context, IMySettingsService settingsService, IHostingEnvironment env)
         {
-            _context = context;    
+            _context = context;
+            mySettingsService = settingsService;
+            _env = env;
         }
 
         // GET: MyInvoice
@@ -204,5 +209,16 @@ namespace InvoiceApplication.Controllers
         {
             return _context.Invoices.Any(e => e.InvoiceNumber == id);
         }
+
+        public FileStreamResult PDF(int id)
+        {
+            PDF pdf = new PDF(_context, mySettingsService, _env);
+            FileStreamResult fs = pdf.CreatePDF(id, HttpContext);
+
+            return fs;
+        }
+
+
+
     }
 }

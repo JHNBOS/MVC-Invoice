@@ -47,6 +47,47 @@ namespace InvoiceApplication
         {
             return mySettings.Website;
         }
+
+        public string GetPhone()
+        {
+            return mySettings.Phone;
+        }
+
+        public string GetLogo()
+        {
+            return mySettings.Logo;
+        }
+
+        public bool UseLogo()
+        {
+            return mySettings.UseLogo;
+        }
+
+        public string GetAddress()
+        {
+            return mySettings.Address;
+        }
+
+        public string GetPostalCode()
+        {
+            return mySettings.PostalCode;
+        }
+
+        public string GetCity()
+        {
+            return mySettings.City;
+        }
+
+        public string GetTaxNumber()
+        {
+            return mySettings.TaxNumber;
+        }
+
+        public string GetCompanyNumber()
+        {
+            return mySettings.CompanyNumber;
+        }
+
         /* END OF GETTERS */
 
         /*--------------------------------------------------------------------*/
@@ -80,6 +121,46 @@ namespace InvoiceApplication
         public void SetWebsite(string value)
         {
             mySettings.Website = value;
+        }
+
+        public void SetPhone(string value)
+        {
+            mySettings.Phone = value;
+        }
+
+        public void SetLogo(string value)
+        {
+            mySettings.Logo = value;
+        }
+
+        public void SetUseLogo(bool value)
+        {
+            mySettings.UseLogo = value;
+        }
+
+        public void SetAddress(string value)
+        {
+            mySettings.Address = value;
+        }
+
+        public void SetPostalCode(string value)
+        {
+            mySettings.PostalCode = value;
+        }
+
+        public void SetCity(string value)
+        {
+            mySettings.City = value;
+        }
+
+        public void SetTaxNumber(string value)
+        {
+            mySettings.TaxNumber = value;
+        }
+
+        public void SetCompanyNumber(string value)
+        {
+            mySettings.CompanyNumber = value;
         }
 
         /* END OF SETTERS */
