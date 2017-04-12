@@ -1,4 +1,7 @@
-﻿@{
+﻿@using Microsoft.Extensions.Options
+@inject IOptions<mySettings> settings
+
+@{
     InvoiceApplication.Models.User user = null;
 
     if (SessionHelper.IsExists(Context.Session, "User"))
@@ -12,7 +15,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - InvoiceApplication</title>
+    <title>@ViewData["Title"] - @settings.Value.Name</title>
 
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -35,7 +38,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">InvoiceApplication</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">@settings.Value.Name</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -64,7 +67,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2017 - Made by Johan Bos</p>
+            <p>&copy; 2017 - Made by @settings.Value.Name</p>
         </footer>
     </div>
 

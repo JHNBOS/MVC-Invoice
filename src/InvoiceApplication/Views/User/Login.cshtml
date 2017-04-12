@@ -8,42 +8,53 @@
 <h2>Login</h2>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-sm-12 col-md-12">
         <section>
             <form asp-controller="User" asp-action="Login" class="form-horizontal">
 
                 <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>
 
-                <div class="form-group">
-                    <label asp-for="Email" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
+                <div class="row">
+                    <div class="col-sm-1 col-md-1"></div>
+                    <div class="col-sm-7 col-md-7">
+                        <!--LOGIN FORM-->
+                        <div class="form-group">
+                            <label asp-for="Email" class="col-md-2 control-label"></label>
+                            <div class="col-md-10">
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Password" class="col-md-2 control-label"></label>
+                            <div class="col-md-10">
+                                <input asp-for="Password" class="form-control" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <br />
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="submit" class="btn btn-primary" style="width:180px;">Log in</button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-4 col-md-4" style="padding-left:25px;">
+                        <!--LINKS-->
+                        <p>
+                                <a asp-action="Create" style="font-size:16px;font-weight:600;" asp-route-returnurl="@ViewData["ReturnUrl"]">Register as a new user?</a>
+                        </p>
+                        <p>
+                                <a asp-action="ForgotPassword" style="font-size:16px;font-weight:600;">Forgot your password?</a>
+                        </p>
+
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label asp-for="Password" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="Password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-primary">Log in</button>
-                    </div>
-                </div>
-
-                <p>
-                    <a asp-action="Create" asp-route-returnurl="@ViewData["ReturnUrl"]">Register as a new user?</a>
-                </p>
-                <p>
-                    <a asp-action="ForgotPassword">Forgot your password?</a>
-                </p>
-
             </form>
         </section>
     </div>

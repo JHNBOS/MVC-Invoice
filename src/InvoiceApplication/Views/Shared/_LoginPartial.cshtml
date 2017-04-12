@@ -17,6 +17,10 @@
             <li>
                 <a asp-route-id="@(user.ID)" asp-controller="User" asp-action="Edit" title="Manage">Hello @(user.FirstName)!</a>
             </li>
+            @if (user.AccountType == "Admin")
+            {
+                <li><a asp-area="" asp-controller="User" asp-action="Settings"><span class="glyphicon glyphicon-cog"></span></a></li>
+            }
             <li>
                 <button type="submit" class="btn btn-link navbar-btn navbar-link">Log out</button>
             </li>

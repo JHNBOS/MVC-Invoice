@@ -7,6 +7,9 @@ namespace InvoiceApplication.Services
 {
     public interface IEmailSender
     {
-        Task SendEmailAsync(string email, string subject, string message);
+        //Task SendEmailAsync(string email, string subject, string message);
+        Task SendUserEmailAsync(string email, string password);
+        Task SendInvoiceEmailAsync(string email);
+
     }
 }

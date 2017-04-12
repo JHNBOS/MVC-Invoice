@@ -48,8 +48,20 @@
                 <div class="form-group">
                     <label asp-for="Total" class="col-md-2 control-label"></label>
                     <div class="col-md-10">
-                        <input id="total" name="total" type="text" class="form-control" />
+                        <input id="total" name="total" type="text" class="form-control" readonly />
                         <span asp-validation-for="Total" class="text-danger" />
+                    </div>
+                </div>
+
+                <!---TYPE-->
+                <div class="form-group">
+                    <label asp-for="Type" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <select asp-for="Type" class="form-control">
+                            <option value="Concept">Concept</option>
+                            <option value="Final">Final</option>
+                        </select>
+                        <span asp-validation-for="Type" class="text-danger" />
                     </div>
                 </div>
 

@@ -1,23 +1,25 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InvoiceApplication.Data;
 using InvoiceApplication.Models;
 using System.Diagnostics;
+using Microsoft.Extensions.Options;
+using InvoiceApplication.Services;
 
 namespace InvoiceApplication.Controllers
 {
     public class UserController : Controller
     {
         private ApplicationDbContext _context;
+        private mySettings _settings;
 
-        public UserController(ApplicationDbContext context)
+        public UserController(ApplicationDbContext context, IOptions<mySettings> settingsAccessor)
         {
-            _context = context;    
+            _context = context;
+            _settings = settingsAccessor.Value;
         }
 
         // GET: User
@@ -227,10 +229,37 @@ namespace InvoiceApplication.Controllers
             }
         }
 
+        public ActionResult Settings()
+        {
+            mySettings current = new mySettings();
 
+            current.Email = _settings.Email;
+            current.Password = _settings.Password;
+            current.SMTP = _settings.SMTP;
+            current.Port = _settings.Port;
+            current.Name = _settings.Name;
+            current.Website = _settings.Website;
 
+            return View(current);
+        }
+        
+        [HttpPost]
+        public ActionResult Settings(mySettings mySettings)
+        {
+            if (mySettings != null)
+            {
+                _settings.Email = mySettings.Email;
+                _settings.Password = mySettings.Password;
+                _settings.SMTP = mySettings.SMTP;
+                _settings.Port = mySettings.Port;
+                _settings.Name = mySettings.Name;
+                _settings.Website = mySettings.Website;
 
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
 
+            return View(mySettings);
+        }
 
     }
 }

@@ -8,16 +8,19 @@ using System.Linq;
 using InvoiceApplication.Data;
 using InvoiceApplication.Models;
 using System.Diagnostics;
+using InvoiceApplication.Services;
 
 namespace InvoiceApplication.Controllers
 {
     public class InvoiceController : Controller
     {
         private ApplicationDbContext _context;
+        private IMySettingsService mySettingsService;
 
-        public InvoiceController(ApplicationDbContext context)
+        public InvoiceController(ApplicationDbContext context, IMySettingsService settingsService)
         {
             _context = context;
+            mySettingsService = settingsService;
         }
 
         // GET: Invoice
@@ -119,36 +122,60 @@ namespace InvoiceApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("InvoiceNumber,CreatedOn,DebtorID,ExpirationDate")] Invoice invoice, string total, string pids, string amounts)
+        public async Task<IActionResult> Create([Bind("InvoiceNumber,CreatedOn,DebtorID,ExpirationDate,Type")] Invoice invoice, string total, string pids, string amounts)
         {
             if (ModelState.IsValid)
             {
-                invoice.Total = decimal.Parse(total);
-                _context.Add(invoice);
-                await _context.SaveChangesAsync();
-
-                string[] pidArray = pids.Split(',');
-                string[] amountArray = amounts.Split(',');
-
-                List<InvoiceItem> items = new List<InvoiceItem>();
-
-                for (int i = 0; i < pidArray.Length; i++)
+                try
                 {
-                    int pid = int.Parse(pidArray[i]);
-                    int amount = int.Parse(amountArray[i]);
-
-                    InvoiceItem item = new InvoiceItem();
-                    item.Amount = amount;
-                    item.InvoiceNumber = invoice.InvoiceNumber;
-                    item.ProductID = pid;
-
-                    items.Add(item);
+                    invoice.Total = decimal.Parse(total);
+                    _context.Add(invoice);
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
                 }
 
-                _context.AddRange(items);
-                await _context.SaveChangesAsync();
 
-                return RedirectToAction("Index");
+                try
+                {
+                    string[] pidArray = pids.Split(',');
+                    string[] amountArray = amounts.Split(',');
+
+                    List<InvoiceItem> items = new List<InvoiceItem>();
+
+                    for (int i = 0; i < pidArray.Length; i++)
+                    {
+                        int pid = int.Parse(pidArray[i]);
+                        int amount = int.Parse(amountArray[i]);
+
+                        InvoiceItem item = new InvoiceItem();
+                        item.Amount = amount;
+                        item.InvoiceNumber = invoice.InvoiceNumber;
+                        item.ProductID = pid;
+
+                        items.Add(item);
+                    }
+
+                    _context.AddRange(items);
+                    await _context.SaveChangesAsync();
+
+                    //SEND MAIL TO DEBTOR NOTIFYING ABOUT INVOICE
+                    if (invoice.Type == "Final")
+                    {
+                        string debtorEmail = invoice.Debtor.Email;
+                        AuthMessageSender email = new AuthMessageSender(mySettingsService);
+                        await email.SendInvoiceEmailAsync(debtorEmail);
+                    }
+                    
+
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
             }
 
             var products = _context.Products
@@ -220,7 +247,7 @@ namespace InvoiceApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("InvoiceNumber,CreatedOn,DebtorID,ExpirationDate")] Invoice invoice, string products, string amount, string total)
+        public async Task<IActionResult> Edit(int id, [Bind("InvoiceNumber,CreatedOn,DebtorID,ExpirationDate,Type")] Invoice invoice, string products, string amount, string total)
         {
             Debug.WriteLine("pids: " + products);
             Debug.WriteLine("amounts: " + amount);
@@ -280,7 +307,15 @@ namespace InvoiceApplication.Controllers
 
                        _context.InvoiceItems.Add(item);
                     }
-                    
+
+                    //SEND MAIL TO DEBTOR NOTIFYING ABOUT INVOICE
+                    if (invoice.Type == "Final")
+                    {
+                        string debtorEmail = invoice.Debtor.Email;
+                        AuthMessageSender email = new AuthMessageSender(mySettingsService);
+                        await email.SendInvoiceEmailAsync(debtorEmail);
+                    }
+
 
                     await _context.SaveChangesAsync();
 

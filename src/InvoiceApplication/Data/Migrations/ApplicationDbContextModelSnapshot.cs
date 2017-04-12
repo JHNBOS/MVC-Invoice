@@ -120,6 +120,8 @@ namespace InvoiceApplication.Data.Migrations
 
                     b.Property<decimal>("Total");
 
+                    b.Property<string>("Type");
+
                     b.HasKey("InvoiceNumber");
 
                     b.HasIndex("DebtorID");

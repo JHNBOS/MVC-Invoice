@@ -5,16 +5,22 @@ using InvoiceApplication.Data;
 using InvoiceApplication.Models;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+using InvoiceApplication.Services;
+using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 
 namespace InvoiceApplication.Controllers
 {
     public class DebtorController : Controller
     {
         private ApplicationDbContext _context;
+        private IMySettingsService mySettingsService;
 
-        public DebtorController(ApplicationDbContext context)
+        public DebtorController(ApplicationDbContext context, IMySettingsService settingsService)
         {
             _context = context;
+            mySettingsService = settingsService;
         }
 
         // GET: Debtor
@@ -114,8 +120,40 @@ namespace InvoiceApplication.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Debtors.Add(debtor);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Debtors.Add(debtor);
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+
+                try
+                {
+                    User user = new User();
+                    user.AccountType = "Client";
+                    user.Address = debtor.Address;
+                    user.PostalCode = debtor.PostalCode;
+                    user.City = debtor.City;
+                    user.Country = debtor.Country;
+                    user.FirstName = debtor.FirstName;
+                    user.LastName = debtor.LastName;
+                    user.Email = debtor.Email;
+                    user.Password = debtor.FirstName + "_" + DateTime.Now.ToString("ddMMHH");
+
+                    _context.User.Add(user);
+                    await _context.SaveChangesAsync();
+
+                    AuthMessageSender email = new AuthMessageSender(mySettingsService);
+                    await email.SendUserEmailAsync(user.Email, user.Password);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+
                 return RedirectToAction("Index");
             }
             return View(debtor);
@@ -195,8 +233,27 @@ namespace InvoiceApplication.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var debtor = await _context.Debtors.SingleOrDefaultAsync(m => m.DebtorID == id);
+            List<Invoice> invoices = _context.Invoices.Where(i => i.DebtorID == debtor.DebtorID).ToList();
+
+            //REMOVE ALL INVOICE ITEMS
+            foreach (var invoice in invoices)
+            {
+                _context.InvoiceItems.RemoveRange(_context.InvoiceItems.Where(i => i.InvoiceNumber == invoice.InvoiceNumber));
+                await _context.SaveChangesAsync();
+            }
+
+            //REMOVE ALL INVOICES OF DEBTOR
+            _context.Invoices.RemoveRange(invoices);
+            await _context.SaveChangesAsync();
+
+            //REMOVE USER ACCOUNT OF DEBTOR
+            _context.User.Remove(_context.User.Single(u => u.Email == debtor.Email));
+            await _context.SaveChangesAsync();
+
+            //REMOVE DEBTOR
             _context.Debtors.Remove(debtor);
             await _context.SaveChangesAsync();
+
             return RedirectToAction("Index");
         }
 

@@ -24,6 +24,9 @@ namespace InvoiceApplication.Models
         [DataType(DataType.Currency)]
         public decimal Total { get; set; }
 
+        [Display(Name = "Save As")]
+        public string Type { get; set; }
+
         public virtual Debtor Debtor { get; set; }
         public virtual List<InvoiceItem> InvoiceItems { get; set; }
     }
