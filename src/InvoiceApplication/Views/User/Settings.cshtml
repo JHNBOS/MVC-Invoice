@@ -6,70 +6,200 @@
 
 <h2>Settings</h2>
 
-<form asp-action="Settings">
+<form asp-action="Settings" enctype="multipart/form-data">
     <div class="form-horizontal">
         <h4></h4>
         <hr />
 
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        <div class="form-group">
-            <label class="col-md-2 control-label">Company Name</label>
-            <div class="col-md-10">
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger" />
+        <div class="row">
+            <div class="col-sm-7 col-md-7" style="padding-right:0px !important;">
+                <!--COMPANY INFO-->
+                <!--NAME-->
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Company Name</label>
+                    <div class="col-md-10">
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger" />
+                    </div>
+                </div>
+
+                <!--WEBSITE-->
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Company Website</label>
+                    <div class="col-md-10">
+                        <input asp-for="Website" class="form-control" />
+                        <span asp-validation-for="Website" class="text-danger" />
+                    </div>
+                </div>
+
+                <!--PHONE-->
+                <div class="form-group">
+                    <label asp-for="Phone" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Phone" class="form-control" />
+                        <span asp-validation-for="Phone" class="text-danger" />
+                    </div>
+                </div>
+
+                <!--ADDRESS-->
+                <div class="form-group">
+                    <label asp-for="Address" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger" />
+                    </div>
+                </div>
+
+                <!--POSTALCODE-->
+                <div class="form-group">
+                    <label asp-for="PostalCode" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="PostalCode" class="form-control" />
+                        <span asp-validation-for="PostalCode" class="text-danger" />
+                    </div>
+                </div>
+
+                <!--CITY-->
+                <div class="form-group">
+                    <label asp-for="City" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="City" class="form-control" />
+                        <span asp-validation-for="City" class="text-danger" />
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-sm-5 col-md-5" style="padding-left:0px !important;">
+                <!--COMPANY EMAIL-->
+                <!--EMAIL-->
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Company Email</label>
+                    <div class="col-md-10">
+                        <input asp-for="Email" type="email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger" />
+                    </div>
+                </div>
+
+                <!--PASSWORD-->
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Password</label>
+                    <div class="col-md-10">
+                        <input asp-for="Password" type="password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger" />
+                    </div>
+                </div>
+
+                <!--SMTP-->
+                <div class="form-group">
+                    <label asp-for="SMTP" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="SMTP" class="form-control" />
+                        <span asp-validation-for="SMTP" class="text-danger" />
+                    </div>
+                </div>
+
+                <!--PORT-->
+                <div class="form-group">
+                    <label asp-for="Port" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Port" class="form-control" />
+                        <span asp-validation-for="Port" class="text-danger" />
+                    </div>
+                </div>
+
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="col-md-2 control-label">Company Website</label>
-            <div class="col-md-10">
-                <input asp-for="Website" type="url" class="form-control" />
-                <span asp-validation-for="Website" class="text-danger" />
-            </div>
-        </div>
+        <hr />
 
-        <div class="form-group">
-            <label class="col-md-2 control-label">Company Email</label>
-            <div class="col-md-10">
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger" />
-            </div>
-        </div>
+        <div class="row">
+            <div class="col-sm-7 col-md-7" style="padding-right:0px !important;">
+                <!--COMPANY INFO-->
+                <!--TAXNUMBER-->
+                <div class="form-group">
+                    <label asp-for="TaxNumber" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="TaxNumber" class="form-control" />
+                        <span asp-validation-for="TaxNumber" class="text-danger" />
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <label class="col-md-2 control-label">Company Email Password</label>
-            <div class="col-md-10">
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger" />
-            </div>
-        </div>
+                <!--COMPANYNUMBER-->
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Company nr.</label>
+                    <div class="col-md-10">
+                        <input asp-for="CompanyNumber" class="form-control" />
+                        <span asp-validation-for="CompanyNumber" class="text-danger" />
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <label asp-for="SMTP" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="SMTP" class="form-control" />
-                <span asp-validation-for="SMTP" class="text-danger" />
-            </div>
-        </div>
+                <!--SUBMIT BUTTON-->
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-primary" style="width:180px;" />
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <label asp-for="Port" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Port" class="form-control" />
-                <span asp-validation-for="Port" class="text-danger" />
             </div>
-        </div>
+            <div class="col-sm-5 col-md-5" style="padding-left:0px !important;">
+                <!--LOGO-->
+                <!--FILE UPLOAD-->
+                <div class="form-group">
+                    <label asp-for="Logo" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input type="file" id="fileUpload" class="form-control" name="file" />
+                        <span asp-validation-for="Logo" class="text-danger" />
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <!--CHECKBOX-->
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Use Logo</label>
+                    <div class="col-md-10">
+                        <input asp-for="UseLogo" class="form-control checkbox" style="height:25px;" />
+                        <span asp-validation-for="UseLogo" class="text-danger" />
+                    </div>
+                </div>
+
+
+                <div id="preview text-center">
+                    <img id="showImg" src="#" alt="Logo" />
+                </div>
+
             </div>
         </div>
+        
+        <br />
+
+        
 
     </div>
 </form>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script language="javascript" type="text/javascript">
+    var img = document.getElementById('showImg');
+    img.style.visibility = 'hidden';
+
+    $(function () {
+        $(":file").change(function () {
+            if (this.files && this.files[0]) {
+                var img = document.getElementById('showImg');
+                img.style.visibility = 'visible';
+
+                var reader = new FileReader();
+                reader.onload = imageIsLoaded;
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    });
+
+    function imageIsLoaded(e) {
+        $('#showImg').attr('src', e.target.result);
+    };
+</script>
 }

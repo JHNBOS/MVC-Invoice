@@ -8,6 +8,9 @@ using InvoiceApplication.Models;
 using System.Diagnostics;
 using Microsoft.Extensions.Options;
 using InvoiceApplication.Services;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace InvoiceApplication.Controllers
 {
@@ -15,11 +18,13 @@ namespace InvoiceApplication.Controllers
     {
         private ApplicationDbContext _context;
         private mySettings _settings;
+        private IHostingEnvironment _env;
 
-        public UserController(ApplicationDbContext context, IOptions<mySettings> settingsAccessor)
+        public UserController(ApplicationDbContext context, IOptions<mySettings> settingsAccessor, IHostingEnvironment env)
         {
             _context = context;
             _settings = settingsAccessor.Value;
+            _env = env;
         }
 
         // GET: User
@@ -175,7 +180,6 @@ namespace InvoiceApplication.Controllers
 
             if (login != null)
             {
-                Debug.WriteLine("User exists!");
                 HttpContext.Session.Set("User", (User)login);
 
                 return RedirectToAction("Index", "Home", new { area = "" });
@@ -239,27 +243,72 @@ namespace InvoiceApplication.Controllers
             current.Port = _settings.Port;
             current.Name = _settings.Name;
             current.Website = _settings.Website;
+            current.Phone = _settings.Phone;
+            current.Address = _settings.Address;
+            current.City = _settings.City;
+            current.PostalCode = _settings.PostalCode;
+            current.CompanyNumber = _settings.CompanyNumber;
+            current.TaxNumber = _settings.TaxNumber;
+            current.Logo = _settings.Logo;
+            current.UseLogo = _settings.UseLogo;
 
             return View(current);
         }
-        
+
         [HttpPost]
-        public ActionResult Settings(mySettings mySettings)
+        public async Task<ActionResult> Settings(mySettings mySettings, IFormFile file)
         {
             if (mySettings != null)
             {
+
+                try
+                {
+                    var uploads = Path.Combine(_env.WebRootPath, "images");
+
+                    if (file.Length > 0)
+                    {
+                        var filePath = Path.Combine(uploads, file.FileName);
+                        _settings.Logo = file.FileName;
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+
+
+                if (mySettings.Password != "")
+                {
+                    _settings.Password = mySettings.Password;
+                }
+
                 _settings.Email = mySettings.Email;
-                _settings.Password = mySettings.Password;
                 _settings.SMTP = mySettings.SMTP;
                 _settings.Port = mySettings.Port;
                 _settings.Name = mySettings.Name;
                 _settings.Website = mySettings.Website;
+                _settings.Phone = mySettings.Phone;
+                _settings.Address = mySettings.Address;
+                _settings.City = mySettings.City;
+                _settings.PostalCode = mySettings.PostalCode;
+                _settings.CompanyNumber = mySettings.CompanyNumber;
+                _settings.TaxNumber = mySettings.TaxNumber;
+                _settings.UseLogo = mySettings.UseLogo;
+
 
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
 
             return View(mySettings);
         }
+
+
+
 
     }
 }

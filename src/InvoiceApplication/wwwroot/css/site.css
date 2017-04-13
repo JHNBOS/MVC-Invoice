@@ -1,5 +1,5 @@
 ﻿body {
-    padding-top: 50px;
+    padding-top: 40px;
     padding-bottom: 20px;
 }
 
@@ -135,4 +135,11 @@ textarea {
     top: 0px;
     padding-left: 3px;
     position: relative;
+}
+
+/* SETTINGS */
+#showImg{
+    margin-top: 25px;
+    max-height: 60%;
+    max-width: 60%;
 }
