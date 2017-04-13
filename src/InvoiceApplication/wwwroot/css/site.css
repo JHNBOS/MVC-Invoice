@@ -101,6 +101,7 @@ textarea {
     width: 180px;
     float: right;
     margin-top: 5px;
+    margin-right: 180px;
 }
 
 #delete_inv_btn{
@@ -114,6 +115,11 @@ textarea {
     padding-top: 10px;
     padding-bottom: 10px;
     line-height: 24px;
+}
+
+.navbar-brand{
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 #settings{

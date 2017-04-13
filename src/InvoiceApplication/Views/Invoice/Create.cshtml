@@ -88,12 +88,31 @@
                 <div id="products">
 
                     <!--PRODUCT ROW @(cnt)-->
-                    <div id="productRow">
+                    <div id="productRow0" style="display:none;">
                         <div class="col-sm-7 col-md-7" style="padding-right:2px;">
-                            <select id="product@(cnt)" name="product" class="form-control" asp-items="ViewBag.Products"></select>
+                            <select id="_product" class="form-control" asp-items="ViewBag.Products"></select>
                         </div>
                         <div class="col-sm-3 col-md-3" style="padding-right:2px;padding-left:2px;">
-                            <input id="amount@(cnt)" name="amount" class="form-control" />
+                            <input id="_amount" class="form-control" />
+                        </div>
+                        <div class="col-sm-2 col-md-2" style="padding-left:2px;">
+                            <!--REMOVE ROW BUTTON-->
+                            <a href="#" id="del_row_btn" class="btn">
+                                <span class="glyphicon glyphicon-minus" style="color:orangered;"></span>
+                            </a>
+                        </div>
+
+                        <br />
+                        <br />
+
+                    </div>
+
+                    <div id="productRow">
+                        <div class="col-sm-7 col-md-7" style="padding-right:2px;">
+                            <select id="product" class="form-control" asp-items="ViewBag.Products"></select>
+                        </div>
+                        <div class="col-sm-3 col-md-3" style="padding-right:2px;padding-left:2px;">
+                            <input id="amount" class="form-control" />
                         </div>
                         <div class="col-sm-2 col-md-2" style="padding-left:2px;">
                             <!--REMOVE ROW BUTTON-->
@@ -120,7 +139,7 @@
         </div>
 
         <!---------------------------------------------------------------------------------->
-        
+
     </div>
 </form>
 
@@ -128,11 +147,12 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
+
         $(document).ready(function () {
 
             /* VARIABLES */
             var total = "";
-            var count = 2;
+            var count = 0;
             var productArray = new Array();
             var amountArray = new Array();
 
@@ -184,52 +204,27 @@
                     amountArray.push($(this).val());
                 })
 
+                productArray.splice(0, 1);
+                amountArray.splice(0, 1);
+
                 console.log(productArray.toString());
                 console.log(amountArray.toString());
-                console.log(total);
+                console.log(total.toString());
+
+                /*
+                $("#form").attr("asp-route-pids", productArray.toString());
+                $("#form").attr("asp-route-amounts", amountArray.toString());
+                $("#form").attr("asp-route-total", total);
+                */
 
                 $("#form").attr("action", "Create/?pids=" + productArray.toString() + "&amounts=" + amountArray.toString() + "&total=" + total);
                 $("#form").submit();
-
-                productArray = new Array();
-                amountArray = new Array();
-                total = "";
             });
-
-
-            /* FUNCTION TO CALCULATE TOTAL AND SHOW IN TOTAL BOX */
-            function calcTotal() {
-
-                var amounts = new Array();
-                var pids = new Array();
-                var totalPrice = Number.parseFloat("0");
-
-                $("#products option:selected").each(function () {
-                    pids.push($(this).val().split('_')[1]);
-                })
-
-                $("#products input").each(function () {
-                    amounts.push($(this).val());
-                })
-
-                for (var i = 0; i < pids.length; i++) {
-                    var price = Number.parseFloat(pids[i]).toFixed(2);
-                    var amount = Number.parseInt(amounts[i]);
-
-                    totalPrice += (price * amount);
-                }
-
-                $("#total").prop("readonly", false);
-                $("#total").val(totalPrice.toLocaleString("nl-NL", { minimumFractionDigits: 2 }));
-                total = totalPrice.toLocaleString("nl-NL", { minimumFractionDigits: 2 });
-                $("#total").prop("readonly", true);
-            }
-
 
             /* ADD NEW DIV INSIDE #products*/
             $("#add_row_btn").on("click", function () {
                 @{cnt++;}
-                var copy = $("#productRow").clone(true).appendTo("#products").find("input").val("");
+                var copy = $("#productRow0").clone(true).appendTo("#products").find("input").val("");
             });
 
             /* REMOVE DIV INSIDE #products*/
@@ -238,9 +233,48 @@
                 $(this).parent().parent().remove();
             });
 
-
         });
+
+        /*-------------------------------------------------------------------------------------------*/
+
+       
+        /*-------------------------------------------------------------------------------------------*/
+
+        /* FUNCTION TO CALCULATE TOTAL AND SHOW IN TOTAL BOX */
+        function calcTotal() {
+
+            var amounts = new Array();
+            var pids = new Array();
+            var totalPrice = Number.parseFloat("0");
+
+            $("#products option:selected").each(function () {
+                pids.push($(this).val().split('_')[1]);
+            })
+
+            $("#products input").each(function () {
+                amounts.push($(this).val());
+            })
+
+            pids.splice(0, 1);
+            amounts.splice(0, 1);
+
+            for (var i = 0; i < pids.length; i++) {
+                var price = Number.parseFloat(pids[i]).toFixed(2);
+                var amount = Number.parseInt(amounts[i]);
+
+                totalPrice += (price * amount);
+            }
+
+            $("#total").prop("readonly", false);
+            $("#total").val(totalPrice.toLocaleString("nl-NL", { minimumFractionDigits: 2 }));
+            total = totalPrice.toLocaleString("nl-NL", { minimumFractionDigits: 2 });
+            $("#total").prop("readonly", true);
+
+            console.log('calculated: ' + total);
+        }
 
 
     </script>
 }
+
+

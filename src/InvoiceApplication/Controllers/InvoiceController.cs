@@ -32,15 +32,18 @@ namespace InvoiceApplication.Controllers
             ViewBag.TotalSortParm = sortOrder == "Total" ? "total_desc" : "Total";
             ViewBag.DebtorSortParm = sortOrder == "Debtor" ? "debtor_desc" : "Debtor";
 
-            var invoices = _context.Invoices.Include(i => i.Debtor).Include(i => i.InvoiceItems).ThenInclude(c => c.Product);
+            var invoices = _context.Invoices.Include(s => s.Debtor)
+                                .Include(s => s.InvoiceItems)
+                                .ThenInclude(s => s.Product);
+
             var query = from invoice in invoices
                         select invoice;
 
             if (!String.IsNullOrEmpty(searchQuery))
             {
-                query = query.Where(i => i.Debtor.FullName.Contains(searchQuery)
-                                    || i.InvoiceNumber.ToString().Contains(searchQuery)
-                                    || i.Total.ToString().Contains(searchQuery));
+                query = query.Where(s => s.Debtor.FullName.Contains(searchQuery)
+                                    || s.InvoiceNumber.ToString().Contains(searchQuery)
+                                    || s.Total.ToString().Contains(searchQuery));
             }
 
             switch (sortOrder)
@@ -88,10 +91,10 @@ namespace InvoiceApplication.Controllers
             }
 
             var invoice = await _context.Invoices
-                .Include(d => d.Debtor)
-                .Include(d => d.InvoiceItems)
-                    .ThenInclude(c => c.Product)
-                .SingleOrDefaultAsync(m => m.InvoiceNumber == id);
+                .Include(s => s.Debtor)
+                .Include(s => s.InvoiceItems)
+                    .ThenInclude(s => s.Product)
+                .SingleOrDefaultAsync(s => s.InvoiceNumber == id);
 
             if (invoice == null)
             {
@@ -139,35 +142,56 @@ namespace InvoiceApplication.Controllers
 
                 try
                 {
-                    string[] pidArray = pids.Split(',');
-                    string[] amountArray = amounts.Split(',');
-
+                    string[] pidArray = null;
+                    string[] amountArray = null;
                     List<InvoiceItem> items = new List<InvoiceItem>();
 
-                    for (int i = 0; i < pidArray.Length; i++)
+                    if (pids.Contains(','))
                     {
-                        int pid = int.Parse(pidArray[i]);
-                        int amount = int.Parse(amountArray[i]);
-
-                        InvoiceItem item = new InvoiceItem();
-                        item.Amount = amount;
-                        item.InvoiceNumber = invoice.InvoiceNumber;
-                        item.ProductID = pid;
-
-                        items.Add(item);
+                        pidArray = pids.Split(',');
                     }
 
-                    _context.AddRange(items);
+                    if (amounts.Contains(','))
+                    {
+                        amountArray = amounts.Split(',');
+                    }
+
+                    if (pidArray != null)
+                    {
+                        for (int i = 0; i < pidArray.Length; i++)
+                        {
+                            int pid = int.Parse(pidArray[i]);
+                            int amount = int.Parse(amountArray[i]);
+
+                            InvoiceItem item = new InvoiceItem();
+                            item.Amount = amount;
+                            item.InvoiceNumber = invoice.InvoiceNumber;
+                            item.ProductID = pid;
+
+                            items.Add(item);
+                        }
+
+                        _context.AddRange(items);
+                    }
+                    else
+                    {
+                        InvoiceItem item = new InvoiceItem();
+                        item.Amount = int.Parse(amounts);
+                        item.InvoiceNumber = invoice.InvoiceNumber;
+                        item.ProductID = int.Parse(pids.Split('_')[0]);
+
+                        _context.InvoiceItems.Add(item);
+                    }
+
                     await _context.SaveChangesAsync();
 
                     //SEND MAIL TO DEBTOR NOTIFYING ABOUT INVOICE
                     if (invoice.Type == "Final")
                     {
-                        Debtor debtor = _context.Debtors.Single(d => d.DebtorID == invoice.DebtorID);
+                        Debtor debtor = _context.Debtors.Single(s => s.DebtorID == invoice.DebtorID);
                         AuthMessageSender email = new AuthMessageSender(mySettingsService);
                         await email.SendInvoiceEmailAsync(debtor.Email);
                     }
-                    
 
                     return RedirectToAction("Index");
                 }
@@ -205,10 +229,10 @@ namespace InvoiceApplication.Controllers
                  });
 
             var invoice = await _context.Invoices
-                .Include(d => d.Debtor)
-                .Include(d => d.InvoiceItems)
-                    .ThenInclude(c => c.Product)
-                .SingleOrDefaultAsync(m => m.InvoiceNumber == id);
+                .Include(s => s.Debtor)
+                .Include(s => s.InvoiceItems)
+                    .ThenInclude(s => s.Product)
+                .SingleOrDefaultAsync(s => s.InvoiceNumber == id);
 
             var items = await _context.InvoiceItems
                 .Include(d => d.Product)
@@ -246,10 +270,9 @@ namespace InvoiceApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("InvoiceNumber,CreatedOn,DebtorID,ExpirationDate,Type")] Invoice invoice, string products, string amount, string total)
+        public async Task<IActionResult> Edit(int id, [Bind("InvoiceNumber,CreatedOn,DebtorID,ExpirationDate,Type")] Invoice invoice, string total, string pid, string amount)
         {
-            Debug.WriteLine("pids: " + products);
-            Debug.WriteLine("amounts: " + amount);
+            Invoice old = _context.Invoices.Single(s => s.InvoiceNumber == invoice.InvoiceNumber);
 
             if (id != invoice.InvoiceNumber)
             {
@@ -264,59 +287,69 @@ namespace InvoiceApplication.Controllers
                     _context.Update(invoice);
                     await _context.SaveChangesAsync();
 
-                    _context.InvoiceItems.RemoveRange(_context.InvoiceItems.Where(c => c.InvoiceNumber == invoice.InvoiceNumber));
+                    _context.InvoiceItems.RemoveRange(_context.InvoiceItems.Where(s => s.InvoiceNumber == invoice.InvoiceNumber));
+                    _context.SaveChanges();
 
+                    bool isEmpty = false;
                     string[] pidArray = null;
                     string[] amountArray = null;
                     List<InvoiceItem> items = new List<InvoiceItem>();
 
-                    if (products.Split('_')[0].Length > 1)
+                    if (pid == "" || pid == null)
                     {
-                        pidArray = products.Split('_')[0].Split(',');
+                        isEmpty = true;
                     }
 
-                    if (amount.Length > 1)
+                    if (isEmpty == false)
                     {
-                        amountArray = amount.Split(',');
-                    }
-
-                    if (pidArray != null)
-                    {
-                        for (int i = 0; i < pidArray.Length; i++)
+                        if (pid.Length > 1)
                         {
-                            int _pid = int.Parse(pidArray[i]);
-                            int _amount = int.Parse(amountArray[i]);
-
-                            InvoiceItem item = new InvoiceItem();
-                            item.Amount = _amount;
-                            item.InvoiceNumber = invoice.InvoiceNumber;
-                            item.ProductID = _pid;
-
-                            items.Add(item);
+                            pidArray = pid.Split(',');
                         }
 
-                        _context.InvoiceItems.AddRange(items);
-                    }
-                    else
-                    {
-                        InvoiceItem item = new InvoiceItem();
-                        item.Amount = int.Parse(amount);
-                        item.InvoiceNumber = invoice.InvoiceNumber;
-                        item.ProductID = int.Parse(products.Split('_')[0]);
+                        if (amount.Length > 1)
+                        {
+                            amountArray = amount.Split(',');
+                        }
 
-                       _context.InvoiceItems.Add(item);
-                    }
+                        if (pidArray != null)
+                        {
+                            for (int i = 0; i < pidArray.Length; i++)
+                            {
+                                int _pid = int.Parse(pidArray[i]);
+                                int _amount = int.Parse(amountArray[i]);
 
-                    //SEND MAIL TO DEBTOR NOTIFYING ABOUT INVOICE
-                    if (invoice.Type == "Final")
-                    {
-                        string debtorEmail = invoice.Debtor.Email;
-                        AuthMessageSender email = new AuthMessageSender(mySettingsService);
-                        await email.SendInvoiceEmailAsync(debtorEmail);
-                    }
+                                InvoiceItem item = new InvoiceItem();
+                                item.Amount = _amount;
+                                item.InvoiceNumber = invoice.InvoiceNumber;
+                                item.ProductID = _pid;
 
+                                items.Add(item);
+                            }
+
+                            _context.InvoiceItems.AddRange(items);
+                        }
+
+                        if (pidArray == null && (pid != "" || pid != null))
+                        {
+                            InvoiceItem item = new InvoiceItem();
+                            item.Amount = int.Parse(amount);
+                            item.InvoiceNumber = invoice.InvoiceNumber;
+                            item.ProductID = int.Parse(pid.Split('_')[0]);
+
+                            _context.InvoiceItems.Add(item);
+                        }
+                    }
 
                     await _context.SaveChangesAsync();
+
+                    //SEND MAIL TO DEBTOR NOTIFYING ABOUT INVOICE
+                    if (invoice.Type == "Final" && old.Type != "Final")
+                    {
+                        Debtor debtor = _context.Debtors.Single(s => s.DebtorID == invoice.DebtorID);
+                        AuthMessageSender email = new AuthMessageSender(mySettingsService);
+                        await email.SendInvoiceEmailAsync(debtor.Email);
+                    }
 
                 }
                 catch (DbUpdateConcurrencyException)

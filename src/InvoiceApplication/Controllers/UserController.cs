@@ -287,6 +287,11 @@ namespace InvoiceApplication.Controllers
                     _settings.Password = mySettings.Password;
                 }
 
+                if (mySettings.Logo != "null")
+                {
+                    _settings.Logo = mySettings.Logo;
+                }
+
                 _settings.Email = mySettings.Email;
                 _settings.SMTP = mySettings.SMTP;
                 _settings.Port = mySettings.Port;

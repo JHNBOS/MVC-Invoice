@@ -69,8 +69,15 @@
                 <!--SUBMIT BUTTON-->
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input id="create_inv_btn" type="button" value="Save" class="btn btn-primary" />
+                        <input id="edit_inv_btn" type="button" value="Save" class="btn btn-primary" />
                     </div>
+                </div>
+
+                <br />
+                <br />
+
+                <div>
+                    <a asp-action="Index">Back to Overview</a>
                 </div>
 
             </div>
@@ -80,7 +87,8 @@
             <div class="col-sm-6 col-md-6">
 
                 <div id="products">
-                    <!--PRODUCT ROWS-->
+
+                    <!--PRODUCT ROW @(cnt)-->
                     <div id="productRow0" style="display:none;">
                         <div class="col-sm-7 col-md-7" style="padding-right:2px;">
                             <select id="_product" class="form-control" asp-items="ViewBag.Products"></select>
@@ -99,7 +107,6 @@
                         <br />
 
                     </div>
-
                 </div>
 
                 <hr style="margin-bottom:0;margin-top:10px;" />
@@ -118,17 +125,10 @@
     </div>
 </form>
 
-<div>
-    <br />
-
-    <a asp-action="Index">Back to Overview</a>
-</div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
-        var start = false;
 
         $(document).one('ready', function () {
             setRows();
@@ -145,7 +145,6 @@
             var productArray = new Array();
             var amountArray = new Array();
 
-            /*-------------------------------------------------------------------------------------------*/
 
             /* AUTOMATICALLY SET EXPIRATION DATE */
             $("#creation").on("change", function () {
@@ -169,40 +168,28 @@
                 $("#expiration").text(newDate);
             });
 
-            /*-------------------------------------------------------------------------------------------*/
 
             /* SET PRODUCT VALUE */
-            $("#products > option:selected").each(function () {
-                $("select[id*='products']").on('change', function () {
+            $("#products option:selected").each(function () {
+                $("#product").on('change', function () {
                     calcTotal();
                 });
             })
 
-            $(document).on("change", "#products option:selected", function () {
-                calcTotal();
-            });
-
-            /*-------------------------------------------------------------------------------------------*/
 
             /* SET AMOUNT VALUE */
-            $("#products  input[id*='amount']").on('change', function () {
+            $("#products input").on('change', function () {
                 calcTotal();
             });
 
-            $(document).on("change", "#products input[id*='amount']", function () {
-                calcTotal();
-            });
-
-            /*-------------------------------------------------------------------------------------------*/
 
             /* CHANGE FORM URL WHEN CLICKED ON CREATE */
-            $("#create_inv_btn").on("click", function () {
-
+            $("#edit_inv_btn").on("click", function () {
                 $("#products option:selected").each(function () {
                     productArray.push($(this).val().split('_')[0]);
                 })
 
-                $("#products input[id*='amount']").each(function () {
+                $("#products input").each(function () {
                     amountArray.push($(this).val());
                 })
 
@@ -213,26 +200,21 @@
                 console.log(amountArray.toString());
                 console.log(total);
 
-                $("#form").attr("asp-route-products", productArray.toString());
-                $("#form").attr("asp-route-amount", amountArray.toString());
                 $("#form").attr("asp-route-total", total.toLocaleString("nl-NL", { minimumFractionDigits: 2 }));
+                $("#form").attr("asp-route-pid", productArray.toString());
+                $("#form").attr("asp-route-amount", amountArray.toString());
                 $("#form").submit();
 
-                console.log('ACTION PIDS: ' + $("#form").attr("asp-route-products"));
-                console.log('ACTION AMOUNTS: ' + $("#form").attr("asp-route-amount"));
-                console.log('ACTION TOTAL: ' + $("#form").attr("asp-route-total"));
-
+                productArray = new Array();
+                amountArray = new Array();
+                total = "";
             });
-
-            /*-------------------------------------------------------------------------------------------*/
 
             /* ADD NEW DIV INSIDE #products*/
             $("#add_row_btn").on("click", function () {
                 @{cnt++;}
-                var copy = $("#productRow0").clone(true).show().appendTo("#products").find("input").val("");
+                var copy = $("#productRow0").clone(true).appendTo("#products").find("input").val("");
             });
-
-            /*-------------------------------------------------------------------------------------------*/
 
             /* REMOVE DIV INSIDE #products*/
             $("#del_row_btn").on("click", function () {
@@ -268,7 +250,7 @@
             for (var i = 0; i < pids.length; i++) {
                 var pid = pids[i];
                 var amount = amounts[i];
-
+                    
                 var html = "<div id='productRow'>"
                             + "<div class='col-sm-7 col-md-7' style='padding-right:2px;'>"
                             + "<select id='products' name='products' class='form-control'></select>"
@@ -308,11 +290,11 @@
 
             $("#products option:selected").each(function () {
                 pids.push($(this).val().split('_')[1]);
-            });
-            
-            $("#products input[id*='amount']").each(function () {
+            })
+
+            $("#products input").each(function () {
                 amounts.push($(this).val());
-            });
+            })
 
             pids.splice(0, 1);
             amounts.splice(0, 1);
@@ -324,9 +306,14 @@
                 totalPrice += (price * amount);
             }
 
+            $("#total").prop("readonly", false);
             $("#total").val(totalPrice.toLocaleString("nl-NL", { minimumFractionDigits: 2 }));
             total = totalPrice.toLocaleString("nl-NL", { minimumFractionDigits: 2 });
+            $("#total").prop("readonly", true);
         }
+
 
     </script>
 }
+
+

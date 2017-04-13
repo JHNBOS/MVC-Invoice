@@ -39,6 +39,9 @@
                 @Html.DisplayNameFor(model => model.ExpirationDate)
             </th>
             <th>
+                @Html.Raw("Status")
+            </th>
+            <th>
                 @Html.ActionLink("Total", "Index", new { sortOrder = ViewBag.TotalSortParm })
             </th>
             <th>
@@ -63,6 +66,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ExpirationDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
             </td>
             <td>
                 @Html.Raw(String.Format("{0:C2}", item.Total))
