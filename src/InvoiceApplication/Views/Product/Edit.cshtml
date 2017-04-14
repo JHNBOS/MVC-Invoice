@@ -4,27 +4,34 @@
     ViewData["Title"] = "Edit Product";
 }
 
-<h2>Edit Product</h2>
+<div class="container">
 
-<form id="form" asp-action="Edit">
-    <div class="form-horizontal">
-        <h4></h4>
-        <hr />
+    <div class="row main">
 
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input type="hidden" asp-for="ProductID" />
+        <div class="panel-heading">
+            <div class="panel-title text-center">
+                <h1 class="title">Create Product</h1>
+                <hr style="width:60%;border-top:2px solid #fff;" />
+            </div>
+        </div>
 
-        <div class="row">
-            <div class="col-sm-3 col-md-3"></div>
-            <!--BEGIN OF COLUMN-->
-            <div class="col-sm-8 col-md-8">
+
+        <div class="main-large main-center" style="max-width:50% !important;">
+
+            <form id="form" class="form-horizontal" asp-controller="Product" asp-action="Create">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="ProductID" />
 
                 <!--NAME-->
                 <div class="form-group">
                     <label asp-for="Name" class="col-md-2 control-label"></label>
                     <div class="col-md-10">
-                        <input asp-for="Name" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger" />
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-industry fa-lg" aria-hidden="true"></i></span>
+                            <input type="text" asp-for="Name" class="form-control" name="name" id="name" placeholder="Enter product name" />
+                            <span asp-validation-for="Name" class="text-danger" />
+                        </div>
                     </div>
                 </div>
 
@@ -32,8 +39,11 @@
                 <div class="form-group">
                     <label asp-for="Description" class="col-md-2 control-label"></label>
                     <div class="col-md-10">
-                        <textarea asp-for="Description" class="form-control"></textarea>
-                        <span asp-validation-for="Description" class="text-danger" />
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-industry fa-lg" aria-hidden="true"></i></span>
+                            <input type="text" asp-for="Description" class="form-control" name="description" id="description" placeholder="Enter product description" />
+                            <span asp-validation-for="Description" class="text-danger" />
+                        </div>
                     </div>
                 </div>
 
@@ -41,8 +51,11 @@
                 <div class="form-group">
                     <label asp-for="Price" class="col-md-2 control-label"></label>
                     <div class="col-md-10">
-                        <input id="price" name="price" type="text" class="form-control" />
-                        <span asp-validation-for="Price" class="text-danger" />
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-eur fa-lg" style="padding-right:6px;padding-left:2px;" aria-hidden="true"></i></span>
+                            <input class="form-control" type="text" name="price" id="price" placeholder="Enter price" />
+                            <span asp-validation-for="Price" class="text-danger" />
+                        </div>
                     </div>
                 </div>
 
@@ -50,50 +63,52 @@
                 <div class="form-group">
                     <label asp-for="TaxPercentage" class="col-md-2 control-label"></label>
                     <div class="col-md-10">
-                        <select asp-for="TaxPercentage" class="form-control">
-                            <option value="0">0</option>
-                            <option value="6">6</option>
-                            <option value="21">21</option>
-                        </select>
-                        <span asp-validation-for="TaxPercentage" class="text-danger" />
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-percent fa-lg" aria-hidden="true"></i></span>
+                            <select asp-for="TaxPercentage" class="form-control" name="description" id="description">
+                                <option value="0">0</option>
+                                <option value="6">6</option>
+                                <option value="21">21</option>
+                            </select>
+                            <span asp-validation-for="TaxPercentage" class="text-danger" />
+                        </div>
                     </div>
                 </div>
 
-                <br />
 
+                <!--EDIT BUTTON-->
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <input id="edit_prod_btn" type="submit" value="Save" class="btn btn-primary" />
                     </div>
                 </div>
 
-            </div>
-            <!--END OF COLUMN-->
-            <div class="col-sm-1 col-md-1"></div>
+                <br />
+                <br />
+                <a asp-action="Index">Back to Overview</a>
+
+
+            </form>
+
+
         </div>
 
-        <!------------------------------------------------------------------------->
-
-        
-
     </div>
-</form>
 
-<div>
-    <br />
-
-    <a asp-action="Index">Back to Overview</a>
 </div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
         $(document).ready(function () {
-            $("#price").val(@ViewBag.Price);
+            var t = "@(ViewBag.Price)";
+            console.log("t: " + t);
+            $("#price").val(t);
         });
 
-        $("#edit_btn").on("click", function () {
+        $("#edit_prod_btn").on("click", function () {
             var price = $("#price").val();
             $("#form").attr("asp-route-price", price);
         })

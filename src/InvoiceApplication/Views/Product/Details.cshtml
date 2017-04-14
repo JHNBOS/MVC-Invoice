@@ -4,48 +4,104 @@
     ViewData["Title"] = "Product Details";
 }
 
-<h2>Product Details</h2>
+<div class="container">
 
-<div>
-    <h4></h4>
-    <hr />
+    <div class="row main">
 
-    <div class="row">
-        <div class="col-sm-3 col-md-3"></div>
-        <!--BEGIN OF COLUMN-->
-        <div class="col-sm-6 col-md-6">
+        <div class="panel-heading">
+            <div class="panel-title text-center">
+                <h1 class="title">Product Details</h1>
+                <hr style="width:60%;border-top:2px solid #fff;" />
+            </div>
+        </div>
 
-            <table class="table table-hover table-bordered" style="font-size:14px;">
-                <tr>
-                    <td><b>@Html.DisplayNameFor(model => model.Name)</b></td>
-                    <td>@Html.DisplayFor(model => model.Name)</td>
-                </tr>
-                <tr>
-                    <td><b>@Html.DisplayNameFor(model => model.Description)</b></td>
-                    <td>@Html.DisplayFor(model => model.Description)</td>
-                </tr>
-                <tr>
-                    <td><b>@Html.DisplayNameFor(model => model.Price)</b></td>
-                    <td>@Html.Raw(String.Format("{0:C2}", Model.Price))</td>
-                </tr>
-                <tr>
-                    <td><b>@Html.DisplayNameFor(model => model.TaxPercentage)</b></td>
-                    <td>@Html.Raw(String.Format("{0}%", Model.TaxPercentage))</td>
-                </tr>
-            </table>
 
-            <a id="edit_prod_btn" class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.ProductID">Edit</a>
+        <div class="main-large main-center" style="max-width:50% !important;">
+
+            <form class="form-horizontal">
+
+
+                <!--NAME-->
+                <div class="form-group">
+                    <label asp-for="Name" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-industry fa-lg" aria-hidden="true"></i></span>
+                            <input type="text" asp-for="Name" class="form-control" name="name" id="name" placeholder="" readonly />
+                            <span asp-validation-for="Name" class="text-danger" />
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--DESCRIPTION-->
+                <div class="form-group">
+                    <label asp-for="Description" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-industry fa-lg" aria-hidden="true"></i></span>
+                            <input type="text" asp-for="Description" class="form-control" name="description" id="description" placeholder="" readonly />
+                            <span asp-validation-for="Description" class="text-danger" />
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--PRICE-->
+                <div class="form-group">
+                    <label asp-for="Price" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-eur fa-lg" aria-hidden="true"></i></span>
+                            <input type="text" asp-for="Price" class="form-control" name="price" id="price" placeholder="" readonly />
+                            <span asp-validation-for="Price" class="text-danger" />
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--TAX-->
+                <div class="form-group">
+                    <label asp-for="TaxPercentage" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-percent fa-lg" aria-hidden="true"></i></span>
+                            <input type="text" asp-for="TaxPercentage" class="form-control" name="taxpercentage" id="taxpercentage" placeholder="" readonly />
+                            <span asp-validation-for="TaxPercentage" class="text-danger" />
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--SPACER-->
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <br />
+                    </div>
+                </div>
+
+
+                <!--EDIT BUTTON-->
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <a id="edit_prod_btn" class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.ProductID">
+                            <span class="fa fa-pencil fa-lg"></span>
+                            &nbsp;Edit
+                        </a>
+                    </div>
+                </div>
+
+                <br />
+                <br />
+
+                <a asp-action="Index">Back to Overview</a>
+
+
+            </form>
+
 
         </div>
-        <!--END OF COLUMN-->
-        <div class="col-sm-3 col-md-3"></div>
 
     </div>
-    
-</div>
 
-<div>
-    <br />
-
-    <a asp-action="Index">Back to Overview</a>
 </div>

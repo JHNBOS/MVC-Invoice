@@ -74,21 +74,25 @@ textarea {
 }
 
 /* PRODUCT BUTTONS */
-#create_prod_btn{
-	width: 180px;
+#create_prod_btn {
+	width: 200px;
 	float: right;
-	margin-right: 340px;
+	margin-right: 150px;
+	margin-top: 25px;
 }
 
 #edit_prod_btn{
-	width: 180px;
+	width: 200px;
 	float: right;
-	margin-right: 340px;
+	margin-right: 150px;
+	margin-top: 5px;
 }
 
 #delete_prod_btn{
-	width: 180px;
+	width: 200px;
 	float: right;
+	margin-right: 150px;
+	margin-top: 5px;
 }
 
 /* INVOICE BUTTONS */
@@ -240,8 +244,8 @@ input::-webkit-input-placeholder {
 
 /*----------------------------------------------------------------------*/
 
-/* BEGIN OF MYINVOICE */
-.main-invoice{
+/* BEGIN OF CSS */
+.main-large{
 	background-color: #fff;
 	/* shadows and rounded borders */
 	-moz-border-radius: 2px;
@@ -251,7 +255,8 @@ input::-webkit-input-placeholder {
 	-webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
 	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
 	max-width: 100% !important;
+	height: auto;
 }
 
 
-/* END OF MYINVOICE */
+/* END OF CSS */
