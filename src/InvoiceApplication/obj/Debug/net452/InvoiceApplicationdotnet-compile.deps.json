@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETFramework,Version=v4.5.2/",
-    "signature": "3a06bba2406b389cf0e7b57da00ca57b5a26af47"
+    "signature": "ff095b2e97b9460db6d2368e113dd68d1a66366b"
   },
   "compilationOptions": {
     "defines": [
@@ -18,6 +18,7 @@
       "InvoiceApplication/1.0.0": {
         "dependencies": {
           "BundlerMinifier.Core": "2.4.337",
+          "FontAwesome": "4.7.0",
           "MailKit": "1.14.2",
           "Microsoft.ApplicationInsights": "2.1.0",
           "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
@@ -60,6 +61,7 @@
           "lib/net452/dotnet-bundle.exe": {}
         }
       },
+      "FontAwesome/4.7.0": {},
       "Libuv/1.9.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.0.1"
@@ -1318,6 +1320,7 @@
       "InvoiceApplication/1.0.0": {
         "dependencies": {
           "BundlerMinifier.Core": "2.4.337",
+          "FontAwesome": "4.7.0",
           "MailKit": "1.14.2",
           "Microsoft.ApplicationInsights": "2.1.0",
           "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
@@ -1360,6 +1363,7 @@
           "lib/net452/dotnet-bundle.exe": {}
         }
       },
+      "FontAwesome/4.7.0": {},
       "Libuv/1.9.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.0.1"
@@ -2466,6 +2470,11 @@
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-dJrgItLLzsp7qWeTYDieGhVIPZU2KRwUwOlQq+UakqSHieMnbZocscfy29ZFwzTUrNUjmr/G94ej5wVLcCGrgQ=="
+    },
+    "FontAwesome/4.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-n4H/brfszElyoZ4kmGh8E75uqvLzLvFr3h2PFVdPH1LwUmWIpeqdaW2pcC4oZAhg7sESyObh0IZpAI8COCNeUg=="
     },
     "Libuv/1.9.0": {
       "type": "package",

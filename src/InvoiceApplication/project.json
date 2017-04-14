@@ -3,6 +3,7 @@
 
   "dependencies": {
     "BundlerMinifier.Core": "2.4.337",
+    "FontAwesome": "4.7.0",
     "MailKit": "1.14.2",
     "Microsoft.ApplicationInsights": "2.1.0",
     "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",

@@ -1,76 +1,110 @@
 @model IEnumerable<InvoiceApplication.Models.Debtor>
 
 @{
-    ViewData["Title"] = "Debtor Overview";
+    ViewData["Title"] = "Debtors";
 }
 
-<h2>Debtor Overview</h2>
+<div class="container">
 
-<p>
-    <a asp-action="Create">Create New Debtor</a>
+    <div class="row main">
 
-    @using (Html.BeginForm())
-    {
-        <br />
+        <div class="panel-heading">
+            <div class="panel-title text-center">
+                <h1 class="title">Debtors</h1>
+                <hr style="width:60%;border-top:2px solid #fff;" />
+            </div>
+        </div>
 
-        <div class="form-inline">
-            @Html.TextBox("searchQuery", null, htmlAttributes: new { @class = "form-control", @placeholder = "Find..." })
-            <input type="submit" value="Search" class="btn btn-primary" />
 
-            <br />
-            <br />
+        <div class="main-invoice main-center">
+            <p>
+                @using (Html.BeginForm())
+                {
+
+                    <br />
+
+                    <div class="form-group">
+                        <div class="cols-sm-10">
+                            <div class="form-inline">
+
+
+                                @Html.TextBox("searchQuery", null, htmlAttributes: new { @class = "form-control", @placeholder = "Find..." })
+
+                                <button type="submit" value="Search" class="btn btn-primary">
+                                    <span class="fa fa-search"></span>
+                                    Search
+                                </button>
+
+                                <a asp-action="Create" value="Create Debtor" class="btn btn-primary" style="float:right;">
+                                    <span class="fa fa-user-plus fa-lg"></span>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+                    <br />
+
+                }
+            </p>
+
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.ActionLink("Last Name", "Index", new { sortOrder = ViewBag.LastNameSortParm })
+                        </th>
+                        <th>
+                            @Html.ActionLink("First Name", "Index", new { sortOrder = ViewBag.FirstNameSortParm })
+                        </th>
+                        <th>
+                            @Html.ActionLink("Email", "Index", new { sortOrder = ViewBag.EmailSortParm })
+                        </th>
+                        <th>
+                            @Html.ActionLink("City", "Index", new { sortOrder = ViewBag.CitySortParm })
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Country)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.DebtorID">
+                                    @Html.DisplayFor(modelItem => item.LastName)
+                                </a>
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.DebtorID">
+                                    @Html.DisplayFor(modelItem => item.FirstName)
+                                </a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.City)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Country)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.DebtorID">Edit</a> |
+                                <a asp-action="Delete" asp-route-id="@item.DebtorID">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
 
         </div>
-    }
-</p>
-<table class="table table-hover table-striped">
-    <thead>
-        <tr>
-            <th>
-                @Html.ActionLink("Last Name", "Index", new { sortOrder = ViewBag.LastNameSortParm })
-            </th>
-            <th>
-                @Html.ActionLink("First Name", "Index", new { sortOrder = ViewBag.FirstNameSortParm })
-            </th>
-            <th>
-                @Html.ActionLink("Email", "Index", new { sortOrder = ViewBag.EmailSortParm })            
-            </th>
-            <th>
-                @Html.ActionLink("City", "Index", new { sortOrder = ViewBag.CitySortParm })
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Country)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.DebtorID">
-                    @Html.DisplayFor(modelItem => item.LastName)
-                </a>
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.DebtorID">
-                    @Html.DisplayFor(modelItem => item.FirstName)
-                </a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Country)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.DebtorID">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.DebtorID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+    </div>
+
+</div>

@@ -25,6 +25,9 @@
           "lib/net452/dotnet-bundle.exe": {}
         }
       },
+      "FontAwesome/4.7.0": {
+        "type": "package"
+      },
       "Libuv/1.9.0": {
         "type": "package",
         "dependencies": {
@@ -2343,6 +2346,24 @@
         "lib/netcoreapp1.0/dotnet-bundle.dll",
         "lib/netcoreapp1.0/dotnet-bundle.runtimeconfig.json",
         "prefercliruntime"
+      ]
+    },
+    "FontAwesome/4.7.0": {
+      "sha512": "n4H/brfszElyoZ4kmGh8E75uqvLzLvFr3h2PFVdPH1LwUmWIpeqdaW2pcC4oZAhg7sESyObh0IZpAI8COCNeUg==",
+      "type": "package",
+      "path": "FontAwesome/4.7.0",
+      "files": [
+        "Content/Content/font-awesome.css",
+        "Content/Content/font-awesome.min.css",
+        "Content/fonts/FontAwesome.otf",
+        "Content/fonts/fontawesome-webfont.eot",
+        "Content/fonts/fontawesome-webfont.svg",
+        "Content/fonts/fontawesome-webfont.ttf",
+        "Content/fonts/fontawesome-webfont.woff",
+        "Content/fonts/fontawesome-webfont.woff2",
+        "FontAwesome.4.7.0.nupkg.sha512",
+        "FontAwesome.nuspec",
+        "tools/install.ps1"
       ]
     },
     "Libuv/1.9.0": {
@@ -5947,6 +5968,7 @@
   "projectFileDependencyGroups": {
     "": [
       "BundlerMinifier.Core >= 2.4.337",
+      "FontAwesome >= 4.7.0",
       "MailKit >= 1.14.2",
       "Microsoft.ApplicationInsights >= 2.1.0",
       "Microsoft.AspNetCore.Authentication.Cookies >= 1.0.0",

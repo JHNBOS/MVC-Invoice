@@ -1,51 +1,53 @@
 ﻿body {
-    padding-top: 40px;
-    padding-bottom: 20px;
+	padding-top: 40px;
+	padding-bottom: 20px;
+	background: #d3d3d3;
+	font-family: 'Oxygen', sans-serif;
 }
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+	padding-left: 15px;
+	padding-right: 15px;
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
 input,
 select,
 textarea {
-    max-width: 280px;
+	max-width: 280px;
 }
 
 /* Carousel */
 .carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
+	font-size: 20px;
+	line-height: 1.4;
 }
 
 /* buttons and links extension to use brackets: [ click me ] */
 .btn-bracketed::before {
-    display:inline-block;
-    content: "[";
-    padding-right: 0.5em;
+	display:inline-block;
+	content: "[";
+	padding-right: 0.5em;
 }
 .btn-bracketed::after {
-    display:inline-block;
-    content: "]";
-    padding-left: 0.5em;
+	display:inline-block;
+	content: "]";
+	padding-left: 0.5em;
 }
 
 /* Make .svg files in the carousel display properly in older browsers */
 .carousel-inner .item img[src$=".svg"]
 {
-    width: 100%;
+	width: 100%;
 }
 
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
   /* Hide captions */
   .carousel-caption {
-    display: none
+	display: none
   }
 }
 
@@ -53,99 +55,203 @@ textarea {
 
 /* DEBTOR BUTTONS */
 #create_deb_btn{
-    width: 180px;
-    float: right;
-    margin-right: 180px;
-    margin-top: 5px;
+	width: 180px;
+	float: right;
+	margin-right: 105px;
+	margin-top: 5px;
 }
 
 #edit_deb_btn{
-    width: 180px;
-    float: right;
-    margin-right: 180px;
-    margin-top: 5px;
+	width: 180px;
+	float: right;
+	margin-right: 105px;
+	margin-top: 5px;
 }
 
 #delete_deb_btn{
-    width: 180px;
-    float: right;
+	width: 180px;
+	float: right;
 }
 
 /* PRODUCT BUTTONS */
 #create_prod_btn{
-    width: 180px;
-    float: right;
-    margin-right: 340px;
+	width: 180px;
+	float: right;
+	margin-right: 340px;
 }
 
 #edit_prod_btn{
-    width: 180px;
-    float: right;
-    margin-right: 340px;
+	width: 180px;
+	float: right;
+	margin-right: 340px;
 }
 
 #delete_prod_btn{
-    width: 180px;
-    float: right;
+	width: 180px;
+	float: right;
 }
 
 /* INVOICE BUTTONS */
 #create_inv_btn{
-    width: 180px;
-    float: right;
-    margin-right: 180px;
-    margin-top: 5px;
+	width: 180px;
+	float: right;
+	margin-right: 145px;
+	margin-top: 5px;
 }
 
 #edit_inv_btn{
-    width: 180px;
-    float: right;
-    margin-top: 5px;
-    margin-right: 180px;
+	width: 180px;
+	float: right;
+	margin-top: 5px;
+	margin-right: 180px;
 }
 
 #delete_inv_btn{
-    width: 180px;
-    float: right;
-    margin-top: 5px;
+	width: 180px;
+	float: right;
+	margin-top: 5px;
 }
 
 /* NAVBAR */
 .navbar-nav > li > a {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    line-height: 24px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	line-height: 24px;
 }
 
 .navbar-brand{
-    padding-top: 0;
-    padding-bottom: 0;
+	padding-top: 0;
+	padding-bottom: 0;
 }
 
 #settings{
-    font-size:16px;
-    top:3px;
+	font-size:16px;
+	top:3px;
 }
 
 #logout-icon{
-    font-size:16px;
-    top:3px;
+	font-size:16px;
+	top:3px;
 }
 
 #logout-link{
-    font-family: Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;
-    font-size:13px;
-    font-weight:300;
-    padding-top:0;
-    padding-bottom:0;
-    top: 0px;
-    padding-left: 3px;
-    position: relative;
+	font-family: Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;
+	font-size:13px;
+	font-weight:300;
+	padding-top:0;
+	padding-bottom:0;
+	top: 0px;
+	padding-left: 3px;
+	position: relative;
 }
 
 /* SETTINGS */
 #showImg{
-    margin-top: 25px;
-    max-height: 60%;
-    max-width: 60%;
+	margin-top: 25px;
+	max-height: 60%;
+	max-width: 60%;
 }
+
+/*---------------------------------------------------------*/
+
+/* BEGIN OF LOGIN */
+.main{
+	margin-top: 40px;
+}
+
+h1.title { 
+	font-size: 50px;
+	font-family: 'Passion One', cursive; 
+	font-weight: 400; 
+}
+
+.form-group{
+	margin-bottom: 15px;
+}
+
+label{
+	margin-bottom: 15px;
+}
+
+input,
+input::-webkit-input-placeholder {
+	font-size: 11px;
+	padding-top: 3px;
+}
+
+.main-login{
+	background-color: #fff;
+	/* shadows and rounded borders */
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	-moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+	-webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+
+}
+
+.main-center{
+	margin-top: 30px;
+	margin: 0 auto;
+	max-width: 380px;
+	padding: 40px 40px;
+}
+
+.login-button {
+	margin-top: 25px;
+	margin-bottom: 20px;
+	height: 55px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 1;
+}
+
+.login-register{
+	font-size: 13px;
+	text-align: center;
+}
+/* END OF LOGIN */
+
+/*----------------------------------------------------------------------*/
+
+/* BEGIN OF REGISTER */
+.main-register{
+	background-color: #fff;
+	/* shadows and rounded borders */
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	-moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+	-webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+	max-width: 420px !important;
+}
+
+.register-button {
+	margin-top: 25px;
+	margin-bottom: 20px;
+	height: 55px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 1;
+}
+/* END OF REGISTER */
+
+/*----------------------------------------------------------------------*/
+
+/* BEGIN OF MYINVOICE */
+.main-invoice{
+	background-color: #fff;
+	/* shadows and rounded borders */
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	-moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+	-webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+	max-width: 100% !important;
+}
+
+
+/* END OF MYINVOICE */

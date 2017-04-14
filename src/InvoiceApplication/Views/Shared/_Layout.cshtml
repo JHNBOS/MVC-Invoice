@@ -20,13 +20,22 @@
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+        <!--Awesome Font-->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!-- Google Fonts -->
+        <link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
     </environment>
     <environment names="Staging,Production">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-    </environment>
+        <!--Awesome Font-->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!-- Google Fonts -->
+        <link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>    </environment>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -76,7 +85,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2017 - Made by @settings.Value.Name</p>
+            <p class="text-center">&copy; 2017 - @settings.Value.Name</p>
         </footer>
     </div>
 
