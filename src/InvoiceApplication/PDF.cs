@@ -17,28 +17,28 @@ namespace InvoiceApplication
     public class PDF
     {
         private ApplicationDbContext _context;
-        private IMySettingsService settings;
+        private ISettingsService _settings;
         private IHostingEnvironment _env;
 
-        public PDF(ApplicationDbContext context, IMySettingsService settingsService, IHostingEnvironment env)
+        public PDF(ApplicationDbContext context, ISettingsService settingsService, IHostingEnvironment env)
         {
             _context = context;
-            settings = settingsService;
+            _settings = settingsService;
             _env = env;
         }
 
         public FileStreamResult CreatePDF(int invoiceNumber, HttpContext context)
         {
-            Invoice selected = null;
+            Invoice selectedInvoice = null;
             List<InvoiceItem> itemList = null;
             List<Product> productList = new List<Product>();
             Debtor Debtor = null;
 
             try
             {
-                selected = _context.Invoices.Single(p => p.InvoiceNumber == invoiceNumber);
-                itemList = _context.InvoiceItems.Where(i => i.InvoiceNumber == selected.InvoiceNumber).ToList();
-                Debtor = _context.Debtors.Single(d => d.DebtorID == selected.DebtorID);
+                selectedInvoice = _context.Invoices.Single(p => p.InvoiceNumber == invoiceNumber);
+                itemList = _context.InvoiceItems.Where(i => i.InvoiceNumber == selectedInvoice.InvoiceNumber).ToList();
+                Debtor = _context.Debtors.Single(d => d.DebtorID == selectedInvoice.DebtorID);
 
                 foreach (var inv_item in itemList)
                 {
@@ -86,17 +86,17 @@ namespace InvoiceApplication
             string dAddress = Debtor.Address;
             string dCity = Debtor.PostalCode + " " + Debtor.City;
 
-            string logo = settings.GetLogo();
-            bool useLogo = settings.UseLogo();
-            string email = settings.GetEmail();
-            string company = settings.GetName();
-            string web = settings.GetWebsite();
+            string logo = _settings.GetLogo();
+            bool useLogo = _settings.UseLogo();
+            string email = _settings.GetEmail();
+            string company = _settings.GetName();
+            string web = _settings.GetWebsite();
             string name = "";
-            string address = settings.GetAddress();
-            string city = settings.GetPostalCode() + " | " + settings.GetCity();
-            string phone = settings.GetPhone();
-            string btw = settings.GetTaxNumber();
-            string kvk = settings.GetCompanyNumber();
+            string address = _settings.GetAddress();
+            string city = _settings.GetPostalCode() + " | " + _settings.GetCity();
+            string phone = _settings.GetPhone();
+            string btw = _settings.GetTaxNumber();
+            string kvk = _settings.GetCompanyNumber();
 
             string[] words = fname.Split(' ');
 
@@ -121,11 +121,11 @@ namespace InvoiceApplication
 
             /*--------------------------------------------------------------------------*/
             //Company info rows               
-            tf.DrawString("Address:", infoFont, XBrushes.Black, new XRect(leftMargin, topMargin, 25, 20), XStringFormats.TopLeft);
-            tf.DrawString("Tel:", infoFont, XBrushes.Black, new XRect(leftMargin, topMargin + 28, 25, 20), XStringFormats.TopLeft);
+            tf.DrawString("Addr.:", infoFont, XBrushes.Black, new XRect(leftMargin, topMargin, 25, 20), XStringFormats.TopLeft);
+            tf.DrawString("Tel.:", infoFont, XBrushes.Black, new XRect(leftMargin, topMargin + 28, 25, 20), XStringFormats.TopLeft);
             tf.DrawString("Email:", infoFont, XBrushes.Black, new XRect(leftMargin, topMargin + 43, 25, 20), XStringFormats.TopLeft);
-            tf.DrawString("Tax nr:", infoFont, XBrushes.Black, new XRect(leftMargin, topMargin + 58, 40, 20), XStringFormats.TopLeft);
-            tf.DrawString("Co. nr:", infoFont, XBrushes.Black, new XRect(leftMargin, topMargin + 73, 40, 20), XStringFormats.TopLeft);
+            tf.DrawString("Tax nr.:", infoFont, XBrushes.Black, new XRect(leftMargin, topMargin + 58, 40, 20), XStringFormats.TopLeft);
+            tf.DrawString("Co. nr.:", infoFont, XBrushes.Black, new XRect(leftMargin, topMargin + 73, 40, 20), XStringFormats.TopLeft);
             tf.DrawString("Web:", infoFont, XBrushes.Black, new XRect(leftMargin, topMargin + 88, 35, 20), XStringFormats.TopLeft);
 
             //Company info
@@ -143,8 +143,8 @@ namespace InvoiceApplication
             tf.DrawString("Invoice Date:", textFont, XBrushes.Black, new XRect(leftMargin, topMargin + 268, 100, 20), XStringFormats.TopLeft);
 
             //invoice info
-            tf.DrawString(selected.InvoiceNumber.ToString(), textFont, XBrushes.Black, new XRect(leftMargin + 95, topMargin + 255, 100, 20), XStringFormats.TopLeft);
-            tf.DrawString(selected.CreatedOn.ToString("dd-MM-yyyy"), textFont, XBrushes.Black, new XRect(leftMargin + 95, topMargin + 268, 100, 20), XStringFormats.TopLeft);
+            tf.DrawString(selectedInvoice.InvoiceNumber.ToString(), textFont, XBrushes.Black, new XRect(leftMargin + 95, topMargin + 255, 100, 20), XStringFormats.TopLeft);
+            tf.DrawString(selectedInvoice.CreatedOn.ToString("dd-MM-yyyy"), textFont, XBrushes.Black, new XRect(leftMargin + 95, topMargin + 268, 100, 20), XStringFormats.TopLeft);
 
             /*------------------------------------------*/
             //debtor info rows
@@ -223,7 +223,7 @@ namespace InvoiceApplication
             {
                 Product product = productList[i];
                 InvoiceItem pItem = itemList.Where(l => l.ProductID == product.ProductID
-                                        && l.InvoiceNumber == selected.InvoiceNumber).FirstOrDefault();
+                                        && l.InvoiceNumber == selectedInvoice.InvoiceNumber).FirstOrDefault();
 
                 total += (decimal)(product.Price * pItem.Amount);
                 subTotal += ((total * (100)) / (100 + product.TaxPercentage));
@@ -292,32 +292,28 @@ namespace InvoiceApplication
             tf.DrawString("+", infoFont, XBrushes.Black, new XRect(rightMargin + 117, bottomMargin - 108.5, 5, 5), XStringFormats.TopLeft);
 
             //Numbers
-            tf.DrawString("€" + string.Format("{0:N2}", subTotal), infoFont, XBrushes.Black, new XRect(rightMargin + 40, bottomMargin - 150, 45, 15), XStringFormats.TopLeft);
-            tf.DrawString("€" + string.Format("{0:N2}", btwDecimal), infoFont, XBrushes.Black, new XRect(rightMargin + 40, bottomMargin - 135, 45, 15), XStringFormats.TopLeft);
-            tf.DrawString("€" + string.Format("{0:N2}", total), infoFont, XBrushes.Black, new XRect(rightMargin + 40, bottomMargin - 120, 45, 15), XStringFormats.TopLeft);
-            tf.DrawString("€" + string.Format("{0:N2}", totalDiscount), infoFont, XBrushes.Black, new XRect(rightMargin + 40, bottomMargin - 100, 45, 15), XStringFormats.TopLeft);
+            tf.DrawString("€ " + string.Format("{0:N2}", subTotal), infoFont, XBrushes.Black, new XRect(rightMargin + 40, bottomMargin - 150, 45, 15), XStringFormats.TopLeft);
+            tf.DrawString("€ " + string.Format("{0:N2}", btwDecimal), infoFont, XBrushes.Black, new XRect(rightMargin + 40, bottomMargin - 135, 45, 15), XStringFormats.TopLeft);
+            tf.DrawString("€ " + string.Format("{0:N2}", total), infoFont, XBrushes.Black, new XRect(rightMargin + 40, bottomMargin - 120, 45, 15), XStringFormats.TopLeft);
+            tf.DrawString("€ " + string.Format("{0:N2}", totalDiscount), infoFont, XBrushes.Black, new XRect(rightMargin + 40, bottomMargin - 100, 45, 15), XStringFormats.TopLeft);
             /*--------------------------------------------------------------------------*/
             //Disclaimer
             int width = (Convert.ToInt32(page.Width.Point) - 40);
             int height = 50;
-            tf.DrawString("We kindly request you to transfer the amount due within 30 days, stating the invoice number"
+            tf.DrawString("We kindly request you to transfer the amount due within 30 days, stating the invoice number/"
                 + "\n" + "Our terms and conditions apply to all services",
                 infoFontSmall, XBrushes.Black, new XRect(leftMargin, bottomMargin - 10, width, height),
-                XStringFormats.TopLeft);
+                XStringFormats.TopCenter);
             /*--------------------------------------------------------------------------*/
             // Save the document...
             string fileName = "invoice_" + invoiceNumber + ".pdf";
-
             MemoryStream stream = new MemoryStream();
             document.Save(stream, false);
 
-            //stream.Position = 0;
             FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/pdf");
             fileStreamResult.FileDownloadName = fileName;
 
             return fileStreamResult;
-
-            //End of method
         }
 
 

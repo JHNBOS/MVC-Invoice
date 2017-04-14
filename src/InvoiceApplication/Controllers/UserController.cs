@@ -7,30 +7,101 @@ using InvoiceApplication.Data;
 using InvoiceApplication.Models;
 using System.Diagnostics;
 using Microsoft.Extensions.Options;
-using InvoiceApplication.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using System.Collections.Generic;
 
 namespace InvoiceApplication.Controllers
 {
     public class UserController : Controller
     {
         private ApplicationDbContext _context;
-        private mySettings _settings;
+        private AppSettings _settings;
         private IHostingEnvironment _env;
 
-        public UserController(ApplicationDbContext context, IOptions<mySettings> settingsAccessor, IHostingEnvironment env)
+        public UserController(ApplicationDbContext context, IOptions<AppSettings> settingsAccessor, IHostingEnvironment env)
         {
             _context = context;
             _settings = settingsAccessor.Value;
             _env = env;
         }
 
+        /*----------------------------------------------------------------------*/
+        //DATABASE ACTION METHODS
+
+        private async Task<List<User>> GetUsers()
+        {
+            List<User> userList = await _context.User.ToListAsync();
+            return userList;
+        }
+
+        private async Task<User> GetUser(int? id)
+        {
+            User user = null;
+
+            try
+            {
+                user = await _context.User.SingleOrDefaultAsync(s => s.ID == id);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+
+            return user;
+        }
+
+        private async Task CreateUser(User user)
+        {
+            user.AccountType = "Client";
+
+            try
+            {
+                _context.User.Add(user);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        private async Task UpdateUser(User user)
+        {
+            try
+            {
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        private async Task DeleteUser(int id)
+        {
+            User user = await GetUser(id);
+
+            try
+            {
+                _context.User.Remove(user);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        /*----------------------------------------------------------------------*/
+        //CONTROLLER ACTIONS
+
         // GET: User
         public async Task<IActionResult> Index()
         {
-            return View(await _context.User.ToListAsync());
+            return View(await GetUsers());
         }
 
         // GET: User/Details/5
@@ -41,7 +112,8 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User.SingleOrDefaultAsync(m => m.ID == id);
+            var user = await GetUser(id);
+
             if (user == null)
             {
                 return NotFound();
@@ -57,19 +129,16 @@ namespace InvoiceApplication.Controllers
         }
 
         // POST: User/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,AccountType,Address,City,Country,Email,FirstName,LastName,Password,PostalCode")] User user)
         {
             if (ModelState.IsValid)
             {
-                user.AccountType = "Client";
-                _context.Add(user);
-                await _context.SaveChangesAsync();
+                await CreateUser(user);
                 return RedirectToAction("Login", "User", new { area = "" });
             }
+
             return View(user);
         }
 
@@ -81,17 +150,17 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User.SingleOrDefaultAsync(m => m.ID == id);
+            var user = await GetUser(id);
+
             if (user == null)
             {
                 return NotFound();
             }
+
             return View(user);
         }
 
         // POST: User/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,AccountType,Address,City,Country,Email,FirstName,LastName,Password,PostalCode")] User user)
@@ -103,24 +172,10 @@ namespace InvoiceApplication.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await UpdateUser(user);
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
+
             return View(user);
         }
 
@@ -132,7 +187,8 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User.SingleOrDefaultAsync(m => m.ID == id);
+            var user = await GetUser(id);
+
             if (user == null)
             {
                 return NotFound();
@@ -146,9 +202,7 @@ namespace InvoiceApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.User.SingleOrDefaultAsync(m => m.ID == id);
-            _context.User.Remove(user);
-            await _context.SaveChangesAsync();
+            await DeleteUser(id);
             return RedirectToAction("Login", "User", new { area = "" });
         }
 
@@ -157,12 +211,13 @@ namespace InvoiceApplication.Controllers
             return _context.User.Any(e => e.ID == id);
         }
 
-
+        //GET: User/Login
         public ActionResult Login()
         {
             return View();
         }
 
+        //POST: User/Login
         [HttpPost]
         public ActionResult Login(User user)
         {
@@ -174,31 +229,32 @@ namespace InvoiceApplication.Controllers
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Oh shit...");
                 Debug.WriteLine(ex);
             }
 
             if (login != null)
             {
                 HttpContext.Session.Set("User", (User)login);
-
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
 
             return View(login);
         }
 
+        //GET: User/Logout
         public ActionResult Logout()
         {
             HttpContext.Session.Remove("User");
             return RedirectToAction("Login", "User", new { area = "" });
         }
 
+        //GET: User/ForgotPassword
         public ActionResult ForgotPassword()
         {
             return View();
         }
 
+        //POST: User/ForgotPassword
         [HttpPost]
         public ActionResult ForgotPassword(string email, string password)
         {
@@ -224,7 +280,7 @@ namespace InvoiceApplication.Controllers
                 _context.Update(user);
                 _context.SaveChanges();
 
-                return RedirectToAction("Login", "User", new { area=""});
+                return RedirectToAction("Login", "User", new { area = "" });
             }
             catch (Exception ex)
             {
@@ -233,9 +289,10 @@ namespace InvoiceApplication.Controllers
             }
         }
 
+        //GET: User/Settings
         public ActionResult Settings()
         {
-            mySettings current = new mySettings();
+            AppSettings current = new AppSettings();
 
             current.Email = _settings.Email;
             current.Password = _settings.Password;
@@ -255,12 +312,12 @@ namespace InvoiceApplication.Controllers
             return View(current);
         }
 
+        //POST: User/Settings
         [HttpPost]
-        public async Task<ActionResult> Settings(mySettings mySettings, IFormFile file)
+        public async Task<ActionResult> Settings(AppSettings AppSettings, IFormFile file)
         {
-            if (mySettings != null)
+            if (AppSettings != null)
             {
-
                 try
                 {
                     var uploads = Path.Combine(_env.WebRootPath, "images");
@@ -281,35 +338,34 @@ namespace InvoiceApplication.Controllers
                     Debug.WriteLine(ex);
                 }
 
-
-                if (mySettings.Password != "")
+                if (AppSettings.Password != "")
                 {
-                    _settings.Password = mySettings.Password;
+                    _settings.Password = AppSettings.Password;
                 }
 
-                if (mySettings.Logo != "null")
+                if (AppSettings.Logo != "null")
                 {
-                    _settings.Logo = mySettings.Logo;
+                    _settings.Logo = AppSettings.Logo;
                 }
 
-                _settings.Email = mySettings.Email;
-                _settings.SMTP = mySettings.SMTP;
-                _settings.Port = mySettings.Port;
-                _settings.Name = mySettings.Name;
-                _settings.Website = mySettings.Website;
-                _settings.Phone = mySettings.Phone;
-                _settings.Address = mySettings.Address;
-                _settings.City = mySettings.City;
-                _settings.PostalCode = mySettings.PostalCode;
-                _settings.CompanyNumber = mySettings.CompanyNumber;
-                _settings.TaxNumber = mySettings.TaxNumber;
-                _settings.UseLogo = mySettings.UseLogo;
+                _settings.Email = AppSettings.Email;
+                _settings.SMTP = AppSettings.SMTP;
+                _settings.Port = AppSettings.Port;
+                _settings.Name = AppSettings.Name;
+                _settings.Website = AppSettings.Website;
+                _settings.Phone = AppSettings.Phone;
+                _settings.Address = AppSettings.Address;
+                _settings.City = AppSettings.City;
+                _settings.PostalCode = AppSettings.PostalCode;
+                _settings.CompanyNumber = AppSettings.CompanyNumber;
+                _settings.TaxNumber = AppSettings.TaxNumber;
+                _settings.UseLogo = AppSettings.UseLogo;
 
 
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
 
-            return View(mySettings);
+            return View(AppSettings);
         }
 
 

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceApplication
 {
-    public class mySettings
+    public class AppSettings
     {
         public string Email { get; set; }
         public string Password { get; set; }

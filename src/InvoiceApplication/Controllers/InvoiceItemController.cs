@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InvoiceApplication.Data;
 using InvoiceApplication.Models;
+using System.Diagnostics;
+using InvoiceApplication.Services;
+using System;
+using System.Collections.Generic;
 
 namespace InvoiceApplication.Controllers
 {
@@ -17,11 +21,80 @@ namespace InvoiceApplication.Controllers
             _context = context;
         }
 
+        /*----------------------------------------------------------------------*/
+        //DATABASE ACTION METHODS
+
+        private async Task<List<InvoiceItem>> GetItems()
+        {
+            List<InvoiceItem> itemList = await _context.InvoiceItems.ToListAsync();
+            return itemList;
+        }
+
+        private async Task<InvoiceItem> GetItem(int? id)
+        {
+            InvoiceItem item = null;
+
+            try
+            {
+                item = await _context.InvoiceItems.SingleOrDefaultAsync(s => s.ItemID == id);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+
+            return item;
+        }
+
+        private async Task CreateItem(InvoiceItem item)
+        {
+            try
+            {
+                _context.InvoiceItems.Add(item);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        private async Task UpdateItem(InvoiceItem item)
+        {
+            try
+            {
+                _context.Update(item);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        private async Task DeleteItem(int id)
+        {
+            InvoiceItem item = await GetItem(id);
+
+            try
+            {
+                _context.InvoiceItems.Remove(item);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        /*----------------------------------------------------------------------*/
+        //CONTROLLER ACTIONS
+
         // GET: InvoiceItem
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.InvoiceItems.Include(i => i.Invoice).Include(i => i.Product);
-            return View(await applicationDbContext.ToListAsync());
+            List<InvoiceItem> itemList = await GetItems();
+            return View(itemList);
         }
 
         // GET: InvoiceItem/Details/5
@@ -32,7 +105,8 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var invoiceItem = await _context.InvoiceItems.SingleOrDefaultAsync(m => m.ItemID == id);
+            var invoiceItem = await GetItem(id);
+
             if (invoiceItem == null)
             {
                 return NotFound();
@@ -50,18 +124,16 @@ namespace InvoiceApplication.Controllers
         }
 
         // POST: InvoiceItem/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ItemID,Amount,InvoiceNumber,ProductID")] InvoiceItem invoiceItem)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(invoiceItem);
-                await _context.SaveChangesAsync();
+                await CreateItem(invoiceItem);
                 return RedirectToAction("Index");
             }
+
             ViewData["InvoiceNumber"] = new SelectList(_context.Invoices, "InvoiceNumber", "InvoiceNumber", invoiceItem.InvoiceNumber);
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductID", invoiceItem.ProductID);
             return View(invoiceItem);
@@ -75,19 +147,19 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var invoiceItem = await _context.InvoiceItems.SingleOrDefaultAsync(m => m.ItemID == id);
+            var invoiceItem = await GetItem(id);
+
             if (invoiceItem == null)
             {
                 return NotFound();
             }
+
             ViewData["InvoiceNumber"] = new SelectList(_context.Invoices, "InvoiceNumber", "InvoiceNumber", invoiceItem.InvoiceNumber);
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductID", invoiceItem.ProductID);
             return View(invoiceItem);
         }
 
         // POST: InvoiceItem/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ItemID,Amount,InvoiceNumber,ProductID")] InvoiceItem invoiceItem)
@@ -99,24 +171,10 @@ namespace InvoiceApplication.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(invoiceItem);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!InvoiceItemExists(invoiceItem.ItemID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await UpdateItem(invoiceItem);
                 return RedirectToAction("Index");
             }
+
             ViewData["InvoiceNumber"] = new SelectList(_context.Invoices, "InvoiceNumber", "InvoiceNumber", invoiceItem.InvoiceNumber);
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductID", invoiceItem.ProductID);
             return View(invoiceItem);
@@ -130,7 +188,8 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var invoiceItem = await _context.InvoiceItems.SingleOrDefaultAsync(m => m.ItemID == id);
+            var invoiceItem = await GetItem(id);
+
             if (invoiceItem == null)
             {
                 return NotFound();
@@ -144,9 +203,7 @@ namespace InvoiceApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var invoiceItem = await _context.InvoiceItems.SingleOrDefaultAsync(m => m.ItemID == id);
-            _context.InvoiceItems.Remove(invoiceItem);
-            await _context.SaveChangesAsync();
+            await DeleteItem(id);
             return RedirectToAction("Index");
         }
 

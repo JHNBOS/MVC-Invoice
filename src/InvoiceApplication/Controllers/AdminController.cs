@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InvoiceApplication.Data;
 using InvoiceApplication.Models;
@@ -17,13 +16,85 @@ namespace InvoiceApplication.Controllers
 
         public AdminController(ApplicationDbContext context)
         {
-            _context = context;    
+            _context = context;
         }
+
+        /*----------------------------------------------------------------------*/
+        //DATABASE ACTION METHODS
+
+        private async Task<List<User>> GetAdmins()
+        {
+            List<User> adminList = await _context.User.Where(u => u.AccountType == "Admin").ToListAsync();
+            return adminList;
+        }
+
+        private async Task<User> GetAdmin(int? id)
+        {
+            User admin = null;
+
+            try
+            {
+                admin = await _context.User.SingleOrDefaultAsync(s => s.ID == id);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+
+            return admin;
+        }
+
+        private async Task CreateAdmin(User admin)
+        {
+            admin.AccountType = "Admin";
+
+            try
+            {
+                _context.User.Add(admin);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+
+        }
+
+        private async Task UpdateAdmin(User admin)
+        {
+            try
+            {
+                _context.Update(admin);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        private async Task DeleteAdmin(int id)
+        {
+            User admin = await GetAdmin(id);
+
+            try
+            {
+                _context.User.Remove(admin);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        /*----------------------------------------------------------------------*/
+        //CONTROLLER ACTIONS
 
         // GET: Admin
         public async Task<IActionResult> Index()
         {
-            return View(await _context.User.Where(u => u.AccountType == "Admin").ToListAsync());
+            return View(await GetAdmins());
         }
 
         // GET: Admin/Details/5
@@ -34,7 +105,8 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User.SingleOrDefaultAsync(m => m.ID == id);
+            var user = await GetAdmin(id);
+
             if (user == null)
             {
                 return NotFound();
@@ -50,19 +122,16 @@ namespace InvoiceApplication.Controllers
         }
 
         // POST: Admin/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,AccountType,Address,City,Country,Email,FirstName,LastName,Password,PostalCode")] User user)
         {
             if (ModelState.IsValid)
             {
-                user.AccountType = "Admin";
-                _context.Add(user);
-                await _context.SaveChangesAsync();
+                await CreateAdmin(user);
                 return RedirectToAction("Login", "User", new { area = "" });
             }
+
             return View(user);
         }
 
@@ -74,17 +143,17 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User.SingleOrDefaultAsync(m => m.ID == id);
+            var user = await GetAdmin(id);
+
             if (user == null)
             {
                 return NotFound();
             }
+
             return View(user);
         }
 
         // POST: Admin/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,AccountType,Address,City,Country,Email,FirstName,LastName,Password,PostalCode")] User user)
@@ -96,22 +165,7 @@ namespace InvoiceApplication.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await UpdateAdmin(user);
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
             return View(user);
@@ -125,7 +179,8 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User.SingleOrDefaultAsync(m => m.ID == id);
+            var user = await GetAdmin(id);
+
             if (user == null)
             {
                 return NotFound();
@@ -139,51 +194,13 @@ namespace InvoiceApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.User.SingleOrDefaultAsync(m => m.ID == id);
-            _context.User.Remove(user);
-            await _context.SaveChangesAsync();
+            await DeleteAdmin(id);
             return RedirectToAction("Login", "User", new { area = "" });
         }
 
         private bool UserExists(int id)
         {
             return _context.User.Any(e => e.ID == id);
-        }
-
-
-        public ActionResult Login()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult Login(User user)
-        {
-            User login = null;
-
-            try
-            {
-                login = _context.User.Where(u => u.Email == user.Email && u.Password == user.Password).FirstOrDefault();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-
-            if (login != null)
-            {
-                HttpContext.Session.Set("User", (User)login);
-
-                return RedirectToAction("Index", "Home", new { area = "" });
-            }
-
-            return View(User);
-        }
-
-        public ActionResult Logout()
-        {
-            HttpContext.Session.Remove("User");
-            return RedirectToAction("Login", "User", new { area = "" });
         }
 
     }

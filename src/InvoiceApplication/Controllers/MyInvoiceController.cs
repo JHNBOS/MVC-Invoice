@@ -14,13 +14,13 @@ namespace InvoiceApplication.Controllers
     public class MyInvoiceController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private IMySettingsService mySettingsService;
+        private ISettingsService _appSettings;
         private readonly IHostingEnvironment _env;
 
-        public MyInvoiceController(ApplicationDbContext context, IMySettingsService settingsService, IHostingEnvironment env)
+        public MyInvoiceController(ApplicationDbContext context, ISettingsService settingsService, IHostingEnvironment env)
         {
             _context = context;
-            mySettingsService = settingsService;
+            _appSettings = settingsService;
             _env = env;
         }
 
@@ -205,17 +205,18 @@ namespace InvoiceApplication.Controllers
             return RedirectToAction("Index");
         }
 
-        private bool InvoiceExists(int id)
-        {
-            return _context.Invoices.Any(e => e.InvoiceNumber == id);
-        }
-
+        //POST: MyInvoice/PDF/5
         public FileStreamResult PDF(int id)
         {
-            PDF pdf = new PDF(_context, mySettingsService, _env);
+            PDF pdf = new PDF(_context, _appSettings, _env);
             FileStreamResult fs = pdf.CreatePDF(id, HttpContext);
 
             return fs;
+        }
+
+        private bool InvoiceExists(int id)
+        {
+            return _context.Invoices.Any(e => e.InvoiceNumber == id);
         }
 
 

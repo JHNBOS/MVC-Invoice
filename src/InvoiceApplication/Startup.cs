@@ -48,8 +48,8 @@ namespace InvoiceApplication
 
             // Configure using a sub-section of the appsettings.json file.
             services.AddOptions();
-            services.Configure<mySettings>(this.Configuration.GetSection("Settings"));
-            services.AddSingleton<IMySettingsService, mySettingsService>();
+            services.Configure<AppSettings>(this.Configuration.GetSection("Settings"));
+            services.AddSingleton<ISettingsService, SettingsService>();
 
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options =>

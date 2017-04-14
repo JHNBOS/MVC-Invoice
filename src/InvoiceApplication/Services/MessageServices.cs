@@ -15,9 +15,9 @@ namespace InvoiceApplication.Services
     // For more details see this link http://go.microsoft.com/fwlink/?LinkID=532713
     public class AuthMessageSender : IEmailSender, ISmsSender
     {
-        private IMySettingsService settings;
+        private ISettingsService settings;
 
-        public AuthMessageSender(IMySettingsService settingsService)
+        public AuthMessageSender(ISettingsService settingsService)
         {
             settings = settingsService;
         }

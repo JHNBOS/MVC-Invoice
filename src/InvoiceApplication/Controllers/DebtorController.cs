@@ -15,28 +15,137 @@ namespace InvoiceApplication.Controllers
     public class DebtorController : Controller
     {
         private ApplicationDbContext _context;
-        private IMySettingsService mySettingsService;
+        private ISettingsService _appService;
 
-        public DebtorController(ApplicationDbContext context, IMySettingsService settingsService)
+        public DebtorController(ApplicationDbContext context, ISettingsService settingsService)
         {
             _context = context;
-            mySettingsService = settingsService;
+            _appService = settingsService;
         }
+
+        /*----------------------------------------------------------------------*/
+        //DATABASE ACTION METHODS
+
+        private async Task<List<Debtor>> GetDebtors()
+        {
+            List<Debtor> debtorList = await _context.Debtors.ToListAsync();
+            return debtorList;
+        }
+
+        private async Task<Debtor> GetDebtor(int? id)
+        {
+            Debtor debtor = null;
+
+            try
+            {
+                debtor = await _context.Debtors.SingleOrDefaultAsync(s => s.DebtorID == id);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+
+            return debtor;
+        }
+
+        private async Task CreateDebtor(Debtor debtor)
+        {
+            try
+            {
+                _context.Debtors.Add(debtor);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        private async Task CreateLogin(Debtor debtor)
+        {
+            try
+            {
+                User user = new User();
+                user.AccountType = "Client";
+                user.Address = debtor.Address;
+                user.PostalCode = debtor.PostalCode;
+                user.City = debtor.City;
+                user.Country = debtor.Country;
+                user.FirstName = debtor.FirstName;
+                user.LastName = debtor.LastName;
+                user.Email = debtor.Email;
+                user.Password = debtor.FirstName + "_" + DateTime.Now.ToString("ddMMHH");
+
+                _context.User.Add(user);
+                await _context.SaveChangesAsync();
+
+                AuthMessageSender email = new AuthMessageSender(_appService);
+                await email.SendUserEmailAsync(user.Email, user.Password);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        private async Task UpdateDebtor(Debtor debtor)
+        {
+            try
+            {
+                _context.Update(debtor);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        private async Task DeleteDebtor(int id)
+        {
+            Debtor debtor = await GetDebtor(id);
+            List<Invoice> invoices = null;
+
+            try
+            {
+                invoices = _context.Invoices.Where(s => s.DebtorID == debtor.DebtorID).ToList();
+
+                //REMOVE ALL INVOICE ITEMS
+                foreach (var invoice in invoices)
+                {
+                    _context.InvoiceItems.RemoveRange(_context.InvoiceItems.Where(s => s.InvoiceNumber == invoice.InvoiceNumber));
+                    await _context.SaveChangesAsync();
+                }
+
+                _context.Invoices.RemoveRange(invoices);
+                _context.User.Remove(_context.User.Single(s => s.Email == debtor.Email));
+                _context.Debtors.Remove(debtor);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        /*----------------------------------------------------------------------*/
+        //CONTROLLER ACTIONS
 
         // GET: Debtor
         public async Task<IActionResult> Index(string sortOrder, string searchQuery)
         {
+            //SORTING OPTIONS DEBTOR LIST
             ViewBag.BeginSortParm = String.IsNullOrEmpty(sortOrder) ? "begin_desc" : "";
-
             ViewBag.FirstNameSortParm = sortOrder == "FirstName" ? "firstname_desc" : "FirstName";
             ViewBag.LastNameSortParm = sortOrder == "LastName" ? "lastname_desc" : "LastName";
             ViewBag.CityNameSortParm = sortOrder == "City" ? "city_desc" : "City";
             ViewBag.EmailSortParm = sortOrder == "Email" ? "email_desc" : "Email";
 
-            var debtors = _context.Debtors;
+            var debtors = await GetDebtors();
             var query = from debtor in debtors
                         select debtor;
 
+            //SEARCH OPTION PRODUCT LIST
             if (!String.IsNullOrEmpty(searchQuery))
             {
                 query = query.Where(s => s.FirstName.Contains(searchQuery)
@@ -85,7 +194,7 @@ namespace InvoiceApplication.Controllers
                     break;
             }
 
-            return View(await query.ToListAsync());
+            return View(query);
         }
 
         // GET: Debtor/Details/5
@@ -96,7 +205,8 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var debtor = await _context.Debtors.SingleOrDefaultAsync(m => m.DebtorID == id);
+            var debtor = await GetDebtor(id);
+
             if (debtor == null)
             {
                 return NotFound();
@@ -112,50 +222,17 @@ namespace InvoiceApplication.Controllers
         }
 
         // POST: Debtor/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DebtorID,Address,BankAccount,City,Country,Email,FirstName,LastName,Phone,PostalCode")] Debtor debtor)
         {
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Debtors.Add(debtor);
-                    await _context.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex);
-                }
-
-                try
-                {
-                    User user = new User();
-                    user.AccountType = "Client";
-                    user.Address = debtor.Address;
-                    user.PostalCode = debtor.PostalCode;
-                    user.City = debtor.City;
-                    user.Country = debtor.Country;
-                    user.FirstName = debtor.FirstName;
-                    user.LastName = debtor.LastName;
-                    user.Email = debtor.Email;
-                    user.Password = debtor.FirstName + "_" + DateTime.Now.ToString("ddMMHH");
-
-                    _context.User.Add(user);
-                    await _context.SaveChangesAsync();
-
-                    AuthMessageSender email = new AuthMessageSender(mySettingsService);
-                    await email.SendUserEmailAsync(user.Email, user.Password);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex);
-                }
-
+                await CreateDebtor(debtor);
+                await CreateLogin(debtor);
                 return RedirectToAction("Index");
             }
+
             return View(debtor);
         }
 
@@ -167,17 +244,17 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var debtor = await _context.Debtors.SingleOrDefaultAsync(m => m.DebtorID == id);
+            var debtor = await GetDebtor(id);
+
             if (debtor == null)
             {
                 return NotFound();
             }
+
             return View(debtor);
         }
 
         // POST: Debtor/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("DebtorID,Address,BankAccount,City,Country,Email,FirstName,LastName,Phone,PostalCode")] Debtor debtor)
@@ -189,24 +266,10 @@ namespace InvoiceApplication.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(debtor);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DebtorExists(debtor.DebtorID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await UpdateDebtor(debtor);
                 return RedirectToAction("Index");
             }
+
             return View(debtor);
         }
 
@@ -218,7 +281,8 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var debtor = await _context.Debtors.SingleOrDefaultAsync(m => m.DebtorID == id);
+            var debtor = await GetDebtor(id);
+
             if (debtor == null)
             {
                 return NotFound();
@@ -232,28 +296,7 @@ namespace InvoiceApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var debtor = await _context.Debtors.SingleOrDefaultAsync(m => m.DebtorID == id);
-            List<Invoice> invoices = _context.Invoices.Where(i => i.DebtorID == debtor.DebtorID).ToList();
-
-            //REMOVE ALL INVOICE ITEMS
-            foreach (var invoice in invoices)
-            {
-                _context.InvoiceItems.RemoveRange(_context.InvoiceItems.Where(i => i.InvoiceNumber == invoice.InvoiceNumber));
-                await _context.SaveChangesAsync();
-            }
-
-            //REMOVE ALL INVOICES OF DEBTOR
-            _context.Invoices.RemoveRange(invoices);
-            await _context.SaveChangesAsync();
-
-            //REMOVE USER ACCOUNT OF DEBTOR
-            _context.User.Remove(_context.User.Single(u => u.Email == debtor.Email));
-            await _context.SaveChangesAsync();
-
-            //REMOVE DEBTOR
-            _context.Debtors.Remove(debtor);
-            await _context.SaveChangesAsync();
-
+            await DeleteDebtor(id);
             return RedirectToAction("Index");
         }
 
@@ -261,5 +304,6 @@ namespace InvoiceApplication.Controllers
         {
             return _context.Debtors.Any(e => e.DebtorID == id);
         }
+
     }
 }

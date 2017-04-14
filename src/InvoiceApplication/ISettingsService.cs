@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceApplication
 {
-    public interface IMySettingsService
+    public interface ISettingsService
     {
         string GetEmail();
         string GetPassword();

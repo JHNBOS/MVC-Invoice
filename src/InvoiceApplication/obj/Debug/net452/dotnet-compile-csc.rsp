@@ -196,13 +196,13 @@
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Reflection.Primitives.dll"
 -resource:"C:\GitHub\MVC-Invoice\src\InvoiceApplication\obj\Debug\net452\InvoiceApplicationdotnet-compile.deps.json",InvoiceApplication.deps.json
 -resource:"C:\GitHub\MVC-Invoice\src\InvoiceApplication\obj\Debug\net452\InvoiceApplication.Settings.resources",InvoiceApplication.Settings.resources
-"C:\GitHub\MVC-Invoice\src\InvoiceApplication\IMySettingsService.cs"
-"C:\GitHub\MVC-Invoice\src\InvoiceApplication\mySettings.cs"
-"C:\GitHub\MVC-Invoice\src\InvoiceApplication\mySettingsService.cs"
+"C:\GitHub\MVC-Invoice\src\InvoiceApplication\AppSettings.cs"
+"C:\GitHub\MVC-Invoice\src\InvoiceApplication\ISettingsService.cs"
 "C:\GitHub\MVC-Invoice\src\InvoiceApplication\PDF.cs"
 "C:\GitHub\MVC-Invoice\src\InvoiceApplication\Program.cs"
 "C:\GitHub\MVC-Invoice\src\InvoiceApplication\SessionHelper.cs"
 "C:\GitHub\MVC-Invoice\src\InvoiceApplication\Settings.Designer.cs"
+"C:\GitHub\MVC-Invoice\src\InvoiceApplication\SettingsService.cs"
 "C:\GitHub\MVC-Invoice\src\InvoiceApplication\Startup.cs"
 "C:\GitHub\MVC-Invoice\src\InvoiceApplication\Controllers\AdminController.cs"
 "C:\GitHub\MVC-Invoice\src\InvoiceApplication\Controllers\DebtorController.cs"
