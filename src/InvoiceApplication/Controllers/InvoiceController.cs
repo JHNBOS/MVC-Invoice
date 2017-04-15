@@ -15,12 +15,12 @@ namespace InvoiceApplication.Controllers
     public class InvoiceController : Controller
     {
         private ApplicationDbContext _context;
-        private ISettingsService _appService;
+        private ISettingsService _settings;
 
         public InvoiceController(ApplicationDbContext context, ISettingsService settingsService)
         {
             _context = context;
-            _appService = settingsService;
+            _settings = settingsService;
         }
 
         /*----------------------------------------------------------------------*/
@@ -322,7 +322,7 @@ namespace InvoiceApplication.Controllers
                 if (invoice.Type == "Final")
                 {
                     Debtor debtor = _context.Debtors.Single(s => s.DebtorID == invoice.DebtorID);
-                    AuthMessageSender email = new AuthMessageSender(_appService);
+                    AuthMessageSender email = new AuthMessageSender(_settings);
                     await email.SendInvoiceEmailAsync(debtor.Email);
                 }
 
@@ -404,7 +404,7 @@ namespace InvoiceApplication.Controllers
                 if (invoice.Type == "Final" && invoiceBeforeUpdate.Type != "Final")
                 {
                     Debtor debtor = _context.Debtors.Single(s => s.DebtorID == invoice.DebtorID);
-                    AuthMessageSender email = new AuthMessageSender(_appService);
+                    AuthMessageSender email = new AuthMessageSender(_settings);
                     await email.SendInvoiceEmailAsync(debtor.Email);
                 }
 

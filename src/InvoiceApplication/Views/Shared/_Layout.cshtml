@@ -2,11 +2,11 @@
 @inject IOptions<AppSettings> settings
 
 @{
-    InvoiceApplication.Models.User user = null;
+    User user = null;
 
     if (SessionHelper.IsExists(Context.Session, "User"))
     {
-        user = (InvoiceApplication.Models.User)Context.Session.Get<InvoiceApplication.Models.User>("User");
+        user = (User)Context.Session.Get<User>("User");
     }
 }
 
@@ -50,11 +50,11 @@
 
                 @if (settings.Value.Logo != "" && settings.Value.UseLogo == true)
                 {
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand"><img src="~/images/@settings.Value.Logo" style="max-height:45px;text-align:center;margin-top:0px;" /></a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand"><img src="~/images/@(settings.Value.Logo)" style="max-height:45px;text-align:center;margin-top:0px;" /></a>
                 }
                 else
                 {
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">@settings.Value.Name</a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand" style="padding-top:10px !important;font-size:28px;">@settings.Value.Name</a>
                 }
 
             </div>

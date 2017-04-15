@@ -4,202 +4,257 @@
     ViewData["Title"] = "Settings";
 }
 
-<h2>Settings</h2>
+<div class="container">
 
-<form asp-action="Settings" enctype="multipart/form-data">
-    <div class="form-horizontal">
-        <h4></h4>
-        <hr />
+    <div class="row main-reg">
 
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-        <div class="row">
-            <div class="col-sm-7 col-md-7" style="padding-right:0px !important;">
-                <!--COMPANY INFO-->
-                <!--NAME-->
-                <div class="form-group">
-                    <label class="col-md-2 control-label">Company Name</label>
-                    <div class="col-md-10">
-                        <input asp-for="Name" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger" />
-                    </div>
-                </div>
-
-                <!--WEBSITE-->
-                <div class="form-group">
-                    <label class="col-md-2 control-label">Company Website</label>
-                    <div class="col-md-10">
-                        <input asp-for="Website" class="form-control" />
-                        <span asp-validation-for="Website" class="text-danger" />
-                    </div>
-                </div>
-
-                <!--PHONE-->
-                <div class="form-group">
-                    <label asp-for="Phone" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="Phone" class="form-control" />
-                        <span asp-validation-for="Phone" class="text-danger" />
-                    </div>
-                </div>
-
-                <!--ADDRESS-->
-                <div class="form-group">
-                    <label asp-for="Address" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="Address" class="form-control" />
-                        <span asp-validation-for="Address" class="text-danger" />
-                    </div>
-                </div>
-
-                <!--POSTALCODE-->
-                <div class="form-group">
-                    <label asp-for="PostalCode" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="PostalCode" class="form-control" />
-                        <span asp-validation-for="PostalCode" class="text-danger" />
-                    </div>
-                </div>
-
-                <!--CITY-->
-                <div class="form-group">
-                    <label asp-for="City" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="City" class="form-control" />
-                        <span asp-validation-for="City" class="text-danger" />
-                    </div>
-                </div>
-
-            </div>
-            <div class="col-sm-5 col-md-5" style="padding-left:0px !important;">
-                <!--COMPANY EMAIL-->
-                <!--EMAIL-->
-                <div class="form-group">
-                    <label class="col-md-2 control-label">Company Email</label>
-                    <div class="col-md-10">
-                        <input asp-for="Email" type="email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger" />
-                    </div>
-                </div>
-
-                <!--PASSWORD-->
-                <div class="form-group">
-                    <label class="col-md-2 control-label">Password</label>
-                    <div class="col-md-10">
-                        <input asp-for="Password" type="password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-danger" />
-                    </div>
-                </div>
-
-                <!--SMTP-->
-                <div class="form-group">
-                    <label asp-for="SMTP" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="SMTP" class="form-control" />
-                        <span asp-validation-for="SMTP" class="text-danger" />
-                    </div>
-                </div>
-
-                <!--PORT-->
-                <div class="form-group">
-                    <label asp-for="Port" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="Port" class="form-control" />
-                        <span asp-validation-for="Port" class="text-danger" />
-                    </div>
-                </div>
-
+        <div class="panel-heading">
+            <div class="panel-title text-center">
+                <h1 class="title">Settings</h1>
+                <hr style="width:60%;border-top:2px solid #fff;" />
             </div>
         </div>
 
-        <hr />
 
-        <div class="row">
-            <div class="col-sm-7 col-md-7" style="padding-right:0px !important;">
-                <!--COMPANY INFO-->
-                <!--TAXNUMBER-->
-                <div class="form-group">
-                    <label asp-for="TaxNumber" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="TaxNumber" class="form-control" />
-                        <span asp-validation-for="TaxNumber" class="text-danger" />
+        <div class="main-large main-center">
+            <form class="form-horizontal" asp-controller="User" asp-action="Settings" method="post" enctype="multipart/form-data">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row main">
+                    <div class="col-sm-7 col-md-7" style="padding-right:0px !important;">
+                        <!--COMPANY INFO-->
+                        <!--NAME-->
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Company Name</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon" style="padding-right:16px;"><i class="fa fa-building fa-lg" aria-hidden="true"></i></span>
+                                    <input type="text" asp-for="Name" class="form-control" name="name" id="name" placeholder="Enter company name" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--WEBSITE-->
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Company Website</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-desktop fa-lg" aria-hidden="true"></i></span>
+                                    <input type="text" asp-for="Website" class="form-control" name="website" id="website" placeholder="Enter company website" />
+                                    <span asp-validation-for="Website" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--PHONE-->
+                        <div class="form-group">
+                            <label asp-for="Phone" class="col-md-2 control-label"></label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon" style="padding-right:18px;"><i class="fa fa-phone fa-lg" aria-hidden="true"></i></span>
+                                    <input type="text" asp-for="Phone" class="form-control" name="phone" id="phone" placeholder="Enter company phone number" />
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--ADDRESS-->
+                        <div class="form-group">
+                            <label asp-for="Address" class="col-md-2 control-label"></label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-envelope-open fa-lg" aria-hidden="true"></i></span>
+                                    <input type="text" asp-for="Address" class="form-control" name="address" id="address" placeholder="Enter company address" />
+                                    <span asp-validation-for="Address" class="text-danger" />                                
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--POSTALCODE-->
+                        <div class="form-group">
+                            <label asp-for="PostalCode" class="col-md-2 control-label"></label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-envelope-open fa-lg" aria-hidden="true"></i></span>
+                                    <input type="text" asp-for="PostalCode" class="form-control" name="postalcode" id="postalcode" placeholder="Enter company postal code" />
+                                    <span asp-validation-for="PostalCode" class="text-danger" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--CITY-->
+                        <div class="form-group">
+                            <label asp-for="City" class="col-md-2 control-label"></label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-envelope-open fa-lg" aria-hidden="true"></i></span>
+                                    <input type="text" asp-for="City" class="form-control" name="city" id="city" placeholder="Enter company city" />
+                                    <span asp-validation-for="City" class="text-danger" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-5 col-md-5" style="padding-left:0px !important;">
+                        <!--COMPANY EMAIL-->
+                        <!--EMAIL-->
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Company Email</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-paper-plane fa-lg" aria-hidden="true"></i></span>
+                                    <input type="email" asp-for="Email" class="form-control" name="email" id="email" placeholder="Enter company email" />
+                                    <span asp-validation-for="Email" class="text-danger" />
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!--PASSWORD-->
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Password</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon" style="padding-right:19px;"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                                    <input type="text" asp-for="Password" class="form-control" name="password" id="password" placeholder="Enter company email password" />
+                                    <span asp-validation-for="Password" class="text-danger" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--SMTP-->
+                        <div class="form-group">
+                            <label asp-for="SMTP" class="col-md-2 control-label"></label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-paper-plane fa-lg" aria-hidden="true"></i></span>
+                                    <input type="text" asp-for="SMTP" class="form-control" name="smtp" id="smtp" placeholder="Enter email smtp url" />
+                                    <span asp-validation-for="SMTP" class="text-danger" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--PORT-->
+                        <div class="form-group">
+                            <label asp-for="Port" class="col-md-2 control-label"></label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-paper-plane fa-lg" aria-hidden="true"></i></span>
+                                    <input type="text" asp-for="Port" class="form-control" name="port" id="port" placeholder="Enter email smtp port" />
+                                    <span asp-validation-for="Port" class="text-danger" />
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
-                <!--COMPANYNUMBER-->
-                <div class="form-group">
-                    <label class="col-md-2 control-label">Company nr.</label>
-                    <div class="col-md-10">
-                        <input asp-for="CompanyNumber" class="form-control" />
-                        <span asp-validation-for="CompanyNumber" class="text-danger" />
+                <hr />
+
+                <div class="row main">
+                    <div class="col-sm-7 col-md-7" style="padding-right:0px !important;">
+                        <!--COMPANY INFO-->
+                        <!--TAXNUMBER-->
+                        <div class="form-group">
+                            <label asp-for="TaxNumber" class="col-md-2 control-label"></label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-building fa-lg" aria-hidden="true"></i></span>
+                                    <input type="text" asp-for="TaxNumber" class="form-control" name="taxnumber" id="taxnumber" placeholder="Enter company taxnumber" />
+                                    <span asp-validation-for="TaxNumber" class="text-danger" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--COMPANYNUMBER-->
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Company nr.</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-building fa-lg" aria-hidden="true"></i></span>
+                                    <input type="text" asp-for="CompanyNumber" class="form-control" name="companynumber" id="companynumber" placeholder="Enter companynumber" />
+                                    <span asp-validation-for="CompanyNumber" class="text-danger" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--SUBMIT BUTTON-->
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="submit" id="settings_btn" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-5 col-md-5" style="padding-left:0px !important;">
+                        <!--LOGO-->
+                        <!--FILE UPLOAD-->
+                        <div class="form-group">
+                            <label asp-for="Logo" class="col-md-2 control-label"></label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-camera fa-lg" aria-hidden="true"></i></span>
+                                    <input type="file" id="fileUpload" class="form-control" name="file" />
+                                    <span asp-validation-for="Logo" class="text-danger" />
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <!--CHECKBOX-->
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Use Logo</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon" style="width:47px;border-right:1px solid #cccccc;"><i class="" aria-hidden="true"></i></span>
+                                    <input asp-for="UseLogo" class="checkbox" style="margin-left:125px;width:35px;height:35px;background:white;border-radius:5px;border:2px solid #555;" />
+                                    <span asp-validation-for="UseLogo" class="text-danger" />
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div id="preview text-center">
+                            <img id="showImg" src="#" alt="Logo" />
+                        </div>
+
                     </div>
                 </div>
 
-                <!--SUBMIT BUTTON-->
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Save" class="btn btn-primary" style="width:180px;" />
-                    </div>
-                </div>
 
-            </div>
-            <div class="col-sm-5 col-md-5" style="padding-left:0px !important;">
-                <!--LOGO-->
-                <!--FILE UPLOAD-->
-                <div class="form-group">
-                    <label asp-for="Logo" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input type="file" id="fileUpload" class="form-control" name="file" />
-                        <span asp-validation-for="Logo" class="text-danger" />
-                    </div>
-                </div>
-
-                <!--CHECKBOX-->
-                <div class="form-group">
-                    <label class="col-md-2 control-label">Use Logo</label>
-                    <div class="col-md-10">
-                        <input asp-for="UseLogo" class="form-control checkbox" style="height:25px;" />
-                        <span asp-validation-for="UseLogo" class="text-danger" />
-                    </div>
-                </div>
-
-
-                <div id="preview text-center">
-                    <img id="showImg" src="#" alt="Logo" />
-                </div>
-
-            </div>
+            </form>
         </div>
-        
-        <br />
-
-        
 
     </div>
-</form>
+</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-<script language="javascript" type="text/javascript">
-    var img = document.getElementById('showImg');
-    img.style.visibility = 'hidden';
+    <script language="javascript" type="text/javascript">
+        var img = document.getElementById('showImg');
+        img.style.visibility = 'hidden';
 
-    $(function () {
-        $(":file").change(function () {
-            if (this.files && this.files[0]) {
-                var img = document.getElementById('showImg');
-                img.style.visibility = 'visible';
+        $(function () {
+            $(":file").change(function () {
+                if (this.files && this.files[0]) {
+                    var img = document.getElementById('showImg');
+                    img.style.visibility = 'visible';
 
-                var reader = new FileReader();
-                reader.onload = imageIsLoaded;
-                reader.readAsDataURL(this.files[0]);
-            }
+                    var reader = new FileReader();
+                    reader.onload = imageIsLoaded;
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
         });
-    });
 
-    function imageIsLoaded(e) {
-        $('#showImg').attr('src', e.target.result);
-    };
-</script>
+        function imageIsLoaded(e) {
+            $('#showImg').attr('src', e.target.result);
+        };
+    </script>
 }

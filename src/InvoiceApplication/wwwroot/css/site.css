@@ -116,6 +116,14 @@ textarea {
 	margin-top: 5px;
 }
 
+/* SETTINGS BUTTONS */
+#settings_btn{
+	width: 220px;
+	float: right;
+	margin-top: 30px;
+	margin-right: 250px;
+}
+
 /* NAVBAR */
 .navbar-nav > li > a {
 	padding-top: 10px;
@@ -126,6 +134,7 @@ textarea {
 .navbar-brand{
 	padding-top: 0;
 	padding-bottom: 0;
+	font-family:'Passion One', sans-serif;
 }
 
 #settings{

@@ -12,7 +12,7 @@ namespace InvoiceApplication.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private ApplicationDbContext _context;
 
         public AdminController(ApplicationDbContext context)
         {

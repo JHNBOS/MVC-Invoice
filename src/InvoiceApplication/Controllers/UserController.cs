@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using InvoiceApplication.Data;
 using InvoiceApplication.Models;
 using System.Diagnostics;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.IO;
@@ -17,13 +16,13 @@ namespace InvoiceApplication.Controllers
     public class UserController : Controller
     {
         private ApplicationDbContext _context;
-        private AppSettings _settings;
+        private ISettingsService _settings;
         private IHostingEnvironment _env;
 
-        public UserController(ApplicationDbContext context, IOptions<AppSettings> settingsAccessor, IHostingEnvironment env)
+        public UserController(ApplicationDbContext context, ISettingsService settingsAccessor, IHostingEnvironment env)
         {
             _context = context;
-            _settings = settingsAccessor.Value;
+            _settings = settingsAccessor;
             _env = env;
         }
 
@@ -294,20 +293,20 @@ namespace InvoiceApplication.Controllers
         {
             AppSettings current = new AppSettings();
 
-            current.Email = _settings.Email;
-            current.Password = _settings.Password;
-            current.SMTP = _settings.SMTP;
-            current.Port = _settings.Port;
-            current.Name = _settings.Name;
-            current.Website = _settings.Website;
-            current.Phone = _settings.Phone;
-            current.Address = _settings.Address;
-            current.City = _settings.City;
-            current.PostalCode = _settings.PostalCode;
-            current.CompanyNumber = _settings.CompanyNumber;
-            current.TaxNumber = _settings.TaxNumber;
-            current.Logo = _settings.Logo;
-            current.UseLogo = _settings.UseLogo;
+            current.Email = _settings.GetEmail();
+            current.Password = _settings.GetPassword();
+            current.SMTP = _settings.GetSMTP();
+            current.Port = _settings.GetPort();
+            current.Name = _settings.GetName();
+            current.Website = _settings.GetWebsite();
+            current.Phone = _settings.GetPhone();
+            current.Address = _settings.GetAddress();
+            current.City = _settings.GetCity();
+            current.PostalCode = _settings.GetPostalCode();
+            current.CompanyNumber = _settings.GetCompanyNumber();
+            current.TaxNumber = _settings.GetTaxNumber();
+            current.Logo = _settings.GetLogo();
+            current.UseLogo = _settings.UseLogo();
 
             return View(current);
         }
@@ -320,16 +319,19 @@ namespace InvoiceApplication.Controllers
             {
                 try
                 {
-                    var uploads = Path.Combine(_env.WebRootPath, "images");
-
-                    if (file.Length > 0)
+                    if (file != null)
                     {
-                        var filePath = Path.Combine(uploads, file.FileName);
-                        _settings.Logo = file.FileName;
+                        var uploads = Path.Combine(_env.WebRootPath, "images");
 
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        if (file.Length > 0)
                         {
-                            await file.CopyToAsync(fileStream);
+                            var filePath = Path.Combine(uploads, file.FileName);
+                            _settings.SetLogo(file.FileName);
+
+                            using (var fileStream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await file.CopyToAsync(fileStream);
+                            }
                         }
                     }
                 }
@@ -338,34 +340,25 @@ namespace InvoiceApplication.Controllers
                     Debug.WriteLine(ex);
                 }
 
-                if (AppSettings.Password != "")
-                {
-                    _settings.Password = AppSettings.Password;
-                }
-
-                if (AppSettings.Logo != "null")
-                {
-                    _settings.Logo = AppSettings.Logo;
-                }
-
-                _settings.Email = AppSettings.Email;
-                _settings.SMTP = AppSettings.SMTP;
-                _settings.Port = AppSettings.Port;
-                _settings.Name = AppSettings.Name;
-                _settings.Website = AppSettings.Website;
-                _settings.Phone = AppSettings.Phone;
-                _settings.Address = AppSettings.Address;
-                _settings.City = AppSettings.City;
-                _settings.PostalCode = AppSettings.PostalCode;
-                _settings.CompanyNumber = AppSettings.CompanyNumber;
-                _settings.TaxNumber = AppSettings.TaxNumber;
-                _settings.UseLogo = AppSettings.UseLogo;
-
+                //Update Settings
+                _settings.SetEmail(AppSettings.Email);
+                _settings.SetPassword(AppSettings.Password);
+                _settings.SetSMTP(AppSettings.SMTP);
+                _settings.SetPort(AppSettings.Port);
+                _settings.SetName(AppSettings.Name);
+                _settings.SetWebsite(AppSettings.Website);
+                _settings.SetPhone(AppSettings.Phone);
+                _settings.SetAddress(AppSettings.Address);
+                _settings.SetPostalCode(AppSettings.PostalCode);
+                _settings.SetCity(AppSettings.City);
+                _settings.SetCompanyNumber(AppSettings.CompanyNumber);
+                _settings.SetTaxNumber(AppSettings.TaxNumber);
+                _settings.SetUseLogo(AppSettings.UseLogo);
 
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
 
-            return View(AppSettings);
+            return View();
         }
 
 
