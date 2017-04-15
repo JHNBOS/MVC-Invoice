@@ -283,7 +283,39 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
+            var products = _context.Products
+                 .Select(s => new SelectListItem
+                 {
+                     Value = s.ProductID.ToString() + "_" + s.Price.ToString(),
+                     Text = s.Name
+                 });
+
             var invoice = await GetInvoice(id);
+            var items = await GetInvoiceItems(id);
+
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            var p = _context.Products;
+            string[] pids = new string[p.Count()];
+
+            int cnt = 0;
+            foreach (var pid in p)
+            {
+                string _id = pid.ProductID + "_" + pid.Price;
+                pids[cnt] = _id;
+                cnt++;
+            }
+
+            ViewBag.PIDs = pids;
+            ViewBag.Amounts = items.Select(s => s.Amount).ToArray();
+            ViewBag.Names = items.Select(s => s.Product.Name).ToArray();
+            ViewBag.Total = String.Format("{0:N2}", invoice.Total);
+
+            ViewBag.Products = new SelectList(products, "Value", "Text");
+            ViewData["DebtorID"] = new SelectList(_context.Debtors, "DebtorID", "FullName", invoice.DebtorID);
 
             if (invoice == null)
             {
@@ -423,7 +455,39 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
+            var products = _context.Products
+                 .Select(s => new SelectListItem
+                 {
+                     Value = s.ProductID.ToString() + "_" + s.Price.ToString(),
+                     Text = s.Name
+                 });
+
             var invoice = await GetInvoice(id);
+            var items = await GetInvoiceItems(id);
+
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            var p = _context.Products;
+            string[] pids = new string[p.Count()];
+
+            int cnt = 0;
+            foreach (var pid in p)
+            {
+                string _id = pid.ProductID + "_" + pid.Price;
+                pids[cnt] = _id;
+                cnt++;
+            }
+
+            ViewBag.PIDs = pids;
+            ViewBag.Amounts = items.Select(s => s.Amount).ToArray();
+            ViewBag.Names = items.Select(s => s.Product.Name).ToArray();
+            ViewBag.Total = String.Format("{0:N2}", invoice.Total);
+
+            ViewBag.Products = new SelectList(products, "Value", "Text");
+            ViewData["DebtorID"] = new SelectList(_context.Debtors, "DebtorID", "FullName", invoice.DebtorID);
 
             if (invoice == null)
             {

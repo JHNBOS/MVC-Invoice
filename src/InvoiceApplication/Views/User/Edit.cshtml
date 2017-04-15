@@ -1,90 +1,146 @@
-@model InvoiceApplication.Models.User
+@using Microsoft.Extensions.Options
+
+@model User
+@inject IOptions<AppSettings> settings
 
 @{
     ViewData["Title"] = "Manage";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Manage</h2>
+<div class="container">
 
-<form asp-action="Edit">
-    <div class="form-horizontal">
-        <h4></h4>
-        <hr />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row main-reg">
 
-        <div class="form-group">
-            <label asp-for="FirstName" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger" />
+        <div class="panel-heading">
+            <div class="panel-title text-center">
+                <h1 class="title">@settings.Value.Name</h1>
+                <hr style="width:35%;border-top:2px solid #fff;" />
             </div>
         </div>
 
-        <div class="form-group">
-            <label asp-for="LastName" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger" />
-            </div>
-        </div>
 
-        <div class="form-group">
-            <label asp-for="Address" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger" />
-            </div>
-        </div>
+        <div class="main-register main-center">
+            <form class="form-horizontal" asp-controller="User" asp-action="Create">
 
-        <div class="form-group">
-            <label asp-for="PostalCode" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="PostalCode" class="form-control" />
-                <span asp-validation-for="PostalCode" class="text-danger" />
-            </div>
-        </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        <div class="form-group">
-            <label asp-for="City" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="City" class="form-control" />
-                <span asp-validation-for="City" class="text-danger" />
-            </div>
-        </div>
 
-        <div class="form-group">
-            <label asp-for="Country" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Country" class="form-control" />
-                <span asp-validation-for="Country" class="text-danger" />
-            </div>
-        </div>
+                <!--FIRST NAME-->
+                <div class="form-group">
+                    <label asp-for="FirstName" class="cols-sm-2 control-label">Your First Name</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-id-card" aria-hidden="true"></i></span>
+                            <input type="text" asp-for="FirstName" class="form-control" name="firstName" id="firstName" placeholder="Enter your first name" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <label asp-for="Email" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger" />
-            </div>
-        </div>
 
-        <div class="form-group">
-            <label asp-for="Password" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger" />
-            </div>
-        </div>
+                <!--LAST NAME-->
+                <div class="form-group">
+                    <label asp-for="LastName" class="cols-sm-2 control-label">Your Last Name</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-id-card" aria-hidden="true"></i></span>
+                            <input type="text" asp-for="LastName" class="form-control" name="lastname" id="lastname" placeholder="Enter your last name" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save Changes" class="btn btn-primary" />
-            </div>
+
+                <!--ADDRESS-->
+                <div class="form-group">
+                    <label asp-for="Address" class="cols-sm-2 control-label">Your Address</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope-open" aria-hidden="true"></i></span>
+                            <input type="text" asp-for="Address" class="form-control" name="address" id="address" placeholder="Enter your address" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--POSTAL CODE-->
+                <div class="form-group">
+                    <label asp-for="PostalCode" class="cols-sm-2 control-label">Your Postal Code</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope-open" aria-hidden="true"></i></span>
+                            <input type="text" asp-for="PostalCode" class="form-control" name="postal" id="postal" placeholder="Enter your postal code" />
+                            <span asp-validation-for="PostalCode" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--CITY-->
+                <div class="form-group">
+                    <label asp-for="City" class="cols-sm-2 control-label">Your City</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope-open" aria-hidden="true"></i></span>
+                            <input type="text" asp-for="City" class="form-control" name="city" id="city" placeholder="Enter your city" />
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--COUNTRY-->
+                <div class="form-group">
+                    <label asp-for="Country" class="cols-sm-2 control-label">Your Country</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope-open" aria-hidden="true"></i></span>
+                            <input type="text" asp-for="Country" class="form-control" name="country" id="country" placeholder="Enter your country" />
+                            <span asp-validation-for="Country" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr style="width:80%;" />
+
+                <!--EMAIL-->
+                <div class="form-group">
+                    <label asp-for="Email" class="cols-sm-2 control-label">Your Email</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
+                            <input type="text" asp-for="Email" class="form-control" name="email" id="email" placeholder="Enter your Email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--PASSWORD-->
+                <div class="form-group">
+                    <label asp-for="Password" class="cols-sm-2 control-label">Password</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-lock" aria-hidden="true"></i></span>
+                            <input type="password" asp-for="Password" class="form-control" name="password" id="password" placeholder="Enter your Password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--EDIT BUTTON-->
+                <div class="form-group ">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block register-button">Save</button>
+                </div>
+
+            </form>
         </div>
 
     </div>
-</form>
+</div>
 
 
 @section Scripts {
