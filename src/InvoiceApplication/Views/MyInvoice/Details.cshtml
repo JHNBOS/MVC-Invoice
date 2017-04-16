@@ -144,12 +144,12 @@
             $.ajax(
             {
                 type: "POST",
-                url: "../../Invoice/Pay",
+                url: '@Url.Action("Pay")',
                 data: {
                     id: id
                 },
-                success: function() { alert('Success'); },
-                error: errorFunc
+                success: function() { alert('Thank you for paying!'); window.location.href='@Url.Action("Index")'; },
+                error: function() { alert('An error occured while paying. Please try again!');}
             });
 
         })

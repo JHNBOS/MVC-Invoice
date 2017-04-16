@@ -287,6 +287,18 @@ namespace InvoiceApplication.Controllers
             return fs;
         }
 
+        // POST: Invoice/Pay
+        public IActionResult Pay(int id)
+        {
+            Invoice invoiceBeforeUpdate = _context.Invoices.Single(s => s.InvoiceNumber == id);
+            invoiceBeforeUpdate.Paid = true;
+
+            _context.Update(invoiceBeforeUpdate);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
         private bool InvoiceExists(int id)
         {
             return _context.Invoices.Any(e => e.InvoiceNumber == id);

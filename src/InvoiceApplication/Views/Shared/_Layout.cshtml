@@ -16,6 +16,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - @settings.Value.Name</title>
+
+    @RenderSection("HEAD", required: false)
+
     
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -48,19 +51,37 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                @if (settings.Value.Logo != "" && settings.Value.UseLogo == true)
+                @if (settings.Value.Logo != "" && settings.Value.UseLogo == true && user != null)
+                {
+                    <a asp-area="" asp-controller="Home" asp-action="Index" asp-route-email="@(user.Email)" class="navbar-brand"><img src="~/images/@(settings.Value.Logo)" style="max-height:45px;text-align:center;margin-top:0px;" /></a>
+                }
+                
+                @if (settings.Value.Logo != "" && settings.Value.UseLogo == true && user == null)
                 {
                     <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand"><img src="~/images/@(settings.Value.Logo)" style="max-height:45px;text-align:center;margin-top:0px;" /></a>
                 }
-                else
+
+                @if(settings.Value.UseLogo == false && user != null)
                 {
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand" style="padding-top:15px;font-size:25px;font-weight:normal;">@settings.Value.Name</a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" asp-route-email="@(user.Email)" class="navbar-brand" style="padding-top:15px;font-size:25px;font-weight:normal;">@settings.Value.Name</a>
+                }
+
+                @if (settings.Value.UseLogo == false && user == null)
+                {
+                    <a  asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand" style="padding-top:15px;font-size:25px;font-weight:normal;">@settings.Value.Name</a>
                 }
 
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    @if (user != null)
+                    {
+                        <li><a asp-area="" asp-controller="Home" asp-route-email="@(user.Email)" asp-action="Index">Home</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    }
 
                     @if (user != null && user.AccountType == "Admin")
                     {

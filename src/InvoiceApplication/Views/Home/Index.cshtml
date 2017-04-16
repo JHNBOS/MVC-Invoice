@@ -1,42 +1,19 @@
-﻿@{
+﻿@using Microsoft.Extensions.Options
+@inject IOptions<AppSettings> settings
+
+
+@{
     ViewData["Title"] = "Home Page";
+
+    User user = null;
+
+    if (SessionHelper.IsExists(Context.Session, "User"))
+    {
+        user = (User)Context.Session.Get<User>("User");
+    }
 }
 
-<div class="row">
-    <div class="col-md-3">
-        <h2>Application uses</h2>
-        <ul>
-            <li>Sample pages using ASP.NET Core MVC</li>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkId=518004">Bower</a> for managing client-side libraries</li>
-            <li>Theming using <a href="http://go.microsoft.com/fwlink/?LinkID=398939">Bootstrap</a></li>
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>How to</h2>
-        <ul>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkID=398600">Add a Controller and View</a></li>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkID=699562">Add an appsetting in config and access it in app.</a></li>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkId=699315">Manage User Secrets using Secret Manager.</a></li>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkId=699316">Use logging to log a message.</a></li>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkId=699317">Add packages using NuGet.</a></li>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkId=699318">Add client packages using Bower.</a></li>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkId=699319">Target development, staging or production environment.</a></li>
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>Overview</h2>
-     
-
-    </div>
-    <div class="col-md-3">
-
-    </div>
-</div>
-
-@section Scripts{
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
-
+@section HEAD{
     <!-- amCharts javascript code -->
     <script type="text/javascript" src="http://www.amcharts.com/lib/3/amcharts.js"></script>
     <script type="text/javascript" src="http://www.amcharts.com/lib/3/pie.js"></script>
@@ -45,7 +22,140 @@
     <script type="text/javascript" src="http://www.amcharts.com/lib/3/themes/dark.js"></script>
     <script src="https://www.amcharts.com/lib/3/plugins/export/export.js" type="text/javascript"></script>
     <link href="https://www.amcharts.com/lib/3/plugins/export/export.css" rel="stylesheet" type="text/css">
+}
 
-    <!-- amCharts javascript code -->
-    
+<!-- Top Row -->
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 text-center">
+        @if (user != null)
+        {
+            <h2>Welcome, @user.FirstName</h2>
+        }
+        else
+        {
+            <h2>Welcome</h2>
+        }
+    </div>
+    <div class="col-md-3"></div>
+</div>
+
+<br />
+<br />
+
+<!-- Middle Row -->
+<div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+        <h4 id="invoiceText" class="text-center"></h4>
+    </div>
+    <div class="col-sm-2"></div>
+</div>
+
+<br />
+<br />
+
+<!-- Bottom Row -->
+<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+        <div id="chartdiv" style="width:100%;height:400px;background-color:#d3d3d3;display:none;"></div>
+    </div>
+    <div class="col-sm-3"></div>
+</div>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+        $(document).ready(function () {
+            /* BEGIN OF SCRIPT FOR TEXT */
+            @{
+                var count = ViewBag.invoiceList.Count;
+            }
+
+            var noUserText = "With this application it is possible to view and pay your invoices"
+                        + "<br /><br />"
+                        + "To use this website, u must login using the credentials sent to you by @settings.Value.Name.";
+
+            //Set text when no user logged in
+            @if (user == null)
+            {
+                <text>
+            $("#invoiceText").html(noUserText);
+            </text>
+            }
+
+            //Set text according to items inside invoices
+            @if (user != null && user.AccountType == "Client" && (count == 0 || ViewBag.invoiceList == null))
+            {
+                <text>
+            $("#invoiceText").html("There are no unpaid invoices found at the moment.");
+            </text>
+            }
+
+            //Set text according to items inside invoices
+            @if (user != null && user.AccountType == "Client" && count == 1)
+            {
+                <text>
+            $("#invoiceText").html("You have 1 unpaid invoice." + "<br />" + "To be paid: &euro;@(ViewBag.total)");
+            $("#chartdiv").show();
+            </text>
+            }
+
+            //Set text according to items inside invoices
+            @if (user != null && user.AccountType == "Client" && count > 1)
+            {
+                <text>
+            $("#invoiceText").html("You have @(count) unpaid invoices." + "<br />" + "To be paid: &euro;@(ViewBag.total)");
+            $("#chartdiv").show();
+            </text>
+            }
+
+            /* END OF SCRIPT FOR TEXT */
+            /* BEGIN OF SCRIPT FOR CHART */
+            var paidArray = @(ViewBag.paid);
+            var unpaidArray = @(ViewBag.unpaid);
+
+            AmCharts.makeChart("chartdiv",
+                    {
+                        "type": "pie",
+                        "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
+                        "innerRadius": 0,
+                        "labelRadius": 21,
+                        "radius": 100,
+                        "baseColor": "#0063D3",
+                        "hoverAlpha": 0.62,
+                        "outlineThickness": 0,
+                        "titleField": "category",
+                        "valueField": "column-1",
+                        "decimalSeparator": ",",
+                        "percentPrecision": 1,
+                        "theme": "default",
+                        "thousandsSeparator": ".",
+                        "allLabels": [],
+                        "creditsPosition": "bottom-right",
+                        "showEntries": true,
+                        "balloon": {},
+                        "legend": {
+                            "enabled": true,
+                            "align": "center",
+                            "markerType": "circle"
+                        },
+                        "titles": [],
+                        "dataProvider": [
+                            {
+                                "category": "Paid",
+                                "column-1": paidArray
+                            },
+                            {
+                                "category": "Unpaid",
+                                "column-1": unpaidArray
+                            }
+                        ]
+                    }
+                );
+            /* END OF SCRIPT FOR CHART */
+        })
+</script>
 }
