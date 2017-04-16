@@ -84,8 +84,8 @@ textarea {
 #edit_prod_btn {
     width: 220px;
     float: right;
-    margin-right: 270px;
-    margin-top: 25px;
+    margin-right: 155px;
+    margin-top: 5px;
 }
 
 #delete_prod_btn {
@@ -127,16 +127,18 @@ textarea {
 
 /* NAVBAR */
 .navbar-nav > li > a {
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 12px;
+    padding-bottom: 13px;
     line-height: 24px;
 }
 
 .navbar-brand {
     padding-top: 0;
     padding-bottom: 0;
-    font-family: 'Passion One', sans-serif;
+    font-family: 'Century Gothic', sans-serif;
+    font-size: 25px;
 }
+
 
 #settings {
     font-size: 16px;

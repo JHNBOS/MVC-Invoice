@@ -11,7 +11,7 @@
 
         <div class="panel-heading">
             <div class="panel-title text-center">
-                <h1 class="title">Create Invoice</h1>
+                <h1 class="title">Edit Invoice</h1>
                 <hr style="width:60%;border-top:2px solid #fff;" />
             </div>
         </div>
@@ -19,7 +19,7 @@
 
         <div class="main-large main-center">
 
-            <form id="form" class="form-horizontal" asp-controller="Invoice" asp-action="Create">
+            <form id="form" class="form-horizontal" asp-controller="Invoice" asp-action="Edit" method="post">
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="InvoiceNumber" />
@@ -45,7 +45,7 @@
                             <div class="col-md-10">
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-calendar fa-lg" aria-hidden="true"></i></span>
-                                    <input type="text" asp-for="CreatedOn" class="form-control" name="creation" id="creation" placeholder="Enter invoice date" />
+                                    <input asp-for="CreatedOn" class="form-control" id="creation" placeholder="Enter invoice date" />
                                     <span asp-validation-for="CreatedOn" class="text-danger" />
                                 </div>
                             </div>
@@ -57,7 +57,7 @@
                             <div class="col-md-10">
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-calendar fa-lg" aria-hidden="true"></i></span>
-                                    <input type="text" asp-for="ExpirationDate" class="form-control" name="expiration" id="expiration" placeholder="Enter expiration date" />
+                                    <input asp-for="ExpirationDate" class="form-control" id="expiration" placeholder="Enter expiration date" />
                                     <span asp-validation-for="ExpirationDate" class="text-danger" />
                                 </div>
                             </div>
@@ -133,7 +133,7 @@
 
                             </div>
 
-                           
+
                         </div>
 
                         <hr style="margin-bottom:0;margin-top:10px;" />
@@ -156,6 +156,209 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+    <script>
+        var start = false;
+
+        $(document).one('ready', function () {
+            setRows();
+        });
+
+        $(document).ready(function () {
+
+            var t = "@(ViewBag.Total)";
+            $("#total").val(t);
+
+            /* VARIABLES */
+            var total = t;
+            var count = 0;
+            var productArray = new Array();
+            var amountArray = new Array();
+
+            /*-------------------------------------------------------------------------------------------*/
+
+            /* AUTOMATICALLY SET EXPIRATION DATE */
+            $("#creation").on("change", function () {
+                var value = $("#creation").val();
+
+                var day = value.split('-')[2];
+                var month = value.split('-')[1];
+                var year = value.split('-')[0];
+
+                var num = Number.parseInt(month) + 1;
+
+                if (num < 10) {
+                    num = "0" + num.toString();
+                } else {
+                    num = num.toString();
+                }
+
+                var newDate = year + "-" + num + "-" + day;
+
+                $("#expiration").val(newDate);
+                $("#expiration").text(newDate);
+            });
+
+            /*-------------------------------------------------------------------------------------------*/
+
+            /* SET PRODUCT VALUE */
+            $("#products option:selected").each(function () {
+                $("select[id*='products']").on('change', function () {
+                    calcTotal();
+                });
+            })
+
+            $(document).on("change", "#products option:selected", function () {
+                calcTotal();
+            });
+
+            /*-------------------------------------------------------------------------------------------*/
+
+            /* SET AMOUNT VALUE */
+            $("#products input[id*='amount']").on('change', function () {
+                calcTotal();
+            });
+
+            $(document).on("change", "#products input[id*='amount']", function () {
+                calcTotal();
+            });
+
+            /*-------------------------------------------------------------------------------------------*/
+
+            /* CHANGE FORM URL WHEN CLICKED ON CREATE */
+            $("#edit_inv_btn").on("click", function () {
+
+                $("#products option:selected").each(function () {
+                    productArray.push($(this).val().split('_')[0]);
+                })
+
+                $("#products input[id*='amount']").each(function () {
+                    amountArray.push($(this).val());
+                })
+
+                productArray.splice(0, 1);
+                amountArray.splice(0, 1);
+
+                console.log(productArray.toString());
+                console.log(amountArray.toString());
+                console.log(total);
+
+                $(this).append('<input type="hidden" name="total" value="' + total + '" /> ');
+                $(this).append('<input type="hidden" name="pids" value="' + productArray.toString() + '" /> ');
+                $(this).append('<input type="hidden" name="amounts" value="' + amountArray.toString() + '" /> ');
+
+                $("#form").submit();
+
+            });
+
+            /*-------------------------------------------------------------------------------------------*/
+
+            /* ADD NEW DIV INSIDE #products*/
+            $("#add_row_btn").on("click", function () {
+                @{cnt++;}
+                var copy = $("#productRow0").clone(true).show().appendTo("#products").find("input").val("");
+            });
+
+            /*-------------------------------------------------------------------------------------------*/
+
+            /* REMOVE DIV INSIDE #products*/
+            $("#del_row_btn").on("click", function () {
+                @{cnt--;}
+                $(this).parent().parent().remove();
+            });
+
+        });
+
+        /*-------------------------------------------------------------------------------------------*/
+
+        /* SET PRODUCT ROWS */
+        function setRows() {
+            var pids = new Array();
+            var amounts = new Array();
+            var pnames = new Array();
+
+            @foreach (var pid in ViewBag.PIDs)
+            {
+                @:pids.push('@(pid)');
+                        }
+
+            @foreach (var amount in ViewBag.Amounts)
+            {
+                @:amounts.push(@(amount));
+                        }
+
+            @foreach (var name in ViewBag.Names)
+            {
+                @:pnames.push('@(name)');
+                        }
+
+            for (var i = 0; i < pids.length; i++) {
+                var pid = pids[i];
+                var amount = amounts[i];
+
+                var html = "<div id='productRow'>"
+                            + "<div class='col-sm-7 col-md-7' style='padding-right:2px;'>"
+                            + "<select id='products' class='form-control'></select>"
+                            + "</div>"
+                            + "<div class='col-sm-3 col-md-3' style='padding-right:2px;padding-left:2px;'>"
+                            + "<input id='amount' value='" + amount + "' class='form-control' />"
+                            + "</div>"
+                            + "<div class='col-sm-2 col-md-2' style='padding-left:2px;'>"
+                            + "<a href='#' id='del_row_btn' class='btn'>"
+                            + "<span class='glyphicon glyphicon-minus' style='color:orangered;'></span>"
+                            + "</a>"
+                            + "</div>"
+                            + "<br />"
+                            + "<br />"
+                            + "</div>";
+
+                $("#products").append(html);
+
+                for (var i = 0; i < pnames.length; i++) {
+                    var pname = pnames[i];
+                    $("#products select[id*='products']").append("<option value='" + pid + "' selected>" + pname + "</option>");
+                }
+
+                @{cnt++;}
+            }
+        }
+
+        /*-------------------------------------------------------------------------------------------*/
+
+        /* FUNCTION TO CALCULATE TOTAL AND SHOW IN TOTAL BOX */
+        function calcTotal() {
+
+            $("#total").val("");
+            var amounts = new Array();
+            var pids = new Array();
+            var totalPrice = Number.parseFloat("0");
+
+            $("#products option:selected").each(function () {
+                pids.push($(this).val().split('_')[1]);
+            });
+
+            $("#products input[id*='amount']").each(function () {
+                amounts.push($(this).val());
+            });
+
+            pids.splice(0, 1);
+            amounts.splice(0, 1);
+
+            for (var i = 0; i < pids.length; i++) {
+                var price = Number.parseFloat(pids[i]).toFixed(2);
+                var amount = Number.parseInt(amounts[i]);
+
+                totalPrice += (price * amount);
+            }
+
+            $("#total").val(totalPrice.toLocaleString("nl-NL", { minimumFractionDigits: 2 }));
+            total = totalPrice.toLocaleString("nl-NL", { minimumFractionDigits: 2 });
+        }
+
+    </script>
+
+    <!--
 
     <script>
 
@@ -222,8 +425,8 @@
                     amountArray.push($(this).val());
                 })
 
-                productArray.splice(0, 1);
-                amountArray.splice(0, 1);
+                //productArray.splice(0, 1);
+                //amountArray.splice(0, 1);
 
                 console.log(productArray.toString());
                 console.log(amountArray.toString());
@@ -282,7 +485,7 @@
             for (var i = 0; i < pids.length; i++) {
                 var pid = pids[i];
                 var amount = amounts[i];
-                    
+
                 var html = "<div id='productRow'>"
                             + "<div class='col-sm-7 col-md-7' style='padding-right:2px;'>"
                             + "<select id='products' name='products' class='form-control'></select>"
@@ -328,6 +531,9 @@
                 amounts.push($(this).val());
             })
 
+            console.log('pid:' + pids.toString());
+            console.log('amount:' + amounts.toString());
+
             pids.splice(0, 1);
             amounts.splice(0, 1);
 
@@ -346,4 +552,5 @@
 
 
     </script>
+    -->
 }

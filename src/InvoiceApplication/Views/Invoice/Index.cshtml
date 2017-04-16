@@ -1,124 +1,137 @@
 @model IEnumerable<Invoice>
 
 @{
-    ViewData["Title"] = "Invoices";
+	ViewData["Title"] = "Invoices";
 }
 
 <div class="container">
 
-    <div class="row main">
+	<div class="row main">
 
-        <div class="panel-heading">
-            <div class="panel-title text-center">
-                <h1 class="title">Invoices</h1>
-                <hr style="width:60%;border-top:2px solid #fff;" />
-            </div>
-        </div>
-
-
-        <div class="main-large main-center">
-            <p>
-                @using (Html.BeginForm())
-                {
-
-                    <br />
-
-                    <div class="form-group">
-                        <div class="cols-sm-10">
-                            <div class="form-inline">
+		<div class="panel-heading">
+			<div class="panel-title text-center">
+				<h1 class="title">Invoices</h1>
+				<hr style="width:60%;border-top:2px solid #fff;" />
+			</div>
+		</div>
 
 
-                                @Html.TextBox("searchQuery", null, htmlAttributes: new { @class = "form-control", @placeholder = "Find..." })
+		<div class="main-large main-center">
+			<p>
+				@using (Html.BeginForm())
+				{
 
-                                <button type="submit" value="Search" class="btn btn-primary">
-                                    <span class="fa fa-search"></span>
-                                    Search
-                                </button>
+					<br />
 
-                                <a asp-action="Create" value="Create Invoice" class="btn btn-primary" style="float:right;">
-                                    <span class="fa fa-file-text fa-lg"></span>
-                                </a>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <br />
-                    <br />
-
-                }
-            </p>
-
-            <table class="table table-hover table-striped">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.ActionLink("Invoice Number", "Index", new { sortOrder = ViewBag.NumberSortParm })
-                        </th>
-                        <th>
-                            @Html.ActionLink("Debtor", "Index", new { sortOrder = ViewBag.DebtorSortParm })
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.CreatedOn)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ExpirationDate)
-                        </th>
-                        <th>
-                            @Html.Raw("Status")
-                        </th>
-                        <th>
-                            @Html.ActionLink("Total", "Index", new { sortOrder = ViewBag.TotalSortParm })
-                        </th>
-                        <th>
-                            @Html.Raw("Products")
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                <a asp-action="Details" asp-route-id="@item.InvoiceNumber">
-                                    @Html.DisplayFor(modelItem => item.InvoiceNumber)
-                                </a>
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Debtor.FullName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.CreatedOn)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ExpirationDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Type)
-                            </td>
-                            <td>
-                                @Html.Raw(String.Format("{0:C2}", item.Total))
-                            </td>
-                            <td>
-                                @foreach (var items in item.InvoiceItems)
-                                {
-                                    Product product = items.Product;
-                                    @Html.Raw(items.Amount + "x " + product.Name + "<br />")
-                                }
-                            </td>
-                            <td>
-                                <a asp-action="Edit" asp-route-id="@item.InvoiceNumber">Edit</a> |
-                                <a asp-action="Delete" asp-route-id="@item.InvoiceNumber">Delete</a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+					<div class="form-group">
+						<div class="cols-sm-10">
+							<div class="form-inline">
 
 
-        </div>
+								@Html.TextBox("searchQuery", null, htmlAttributes: new { @class = "form-control", @placeholder = "Find..." })
 
-    </div>
+								<button type="submit" value="Search" class="btn btn-primary">
+									<span class="fa fa-search"></span>
+									Search
+								</button>
+
+								<a asp-action="Create" value="Create Invoice" class="btn btn-primary" style="float:right;">
+									<span class="fa fa-file-text fa-lg"></span>
+								</a>
+
+							</div>
+						</div>
+					</div>
+
+					<br />
+					<br />
+
+				}
+			</p>
+
+			<table class="table table-hover table-striped">
+				<thead>
+					<tr>
+						<th>
+							@Html.ActionLink("Invoice Number", "Index", new { sortOrder = ViewBag.NumberSortParm })
+						</th>
+						<th>
+							@Html.ActionLink("Debtor", "Index", new { sortOrder = ViewBag.DebtorSortParm })
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.CreatedOn)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.ExpirationDate)
+						</th>
+						<th>
+							@Html.Raw("Status")
+						</th>
+						<th>
+                            @Html.DisplayNameFor(model => model.Paid)
+						</th>
+						<th>
+							@Html.ActionLink("Total", "Index", new { sortOrder = ViewBag.TotalSortParm })
+						</th>
+						<th>
+							@Html.Raw("Products")
+						</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model)
+					{
+						<tr>
+							<td>
+								<a asp-action="Details" asp-route-id="@item.InvoiceNumber">
+									@Html.DisplayFor(modelItem => item.InvoiceNumber)
+								</a>
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.Debtor.FullName)
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.CreatedOn)
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.ExpirationDate)
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.Type)
+							</td>
+							<td>
+								@if (item.Paid == true)
+								{
+									@Html.Raw("Yes")
+								}
+								else
+								{
+									@Html.Raw("No")
+								}
+							</td>
+							<td>
+								@Html.Raw(String.Format("{0:C2}", item.Total))
+							</td>
+							<td>
+								@foreach (var items in item.InvoiceItems)
+								{
+									Product product = items.Product;
+									@Html.Raw(items.Amount + "x " + product.Name + "<br />")
+								}
+							</td>
+							<td>
+								<a asp-action="Edit" asp-route-id="@item.InvoiceNumber">Edit</a> |
+								<a asp-action="Delete" asp-route-id="@item.InvoiceNumber">Delete</a>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+
+
+		</div>
+
+	</div>
 
 </div>

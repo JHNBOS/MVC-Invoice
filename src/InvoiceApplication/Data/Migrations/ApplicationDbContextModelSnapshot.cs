@@ -118,6 +118,8 @@ namespace InvoiceApplication.Data.Migrations
 
                     b.Property<DateTime>("ExpirationDate");
 
+                    b.Property<bool>("Paid");
+
                     b.Property<decimal>("Total");
 
                     b.Property<string>("Type");

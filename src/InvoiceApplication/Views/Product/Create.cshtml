@@ -32,7 +32,7 @@
                             <div class="col-md-10">
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-industry fa-lg" aria-hidden="true"></i></span>
-                                    <input type="text" asp-for="Name" class="form-control" name="name" id="name" placeholder="Enter product name" />
+                                    <input type="text" asp-for="Name" class="form-control" id="name" placeholder="Enter product name" />
                                     <span asp-validation-for="Name" class="text-danger" />
                                 </div>
                             </div>
@@ -44,7 +44,7 @@
                             <div class="col-md-10">
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-industry fa-lg" aria-hidden="true"></i></span>
-                                    <input type="text" asp-for="Description" class="form-control" name="description" id="description" placeholder="Enter product description" />
+                                    <input type="text" asp-for="Description" class="form-control" id="description" placeholder="Enter product description" />
                                     <span asp-validation-for="Description" class="text-danger" />
                                 </div>
                             </div>
@@ -68,7 +68,7 @@
                             <div class="col-md-10">
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-percent fa-lg" aria-hidden="true"></i></span>
-                                    <select asp-for="TaxPercentage" class="form-control" name="description" id="description">
+                                    <select asp-for="TaxPercentage" class="form-control" id="tax">
                                         <option value="0">0</option>
                                         <option value="6">6</option>
                                         <option value="21">21</option>

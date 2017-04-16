@@ -18,7 +18,7 @@
 
         <div class="main-large main-center">
 
-            <form class="form-horizontal" asp-controller="Debtor" asp-action="Edit">
+            <form class="form-horizontal" asp-controller="Debtor" asp-action="Edit" method="post">
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="DebtorID" />
@@ -32,7 +32,7 @@
                         <div class="col-md-10">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-id-card-o fa-lg" aria-hidden="true"></i></span>
-                                <input type="text" asp-for="FirstName" class="form-control" name="firstname" id="firstname" placeholder="Enter first name" />
+                                <input type="text" asp-for="FirstName" class="form-control" id="firstname" placeholder="Enter first name" />
                                 <span asp-validation-for="FirstName" class="text-danger" />
                             </div>
                         </div>
@@ -45,7 +45,7 @@
                         <div class="col-md-10">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-id-card-o fa-lg" aria-hidden="true"></i></span>
-                                <input type="text" asp-for="LastName" class="form-control" name="lastname" id="lastname" placeholder="Enter last name" />
+                                <input type="text" asp-for="LastName" class="form-control" id="lastname" placeholder="Enter last name" />
                                 <span asp-validation-for="LastName" class="text-danger" />
                             </div>
                         </div>
@@ -58,7 +58,7 @@
                         <div class="col-md-10">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-id-card-o fa-lg" aria-hidden="true"></i></span>
-                                <input type="text" asp-for="Email" class="form-control" name="email" id="email" placeholder="Enter email" />
+                                <input type="text" asp-for="Email" class="form-control" id="email" placeholder="Enter email" />
                                 <span asp-validation-for="Email" class="text-danger" />
                             </div>
                         </div>
@@ -71,7 +71,7 @@
                         <div class="col-md-10">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-id-card-o fa-lg" aria-hidden="true"></i></span>
-                                <input type="text" asp-for="Phone" class="form-control" name="phone" id="phone" placeholder="Enter phone number" />
+                                <input type="text" asp-for="Phone" class="form-control" id="phone" placeholder="Enter phone number" />
                                 <span asp-validation-for="Phone" class="text-danger" />
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                         <div class="col-md-10">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-id-card-o fa-lg" aria-hidden="true"></i></span>
-                                <input type="text" asp-for="BankAccount" class="form-control" name="bankaccount" id="bankaccount" placeholder="Enter bank account number" />
+                                <input type="text" asp-for="BankAccount" class="form-control" id="bankaccount" placeholder="Enter bank account number" />
                                 <span asp-validation-for="BankAccount" class="text-danger" />
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                         <div class="col-md-10">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-envelope-open" aria-hidden="true"></i></span>
-                                <input type="text" asp-for="Address" class="form-control" name="address" id="address" placeholder="Enter address" />
+                                <input type="text" asp-for="Address" class="form-control" id="address" placeholder="Enter address" />
                                 <span asp-validation-for="Address" class="text-danger"></span>
                             </div>
                         </div>
@@ -115,7 +115,7 @@
                         <div class="col-md-10">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-envelope-open" aria-hidden="true"></i></span>
-                                <input type="text" asp-for="PostalCode" class="form-control" name="postal" id="postal" placeholder="Enter postal code" />
+                                <input type="text" asp-for="PostalCode" class="form-control" id="postal" placeholder="Enter postal code" />
                                 <span asp-validation-for="PostalCode" class="text-danger"></span>
                             </div>
                         </div>
@@ -128,7 +128,7 @@
                         <div class="col-md-10">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-envelope-open" aria-hidden="true"></i></span>
-                                <input type="text" asp-for="City" class="form-control" name="city" id="city" placeholder="Enter city" />
+                                <input type="text" asp-for="City" class="form-control" id="city" placeholder="Enter city" />
                                 <span asp-validation-for="City" class="text-danger"></span>
                             </div>
                         </div>
@@ -141,7 +141,7 @@
                         <div class="col-md-10">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-envelope-open" aria-hidden="true"></i></span>
-                                <input type="text" asp-for="Country" class="form-control" name="country" id="country" placeholder="Enter country" />
+                                <input type="text" asp-for="Country" class="form-control" id="country" placeholder="Enter country" />
                                 <span asp-validation-for="Country" class="text-danger"></span>
                             </div>
                         </div>

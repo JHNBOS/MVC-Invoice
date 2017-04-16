@@ -8,14 +8,15 @@ using Microsoft.EntityFrameworkCore;
 using InvoiceApplication.Data;
 using InvoiceApplication.Models;
 using Microsoft.AspNetCore.Hosting;
+using System.Diagnostics;
 
 namespace InvoiceApplication.Controllers
 {
     public class MyInvoiceController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private ApplicationDbContext _context;
         private ISettingsService _settings;
-        private readonly IHostingEnvironment _env;
+        private IHostingEnvironment _env;
 
         public MyInvoiceController(ApplicationDbContext context, ISettingsService settingsService, IHostingEnvironment env)
         {
@@ -23,6 +24,50 @@ namespace InvoiceApplication.Controllers
             _settings = settingsService;
             _env = env;
         }
+
+        /*----------------------------------------------------------------------*/
+        //DATABASE ACTION METHODS
+
+        private async Task<Invoice> GetInvoice(int? id)
+        {
+            Invoice invoice = null;
+
+            try
+            {
+                invoice = await _context.Invoices.Include(s => s.Debtor)
+                                    .Include(s => s.InvoiceItems)
+                                    .ThenInclude(s => s.Product)
+                                    .SingleOrDefaultAsync(s => s.InvoiceNumber == id);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+
+            return invoice;
+        }
+
+        private async Task<List<InvoiceItem>> GetInvoiceItems(int? id)
+        {
+            List<InvoiceItem> itemList = null;
+
+            try
+            {
+                itemList = await _context.InvoiceItems.Include(d => d.Product)
+                                        .Where(s => s.InvoiceNumber == id)
+                                        .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+
+            return itemList;
+        }
+
+        /*----------------------------------------------------------------------*/
+        //CONTROLLER ACTIONS
+
 
         // GET: MyInvoice
         public async Task<IActionResult> Index(string sortOrder, string searchQuery)
@@ -86,11 +131,39 @@ namespace InvoiceApplication.Controllers
                 return NotFound();
             }
 
-            var invoice = await _context.Invoices
-                            .Include(d => d.Debtor)
-                            .Include(d => d.InvoiceItems)
-                                .ThenInclude(c => c.Product)
-                            .SingleOrDefaultAsync(m => m.InvoiceNumber == id);
+            var products = _context.Products
+                 .Select(s => new SelectListItem
+                 {
+                     Value = s.ProductID.ToString() + "_" + s.Price.ToString(),
+                     Text = s.Name
+                 });
+
+            var invoice = await GetInvoice(id);
+            var items = await GetInvoiceItems(id);
+
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            var p = _context.Products;
+            string[] pids = new string[p.Count()];
+
+            int cnt = 0;
+            foreach (var pid in p)
+            {
+                string _id = pid.ProductID + "_" + pid.Price;
+                pids[cnt] = _id;
+                cnt++;
+            }
+
+            ViewBag.PIDs = pids;
+            ViewBag.Amounts = items.Select(s => s.Amount).ToArray();
+            ViewBag.Names = items.Select(s => s.Product.Name).ToArray();
+            ViewBag.Total = String.Format("{0:N2}", invoice.Total);
+
+            ViewBag.Products = new SelectList(products, "Value", "Text");
+            ViewData["DebtorID"] = new SelectList(_context.Debtors, "DebtorID", "FullName", invoice.DebtorID);
 
             if (invoice == null)
             {

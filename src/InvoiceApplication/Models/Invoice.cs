@@ -27,6 +27,8 @@ namespace InvoiceApplication.Models
         [Display(Name = "Save As")]
         public string Type { get; set; }
 
+        public bool Paid { get; set; }
+
         public virtual Debtor Debtor { get; set; }
         public virtual List<InvoiceItem> InvoiceItems { get; set; }
     }

@@ -7,7 +7,6 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using InvoiceApplication.Services;
-using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 
 namespace InvoiceApplication.Controllers

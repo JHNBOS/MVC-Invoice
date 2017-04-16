@@ -80,6 +80,7 @@ namespace InvoiceApplication.Controllers
             try
             {
                 invoice.Total = decimal.Parse(total);
+                invoice.Paid = false;
 
                 _context.Invoices.Add(invoice);
                 await _context.SaveChangesAsync();
@@ -129,36 +130,50 @@ namespace InvoiceApplication.Controllers
             }
         }
 
-        private async Task UpdateInvoice(Invoice invoice, string pid, string amount, string total)
+        private async Task UpdateInvoice(Invoice invoice, string pids, string amounts, string total)
         {
             bool isEmpty = false;
             string[] pidArray = null;
             string[] amountArray = null;
             List<InvoiceItem> items = new List<InvoiceItem>();
 
-            try
-            { 
-                invoice.Total = decimal.Parse(total);
+            Debug.WriteLine("pid: " + pids);
+            Debug.WriteLine("amount: " + amounts);
+            Debug.WriteLine("total: " + total);
 
-                _context.Update(invoice);
-                _context.InvoiceItems.RemoveRange(_context.InvoiceItems.Where(s => s.InvoiceNumber == invoice.InvoiceNumber));
-                _context.SaveChanges();
-                
-                if (pid == "" || pid == null)
+            try
+            {
+               
+                if (pids == "" || pids == null)
                 {
                     isEmpty = true;
                 }
 
                 if (isEmpty == false)
                 {
-                    if (pid.Length > 1)
+                    
+                    Invoice invoiceBeforeUpdate = _context.Invoices.Single(s => s.InvoiceNumber == invoice.InvoiceNumber);
+
+                    invoiceBeforeUpdate.InvoiceNumber = invoice.InvoiceNumber;
+                    invoiceBeforeUpdate.DebtorID = invoice.DebtorID;
+                    invoiceBeforeUpdate.CreatedOn = invoice.CreatedOn;
+                    invoiceBeforeUpdate.ExpirationDate = invoice.ExpirationDate;
+                    invoiceBeforeUpdate.Type = invoice.Type;
+                    invoiceBeforeUpdate.Total = decimal.Parse(total);
+
+                    _context.Update(invoiceBeforeUpdate);
+                    _context.InvoiceItems.RemoveRange(_context.InvoiceItems.Where(s => s.InvoiceNumber == invoice.InvoiceNumber));
+                    _context.SaveChanges();
+
+
+                    if (pids.Length > 1)
                     {
-                        pidArray = pid.Split(',');
+                        pidArray = pids.Split(',');
                     }
 
-                    if (amount.Length > 1)
+                    if (amounts.Length > 1)
                     {
-                        amountArray = amount.Split(',');
+                        amountArray = amounts.Split(',');
                     }
 
                     if (pidArray != null)
@@ -177,20 +192,20 @@ namespace InvoiceApplication.Controllers
                         }
 
                         _context.InvoiceItems.AddRange(items);
+                        await _context.SaveChangesAsync();
                     }
-
-                    if (pidArray == null && (pid != "" || pid != null))
+                    else if(pidArray == null && (pids != "" || pids != null))
                     {
                         InvoiceItem item = new InvoiceItem();
-                        item.Amount = int.Parse(amount);
+                        item.Amount = int.Parse(amounts);
                         item.InvoiceNumber = invoice.InvoiceNumber;
-                        item.ProductID = int.Parse(pid.Split('_')[0]);
+                        item.ProductID = int.Parse(pids.Split('_')[0]);
 
                         _context.InvoiceItems.Add(item);
+                        await _context.SaveChangesAsync();
                     }
                 }
 
-                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -420,7 +435,7 @@ namespace InvoiceApplication.Controllers
         // POST: Invoice/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("InvoiceNumber,CreatedOn,DebtorID,ExpirationDate,Type")] Invoice invoice, string total, string pid, string amount)
+        public async Task<IActionResult> Edit(int id, [Bind("InvoiceNumber,CreatedOn,DebtorID,ExpirationDate,Type")] Invoice invoice, string pids, string amounts, string total)
         {
             if (id != invoice.InvoiceNumber)
             {
@@ -430,7 +445,7 @@ namespace InvoiceApplication.Controllers
             if (ModelState.IsValid)
             {
                 Invoice invoiceBeforeUpdate = _context.Invoices.Single(s => s.InvoiceNumber == invoice.InvoiceNumber);
-                await UpdateInvoice(invoice, pid, amount, total);
+                await UpdateInvoice(invoice, pids, amounts, total);
 
                 //SEND MAIL TO DEBTOR NOTIFYING ABOUT INVOICE
                 if (invoice.Type == "Final" && invoiceBeforeUpdate.Type != "Final")
@@ -504,6 +519,18 @@ namespace InvoiceApplication.Controllers
         {
             await DeleteInvoice(id);
             return RedirectToAction("Index");
+        }
+
+        // POST: Invoice/Pay
+        public IActionResult Pay(int id)
+        {
+            Invoice invoiceBeforeUpdate = _context.Invoices.Single(s => s.InvoiceNumber == id);
+            invoiceBeforeUpdate.Paid = true;
+
+            _context.Update(invoiceBeforeUpdate);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "MyInvoice", null);
         }
 
         private bool InvoiceExists(int id)
