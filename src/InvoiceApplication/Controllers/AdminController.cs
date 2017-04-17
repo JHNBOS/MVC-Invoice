@@ -166,7 +166,9 @@ namespace InvoiceApplication.Controllers
             if (ModelState.IsValid)
             {
                 await UpdateAdmin(user);
-                return RedirectToAction("Index", "Home", new { area = "" });
+
+                User currentUser = SessionHelper.Get<User>(this.HttpContext.Session, "User");
+                return RedirectToAction("Index", "Home", new { email = currentUser.Email });
             }
             return View(user);
         }

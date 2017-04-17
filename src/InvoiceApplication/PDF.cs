@@ -85,6 +85,7 @@ namespace InvoiceApplication
             string lname = Debtor.LastName;
             string dAddress = Debtor.Address;
             string dCity = Debtor.PostalCode + " " + Debtor.City;
+            string dCountry = Debtor.Country;
 
             string logo = settings.GetLogo();
             bool useLogo = settings.UseLogo();
@@ -94,6 +95,7 @@ namespace InvoiceApplication
             string name = "";
             string address = settings.GetAddress();
             string city = settings.GetPostalCode() + " | " + settings.GetCity();
+            string country = settings.GetCountry();
             string phone = settings.GetPhone();
             string btw = settings.GetTaxNumber();
             string kvk = settings.GetCompanyNumber();
@@ -121,21 +123,22 @@ namespace InvoiceApplication
 
             /*--------------------------------------------------------------------------*/
             //Company info rows               
-            tf.DrawString("Address:", infoFont, XBrushes.Black, new XRect(leftMargin, topMargin, 25, 20), XStringFormats.TopLeft);
-            tf.DrawString("Tel:", infoFont, XBrushes.Black, new XRect(leftMargin, topMargin + 28, 25, 20), XStringFormats.TopLeft);
-            tf.DrawString("Email:", infoFont, XBrushes.Black, new XRect(leftMargin, topMargin + 43, 25, 20), XStringFormats.TopLeft);
-            tf.DrawString("Tax nr:", infoFont, XBrushes.Black, new XRect(leftMargin, topMargin + 58, 40, 20), XStringFormats.TopLeft);
-            tf.DrawString("Co. nr:", infoFont, XBrushes.Black, new XRect(leftMargin, topMargin + 73, 40, 20), XStringFormats.TopLeft);
-            tf.DrawString("Web:", infoFont, XBrushes.Black, new XRect(leftMargin, topMargin + 88, 35, 20), XStringFormats.TopLeft);
+            tf.DrawString("Addr:", infoFont, XBrushes.Black, new XRect(leftMargin + 0, topMargin, 24, 20), XStringFormats.TopLeft);
+            tf.DrawString("Tel:", infoFont, XBrushes.Black, new XRect(leftMargin + 7, topMargin + 43, 24, 20), XStringFormats.TopLeft);
+            tf.DrawString("Email:", infoFont, XBrushes.Black, new XRect(leftMargin - 4, topMargin + 58, 24, 20), XStringFormats.TopLeft);
+            tf.DrawString("Tax Nr:", infoFont, XBrushes.Black, new XRect(leftMargin - 9, topMargin + 73, 40, 20), XStringFormats.TopLeft);
+            tf.DrawString("Company:", infoFont, XBrushes.Black, new XRect(leftMargin - 24, topMargin + 88, 24, 20), XStringFormats.TopLeft);
+            tf.DrawString("Web:", infoFont, XBrushes.Black, new XRect(leftMargin + 1, topMargin + 103, 24, 20), XStringFormats.TopLeft);
 
             //Company info
-            tf.DrawString(address, infoFont, XBrushes.Black, new XRect(leftMargin + 45, topMargin, 280, 20), XStringFormats.TopLeft);
-            tf.DrawString(city, infoFont, XBrushes.Black, new XRect(leftMargin + 45, topMargin + 13, 280, 20), XStringFormats.TopLeft);
-            tf.DrawString(phone, infoFont, XBrushes.Black, new XRect(leftMargin + 45, topMargin + 28, 280, 20), XStringFormats.TopLeft);
-            tf.DrawString(email, infoFont, XBrushes.Black, new XRect(leftMargin + 45, topMargin + 43, 280, 20), XStringFormats.TopLeft);
-            tf.DrawString(kvk, infoFont, XBrushes.Black, new XRect(leftMargin + 45, topMargin + 58, 280, 20), XStringFormats.TopLeft);
-            tf.DrawString(btw, infoFont, XBrushes.Black, new XRect(leftMargin + 45, topMargin + 73, 280, 20), XStringFormats.TopLeft);
-            tf.DrawString(web, infoFont, XBrushes.Black, new XRect(leftMargin + 45, topMargin + 88, 280, 20), XStringFormats.TopLeft);
+            tf.DrawString(address, infoFont, XBrushes.Black, new XRect(leftMargin + 44, topMargin, 280, 20), XStringFormats.TopLeft);
+            tf.DrawString(city, infoFont, XBrushes.Black, new XRect(leftMargin + 44, topMargin + 13, 280, 20), XStringFormats.TopLeft);
+            tf.DrawString(country, infoFont, XBrushes.Black, new XRect(leftMargin + 44, topMargin + 27, 280, 20), XStringFormats.TopLeft);
+            tf.DrawString(phone, infoFont, XBrushes.Black, new XRect(leftMargin + 44, topMargin + 43, 280, 20), XStringFormats.TopLeft);
+            tf.DrawString(email, infoFont, XBrushes.Black, new XRect(leftMargin + 44, topMargin + 58, 280, 20), XStringFormats.TopLeft);
+            tf.DrawString(kvk, infoFont, XBrushes.Black, new XRect(leftMargin + 44, topMargin + 73, 280, 20), XStringFormats.TopLeft);
+            tf.DrawString(btw, infoFont, XBrushes.Black, new XRect(leftMargin + 44, topMargin + 88, 280, 20), XStringFormats.TopLeft);
+            tf.DrawString(web, infoFont, XBrushes.Black, new XRect(leftMargin + 44, topMargin + 103, 280, 20), XStringFormats.TopLeft);
 
             /*------------------------------------------*/
             //invoice info rows
@@ -153,6 +156,7 @@ namespace InvoiceApplication
             tf.DrawString(name, textFont, XBrushes.Black, new XRect(rightMargin - 40, topMargin + 150, 160, 20), XStringFormats.TopLeft);
             tf.DrawString(dAddress, textFont, XBrushes.Black, new XRect(rightMargin - 40, topMargin + 165, 200, 20), XStringFormats.TopLeft);
             tf.DrawString(dCity, textFont, XBrushes.Black, new XRect(rightMargin - 40, topMargin + 180, 200, 20), XStringFormats.TopLeft);
+            tf.DrawString(dCountry, textFont, XBrushes.Black, new XRect(rightMargin - 40, topMargin + 195, 200, 20), XStringFormats.TopLeft);
 
             /*------------------------------------------*/
             //Add divider between invoice info and message
@@ -268,9 +272,9 @@ namespace InvoiceApplication
                 //Text
                 tf.DrawString(product.Name, infoFont, XBrushes.Black, new XRect(leftMargin + 2, y + 2, 188, 15), XStringFormats.TopLeft);
                 tf.DrawString(pItem.Amount.ToString(), infoFont, XBrushes.Black, new XRect(leftMargin + 224, y + 2, 188, 15), XStringFormats.TopLeft);
-                tf.DrawString("€" + string.Format("{0:N2}", product.Price), infoFont, XBrushes.Black, new XRect(leftMargin + 274, y + 2, 188, 15), XStringFormats.TopLeft);
+                tf.DrawString("€ " + string.Format("{0:N2}", product.Price), infoFont, XBrushes.Black, new XRect(leftMargin + 274, y + 2, 188, 15), XStringFormats.TopLeft);
                 tf.DrawString(product.TaxPercentage + "%", infoFont, XBrushes.Black, new XRect(leftMargin + 364, y + 2, 188, 15), XStringFormats.TopLeft);
-                tf.DrawString("€" + string.Format("{0:N2}", (product.Price * pItem.Amount)), infoFont, XBrushes.Black, new XRect(rightMargin2 - 92, y + 2, 188, 15), XStringFormats.TopLeft);
+                tf.DrawString("€ " + string.Format("{0:N2}", (product.Price * pItem.Amount)), infoFont, XBrushes.Black, new XRect(rightMargin2 - 92, y + 2, 188, 15), XStringFormats.TopLeft);
                 /*--------------------------------------------*/
 
                 y = y + 15;
@@ -289,9 +293,9 @@ namespace InvoiceApplication
             tf.DrawString("+", infoFont, XBrushes.Black, new XRect(rightMargin + 117, bottomMargin - 123.5, 5, 5), XStringFormats.TopLeft);
 
             //Numbers
-            tf.DrawString("€" + string.Format("{0:N2}", subTotal), infoFont, XBrushes.Black, new XRect(rightMargin + 40, bottomMargin - 150, 45, 15), XStringFormats.TopLeft);
-            tf.DrawString("€" + string.Format("{0:N2}", btwDecimal), infoFont, XBrushes.Black, new XRect(rightMargin + 40, bottomMargin - 135, 45, 15), XStringFormats.TopLeft);
-            tf.DrawString("€" + string.Format("{0:N2}", total), infoFont, XBrushes.Black, new XRect(rightMargin + 40, bottomMargin - 114, 45, 15), XStringFormats.TopLeft);
+            tf.DrawString("€" + " " + string.Format("{0:N2}", subTotal), infoFont, XBrushes.Black, new XRect(rightMargin + 25, bottomMargin - 150, 65, 15), XStringFormats.TopLeft);
+            tf.DrawString("€" + " " + string.Format("{0:N2}", btwDecimal), infoFont, XBrushes.Black, new XRect(rightMargin + 25, bottomMargin - 135, 65, 15), XStringFormats.TopLeft);
+            tf.DrawString("€" + " " + string.Format("{0:N2}", total), infoFont, XBrushes.Black, new XRect(rightMargin + 25, bottomMargin - 114, 65, 15), XStringFormats.TopLeft);
             /*--------------------------------------------------------------------------*/
             //Disclaimer
             int width = (Convert.ToInt32(page.Width.Point) - 40);

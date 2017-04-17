@@ -1,12 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace InvoiceApplication
 {
@@ -14,7 +8,7 @@ namespace InvoiceApplication
     {
         private AppSettings _appSettings;
 
-        public SettingsService(IOptions<AppSettings> appSettings)
+        public SettingsService(IOptionsSnapshot<AppSettings> appSettings)
         {
             _appSettings = appSettings.Value;
         }
@@ -80,6 +74,11 @@ namespace InvoiceApplication
         public string GetCity()
         {
             return _appSettings.City;
+        }
+
+        public string GetCountry()
+        {
+            return _appSettings.Country;
         }
 
         public string GetTaxNumber()
@@ -376,6 +375,30 @@ namespace InvoiceApplication
                 //Change value
                 RootObject obj = JsonConvert.DeserializeObject<RootObject>(json);
                 obj.Data.City = value;
+
+                //Write new value to json file
+                var newJson = JsonConvert.SerializeObject(obj);
+                StreamWriter writer = new StreamWriter(@"settings.json", false);
+                writer.Write(newJson);
+                writer.Close();
+            }
+        }
+
+        public void SetCountry(string value)
+        {
+            if (value != "" || value != null || value != _appSettings.Country)
+            {
+                string json = "";
+
+                //Get content of json file
+                using (StreamReader files = System.IO.File.OpenText(@"settings.json"))
+                {
+                    json = files.ReadToEnd();
+                }
+
+                //Change value
+                RootObject obj = JsonConvert.DeserializeObject<RootObject>(json);
+                obj.Data.Country = value;
 
                 //Write new value to json file
                 var newJson = JsonConvert.SerializeObject(obj);

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Collections.Generic;
+using Microsoft.Extensions.Options;
 
 namespace InvoiceApplication.Controllers
 {
@@ -172,7 +173,9 @@ namespace InvoiceApplication.Controllers
             if (ModelState.IsValid)
             {
                 await UpdateUser(user);
-                return RedirectToAction("Index", "Home", new { area = "" });
+
+                User currentUser = SessionHelper.Get<User>(this.HttpContext.Session, "User");
+                return RedirectToAction("Index", "Home", new { email = currentUser.Email });
             }
 
             return View(user);
@@ -233,7 +236,7 @@ namespace InvoiceApplication.Controllers
 
             if (login != null)
             {
-                HttpContext.Session.Set("User", (User)login);
+                SessionHelper.Set(this.HttpContext.Session, "User", login);
                 return RedirectToAction("Index", "Home", new { email = login.Email });
             }
 
@@ -303,6 +306,7 @@ namespace InvoiceApplication.Controllers
             current.Address = _settings.GetAddress();
             current.City = _settings.GetCity();
             current.PostalCode = _settings.GetPostalCode();
+            current.Country = _settings.GetCountry();
             current.CompanyNumber = _settings.GetCompanyNumber();
             current.TaxNumber = _settings.GetTaxNumber();
             current.Logo = _settings.GetLogo();
@@ -351,11 +355,13 @@ namespace InvoiceApplication.Controllers
                 _settings.SetAddress(AppSettings.Address);
                 _settings.SetPostalCode(AppSettings.PostalCode);
                 _settings.SetCity(AppSettings.City);
+                _settings.SetCountry(AppSettings.Country);
                 _settings.SetCompanyNumber(AppSettings.CompanyNumber);
                 _settings.SetTaxNumber(AppSettings.TaxNumber);
                 _settings.SetUseLogo(AppSettings.UseLogo);
 
-                return RedirectToAction("Index", "Home", new { area = "" });
+                User currentUser = SessionHelper.Get<User>(this.HttpContext.Session, "User");
+                return RedirectToAction("Index", "Home", new { email = currentUser.Email });
             }
 
             return View();

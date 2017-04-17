@@ -51,6 +51,9 @@ namespace InvoiceApplication
         [JsonProperty("City")]
         public string City { get; set; }
 
+        [JsonProperty("Country")]
+        public string Country { get; set; }
+
         [JsonProperty("TaxNumber")]
         public string TaxNumber { get; set; }
 

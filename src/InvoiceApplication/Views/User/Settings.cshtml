@@ -96,6 +96,18 @@
                             </div>
                         </div>
 
+                        <!--COUNTRY-->
+                        <div class="form-group">
+                            <label asp-for="Country" class="col-md-2 control-label"></label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-envelope-open fa-lg" aria-hidden="true"></i></span>
+                                    <input type="text" asp-for="Country" class="form-control" id="country" placeholder="Enter company country" />
+                                    <span asp-validation-for="Country" class="text-danger" />
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="col-sm-5 col-md-5" style="padding-left:0px !important;">
                         <!--COMPANY EMAIL-->

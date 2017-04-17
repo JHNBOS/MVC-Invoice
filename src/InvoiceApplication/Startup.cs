@@ -22,7 +22,7 @@ namespace InvoiceApplication
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile("settings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("settings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
 
@@ -45,12 +45,18 @@ namespace InvoiceApplication
             if (conn.Contains("%CONTENTROOTPATH%"))
             {
                 conn = conn.Replace("%CONTENTROOTPATH%", _contentRootPath);
+
             }
 
-            // Configure using a sub-section of the appsettings.json file.
             services.AddOptions();
+
+            // Configure using a sub-section of the appsettings.json file.
             services.Configure<AppSettings>(this.Configuration.GetSection("AppSettings"));
+            services.AddSingleton<IConfigurationRoot>(Configuration); 
+            services.AddSingleton<IConfiguration>(Configuration);  
             services.AddSingleton<ISettingsService, SettingsService>();
+
+            this.Configuration.Reload();
 
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options =>
