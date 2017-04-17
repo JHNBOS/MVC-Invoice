@@ -59,10 +59,13 @@
                             @Html.DisplayNameFor(model => model.ExpirationDate)
                         </th>
                         <td>
-                            @Html.DisplayNameFor(model => model.Paid)
+                            @Html.Raw("<b>Paid</b>")
                         </td>
                         <th>
                             @Html.ActionLink("Total", "Index", new { sortOrder = ViewBag.TotalSortParm })
+                        </th>
+                        <th>
+                            @Html.Raw("Download")
                         </th>
                         <th></th>
                     </tr>
@@ -94,6 +97,9 @@
                             </td>
                             <td>
                                 @Html.Raw(String.Format("{0:C2}", item.Total))
+                            </td>
+                            <td>
+                                <a asp-action="PDF" asp-route-id="@item.InvoiceNumber">Download PDF</a>
                             </td>
                         </tr>
                     }

@@ -11,6 +11,9 @@
     {
         user = (User)Context.Session.Get<User>("User");
     }
+
+    var count = ViewBag.invoiceList.Count;
+
 }
 
 @section HEAD{
@@ -67,53 +70,83 @@
 @section Scripts{
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-<script>
+    <script>
         $(document).ready(function () {
-            /* BEGIN OF SCRIPT FOR TEXT */
-            @{
-                var count = ViewBag.invoiceList.Count;
-            }
+            showChart();
+            setText();
+        });
+
+        function setText(){
 
             var noUserText = "With this application it is possible to view and pay your invoices"
-                        + "<br /><br />"
-                        + "To use this website, u must login using the credentials sent to you by @settings.Value.Name.";
+                            + "<br /><br />"
+                            + "To use this website, you must login using the credentials sent to you by @settings.Value.Name.";
+
+            var adminText = "<div class='row'>"
+                            + "<div class='col-md-12 text-center'>"
+                            + "<h3>Let's Start</h3>"
+                            + "<br />"
+                            + "<p>"
+                                + "by adding new debtors to your list to start sending invoices to them..."
+                            + "</p>"
+                            + "<p>"
+                                + "<a href='@Url.Action("Index", "Invoice")' class='btn btn-primary btn-link' style='width:150px;height:35px;font-weight:600;'>Add new debtor</a>"
+                            + "</p>"
+                            + "<br />"
+                            + "<p>"
+                                + "...or start by creating a new invoice for one of your debtors."
+                            + "</p>"
+                            + "<p>"
+                                + "<a href='@Url.Action("Index", "Invoice")' class='btn btn-primary btn-link' style='width:150px;height:35px;font-weight:600;'>Create Invoice</a>";
+                            + "</p>"
+                            + "</div>";
 
             //Set text when no user logged in
             @if (user == null)
             {
                 <text>
-            $("#invoiceText").html(noUserText);
-            </text>
+                    $("#invoiceText").html(noUserText);
+                </text>
+            }
+
+            @if (user != null && user.AccountType == "Admin")
+            {
+                <text>
+                    $("#invoiceText").html(adminText);
+                </text>
             }
 
             //Set text according to items inside invoices
             @if (user != null && user.AccountType == "Client" && (count == 0 || ViewBag.invoiceList == null))
             {
                 <text>
-            $("#invoiceText").html("There are no unpaid invoices found at the moment.");
-            </text>
+                    $("#invoiceText").html("There are no unpaid invoices found at the moment.");
+                </text>
             }
 
             //Set text according to items inside invoices
             @if (user != null && user.AccountType == "Client" && count == 1)
             {
                 <text>
-            $("#invoiceText").html("You have 1 unpaid invoice." + "<br />" + "To be paid: &euro;@(ViewBag.total)");
-            $("#chartdiv").show();
-            </text>
+                    $("#invoiceText").html("You have 1 unpaid invoice." + "<br />" + "To be paid: &euro; @(ViewBag.total)");
+                    $("#chartdiv").show();
+                </text>
             }
 
             //Set text according to items inside invoices
             @if (user != null && user.AccountType == "Client" && count > 1)
             {
                 <text>
-            $("#invoiceText").html("You have @(count) unpaid invoices." + "<br />" + "To be paid: &euro;@(ViewBag.total)");
-            $("#chartdiv").show();
-            </text>
+                    $("#invoiceText").html("You have @(count) unpaid invoices." + "<br />" + "To be paid: &euro;  @(ViewBag.total)");
+                    $("#chartdiv").show();
+                </text>
             }
+        };
 
-            /* END OF SCRIPT FOR TEXT */
-            /* BEGIN OF SCRIPT FOR CHART */
+
+        /* BEGIN OF SCRIPT FOR CHART */
+        function showChart(){
+
             var paidArray = @(ViewBag.paid);
             var unpaidArray = @(ViewBag.unpaid);
 
@@ -155,7 +188,7 @@
                         ]
                     }
                 );
-            /* END OF SCRIPT FOR CHART */
-        })
-</script>
+        };
+
+    </script>
 }

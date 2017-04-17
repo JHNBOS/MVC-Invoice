@@ -234,7 +234,7 @@ namespace InvoiceApplication.Controllers
             if (login != null)
             {
                 HttpContext.Session.Set("User", (User)login);
-                return RedirectToAction("Index", "Home", new { area = "" });
+                return RedirectToAction("Index", "Home", new { email = login.Email });
             }
 
             return View(login);

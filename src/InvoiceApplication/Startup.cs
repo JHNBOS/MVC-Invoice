@@ -96,7 +96,13 @@ namespace InvoiceApplication
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=User}/{action=Login}/{id?}");
+
+                routes.MapRoute(
+                    name: "admin",
+                    template: "{controller=Admin}/{action=Create}/{id?}");
             });
+
+            
         }
     }
 }
