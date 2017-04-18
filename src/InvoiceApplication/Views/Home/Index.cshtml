@@ -1,5 +1,5 @@
 ﻿@using Microsoft.Extensions.Options
-@inject IOptionsSnapshot<AppSettings> settings
+@inject IOptionsMonitor<AppSettings> settings
 
 
 @{
@@ -80,7 +80,7 @@
 
             var noUserText = "With this application it is possible to view and pay your invoices"
                             + "<br /><br />"
-                            + "To use this website, you must login using the credentials sent to you by @settings.Value.Name.";
+                            + "To use this website, you must login using the credentials sent to you by @settings.CurrentValue.Name.";
 
             var adminText = "<div class='row'>"
                             + "<div class='col-md-12 text-center'>"

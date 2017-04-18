@@ -1,7 +1,7 @@
 @using Microsoft.Extensions.Options
 
 @model User
-@inject IOptions<AppSettings> settings
+@inject IOptionsMonitor<AppSettings> settings
 
 @{
     ViewData["Title"] = "Register Administrator";
@@ -14,7 +14,7 @@
 
         <div class="panel-heading">
             <div class="panel-title text-center">
-                <h1 class="title">@settings.Value.Name</h1>
+                <h1 class="title">@settings.CurrentValue.Name</h1>
                 <hr style="width:35%;border-top:2px solid #fff;" />
             </div>
         </div>

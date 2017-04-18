@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using InvoiceApplication.Data;
 using InvoiceApplication.Models;
 using InvoiceApplication.Services;
+using Microsoft.Extensions.Options;
 
 namespace InvoiceApplication
 {
@@ -22,7 +23,7 @@ namespace InvoiceApplication
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile("settings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("settings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
 
@@ -51,12 +52,10 @@ namespace InvoiceApplication
             services.AddOptions();
 
             // Configure using a sub-section of the appsettings.json file.
-            services.Configure<AppSettings>(this.Configuration.GetSection("AppSettings"));
-            services.AddSingleton<IConfigurationRoot>(Configuration); 
-            services.AddSingleton<IConfiguration>(Configuration);  
-            services.AddSingleton<ISettingsService, SettingsService>();
-
-            this.Configuration.Reload();
+            services.Configure<AppSettings>(option => Configuration.GetSection("AppSettings").Bind(option));
+            services.AddSingleton(Configuration.GetSection("AppSettings"));
+            services.AddSingleton(Configuration);
+            services.AddSingleton<ISettingsService, SettingsService>();        
 
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -76,10 +75,17 @@ namespace InvoiceApplication
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IOptionsMonitor<AppSettings> monitor)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            monitor.OnChange(vals =>
+            {
+                loggerFactory
+                    .CreateLogger<IOptionsMonitor<AppSettings>>()
+                    .LogDebug($"Config changed: {string.Join(", ", vals)}");
+            });
 
             if (env.IsDevelopment())
             {

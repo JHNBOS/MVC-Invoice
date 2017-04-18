@@ -8,9 +8,9 @@ namespace InvoiceApplication
     {
         private AppSettings _appSettings;
 
-        public SettingsService(IOptionsSnapshot<AppSettings> appSettings)
+        public SettingsService(IOptionsMonitor<AppSettings> appSettings)
         {
-            _appSettings = appSettings.Value;
+            _appSettings = appSettings.CurrentValue;
         }
 
         /*--------------------------------------------------------------------*/
