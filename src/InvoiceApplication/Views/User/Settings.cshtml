@@ -1,4 +1,4 @@
-@model InvoiceApplication.AppSettings
+@model AppSettings
 
 @{
     ViewData["Title"] = "Settings";
@@ -30,8 +30,8 @@
                             <div class="col-md-10">
                                 <div class="input-group">
                                     <span class="input-group-addon" style="padding-right:16px;"><i class="fa fa-building fa-lg" aria-hidden="true"></i></span>
-                                    <input type="text" asp-for="Name" class="form-control" id="name" placeholder="Enter company name" />
-                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                    <input type="text" asp-for="CompanyName" class="form-control" id="name" placeholder="Enter company name" />
+                                    <span asp-validation-for="CompanyName" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -168,14 +168,14 @@
                 <div class="row main">
                     <div class="col-sm-7 col-md-7" style="padding-right:0px !important;">
                         <!--COMPANY INFO-->
-                        <!--TAXNUMBER-->
+                        <!--COMMERCENUMBER-->
                         <div class="form-group">
-                            <label asp-for="TaxNumber" class="col-md-2 control-label"></label>
+                            <label asp-for="CommerceNumber" class="col-md-2 control-label">Commerce Number</label>
                             <div class="col-md-10">
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-building fa-lg" aria-hidden="true"></i></span>
-                                    <input type="text" asp-for="TaxNumber" class="form-control" id="taxnumber" placeholder="Enter company taxnumber" />
-                                    <span asp-validation-for="TaxNumber" class="text-danger" />
+                                    <input type="text" asp-for="CommerceNumber" class="form-control" id="taxnumber" placeholder="Enter company taxnumber" />
+                                    <span asp-validation-for="CommerceNumber" class="text-danger" />
                                 </div>
                             </div>
                         </div>
@@ -222,8 +222,7 @@
                             <label class="col-md-2 control-label">Use Logo</label>
                             <div class="col-md-10">
                                 <div class="input-group">
-                                    <span class="input-group-addon" style="width:47px;border-right:1px solid #cccccc;"><i class="" aria-hidden="true"></i></span>
-                                    <input asp-for="UseLogo" class="checkbox" style="margin-left:125px;width:35px;height:35px;background:white;border-radius:5px;border:2px solid #555;" />
+                                    <input asp-for="UseLogo" class="checkbox" style="margin-left:10px;margin-top:10px;width:20px;height:20px;" />
                                     <span asp-validation-for="UseLogo" class="text-danger" />
                                 </div>
                             </div>
@@ -231,7 +230,7 @@
 
 
                         <div id="preview text-center">
-                            <img id="showImg" src="#" alt="Logo" />
+                            <img id="showImg" src="#" alt="Logo" style="background-color:black;"/>
                         </div>
 
                     </div>

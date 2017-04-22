@@ -17,14 +17,14 @@ namespace InvoiceApplication.Controllers
     public class UserController : Controller
     {
         private ApplicationDbContext _context;
-        private ISettingsService _settings;
+        private AppSettings _settings;
         private IHostingEnvironment _env;
 
-        public UserController(ApplicationDbContext context, ISettingsService settingsAccessor, IHostingEnvironment env)
+        public UserController(ApplicationDbContext context, IHostingEnvironment env)
         {
             _context = context;
-            _settings = settingsAccessor;
             _env = env;
+            _settings = _context.Settings.Single(s => s.ID == 1);
         }
 
         /*----------------------------------------------------------------------*/
@@ -294,25 +294,7 @@ namespace InvoiceApplication.Controllers
         //GET: User/Settings
         public ActionResult Settings()
         {
-            AppSettings current = new AppSettings();
-
-            current.Email = _settings.GetEmail();
-            current.Password = _settings.GetPassword();
-            current.SMTP = _settings.GetSMTP();
-            current.Port = _settings.GetPort();
-            current.Name = _settings.GetName();
-            current.Website = _settings.GetWebsite();
-            current.Phone = _settings.GetPhone();
-            current.Address = _settings.GetAddress();
-            current.City = _settings.GetCity();
-            current.PostalCode = _settings.GetPostalCode();
-            current.Country = _settings.GetCountry();
-            current.CompanyNumber = _settings.GetCompanyNumber();
-            current.TaxNumber = _settings.GetTaxNumber();
-            current.Logo = _settings.GetLogo();
-            current.UseLogo = _settings.UseLogo();
-
-            return View(current);
+            return View(_settings);
         }
 
         //POST: User/Settings
@@ -330,7 +312,7 @@ namespace InvoiceApplication.Controllers
                         if (file.Length > 0)
                         {
                             var filePath = Path.Combine(uploads, file.FileName);
-                            _settings.SetLogo(file.FileName);
+                            _settings.Logo = (file.FileName);
 
                             using (var fileStream = new FileStream(filePath, FileMode.Create))
                             {
@@ -345,20 +327,21 @@ namespace InvoiceApplication.Controllers
                 }
 
                 //Update Settings
-                _settings.SetEmail(AppSettings.Email);
-                _settings.SetPassword(AppSettings.Password);
-                _settings.SetSMTP(AppSettings.SMTP);
-                _settings.SetPort(AppSettings.Port);
-                _settings.SetName(AppSettings.Name);
-                _settings.SetWebsite(AppSettings.Website);
-                _settings.SetPhone(AppSettings.Phone);
-                _settings.SetAddress(AppSettings.Address);
-                _settings.SetPostalCode(AppSettings.PostalCode);
-                _settings.SetCity(AppSettings.City);
-                _settings.SetCountry(AppSettings.Country);
-                _settings.SetCompanyNumber(AppSettings.CompanyNumber);
-                _settings.SetTaxNumber(AppSettings.TaxNumber);
-                _settings.SetUseLogo(AppSettings.UseLogo);
+                _settings.Email  = (AppSettings.Email);
+                _settings.Password = (AppSettings.Password);
+                _settings.SMTP = (AppSettings.SMTP);
+                _settings.Port = (AppSettings.Port);
+                _settings.CompanyName = (AppSettings.CompanyName);
+                _settings.Website = (AppSettings.Website);
+                _settings.Phone = (AppSettings.Phone);
+                _settings.Address = (AppSettings.Address);
+                _settings.PostalCode = (AppSettings.PostalCode);
+                _settings.City = (AppSettings.City);
+                _settings.Country= (AppSettings.Country);
+                _settings.CompanyNumber = (AppSettings.CompanyNumber);
+                _settings.CommerceNumber = (AppSettings.CommerceNumber);
+                _settings.UseLogo = (AppSettings.UseLogo);
+
 
                 User currentUser = SessionHelper.Get<User>(this.HttpContext.Session, "User");
                 return RedirectToAction("Index", "Home", new { email = currentUser.Email });

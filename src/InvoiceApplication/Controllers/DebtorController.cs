@@ -14,12 +14,12 @@ namespace InvoiceApplication.Controllers
     public class DebtorController : Controller
     {
         private ApplicationDbContext _context;
-        private ISettingsService _settings;
+        private AppSettings _settings;
 
-        public DebtorController(ApplicationDbContext context, ISettingsService settingsService)
+        public DebtorController(ApplicationDbContext context)
         {
             _context = context;
-            _settings = settingsService;
+            _settings = _context.Settings.Single(s => s.ID == 1);
         }
 
         /*----------------------------------------------------------------------*/
@@ -78,7 +78,7 @@ namespace InvoiceApplication.Controllers
                 _context.User.Add(user);
                 await _context.SaveChangesAsync();
 
-                AuthMessageSender email = new AuthMessageSender(_settings);
+                AuthMessageSender email = new AuthMessageSender();
                 await email.SendUserEmailAsync(user.Email, user.Password);
             }
             catch (Exception ex)

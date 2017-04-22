@@ -1,29 +1,29 @@
 ﻿using InvoiceApplication.Data;
 using InvoiceApplication.Models;
 using Microsoft.AspNetCore.Http;
-using PdfSharp.Drawing;
-using PdfSharp.Drawing.Layout;
-using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
+using PdfSharp.Pdf;
+using PdfSharp.Drawing;
+using PdfSharp.Drawing.Layout;
+using System.Drawing;
 
 namespace InvoiceApplication
 {
     public class PDF
     {
         private ApplicationDbContext _context;
-        private ISettingsService settings;
+        private AppSettings settings;
         private IHostingEnvironment _env;
 
-        public PDF(ApplicationDbContext context, ISettingsService settingsService, IHostingEnvironment env)
+        public PDF(ApplicationDbContext context, IHostingEnvironment env)
         {
             _context = context;
-            settings = settingsService;
+            settings = _context.Settings.Single(s => s.ID == 1);
             _env = env;
         }
 
@@ -87,18 +87,18 @@ namespace InvoiceApplication
             string dCity = Debtor.PostalCode + " " + Debtor.City;
             string dCountry = Debtor.Country;
 
-            string logo = settings.GetLogo();
-            bool useLogo = settings.UseLogo();
-            string email = settings.GetEmail();
-            string company = settings.GetName();
-            string web = settings.GetWebsite();
+            string logo = settings.Logo;
+            bool useLogo = settings.UseLogo;
+            string email = settings.Email;
+            string company = settings.CompanyName;
+            string web = settings.Website;
             string name = "";
-            string address = settings.GetAddress();
-            string city = settings.GetPostalCode() + " | " + settings.GetCity();
-            string country = settings.GetCountry();
-            string phone = settings.GetPhone();
-            string btw = settings.GetTaxNumber();
-            string kvk = settings.GetCompanyNumber();
+            string address = settings.Address;
+            string city = settings.PostalCode + " | " + settings.City;
+            string country = settings.Country;
+            string phone = settings.Phone;
+            string btw = settings.CommerceNumber;
+            string kvk = settings.CompanyNumber;
 
             string[] words = fname.Split(' ');
 

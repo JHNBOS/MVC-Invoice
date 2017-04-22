@@ -1,11 +1,15 @@
-﻿using MailKit.Net.Smtp;
+﻿using InvoiceApplication.Data;
+using InvoiceApplication.Models;
+using MailKit.Net.Smtp;
 using MailKit.Security;
-using Microsoft.AspNetCore.Razor.Tools;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Razor;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
 
 namespace InvoiceApplication.Services
@@ -15,21 +19,22 @@ namespace InvoiceApplication.Services
     // For more details see this link http://go.microsoft.com/fwlink/?LinkID=532713
     public class AuthMessageSender : IEmailSender, ISmsSender
     {
-        private ISettingsService settings;
+        private AppSettings settings;
+        private ApplicationDbContext _context;
 
-        public AuthMessageSender(ISettingsService settingsService)
+        public AuthMessageSender()
         {
-            settings = settingsService;
+            settings = _context.Settings.Single(s => s.ID == 1);
         }
 
         public async Task SendUserEmailAsync(string email, string pass)
         {
-            string smtp = settings.GetSMTP();
-            int port = settings.GetPort();
-            string company = settings.GetName();
-            string company_email = settings.GetEmail();
-            string password = settings.GetPassword();
-            string website = settings.GetWebsite();
+            string smtp = settings.SMTP;
+            int port = settings.Port;
+            string company = settings.CompanyName;
+            string company_email = settings.Email;
+            string password = settings.Password;
+            string website = settings.Website;
 
             string subject = "Inloggevens " + company;
             string message = "Geachte heer, mevrouw,"
@@ -72,12 +77,12 @@ namespace InvoiceApplication.Services
 
         public async Task SendInvoiceEmailAsync(string email)
         {
-            string smtp = settings.GetSMTP();
-            int port = settings.GetPort();
-            string company = settings.GetName();
-            string company_email = settings.GetEmail();
-            string password = settings.GetPassword();
-            string website = settings.GetWebsite();
+            string smtp = settings.SMTP;
+            int port = settings.Port;
+            string company = settings.CompanyName;
+            string company_email = settings.Email;
+            string password = settings.Password;
+            string website = settings.Website;
 
             string subject = "Factuur beschikbaar op " + company;
             string message = "Er staat een factuur voor u klaar op " + company + "."

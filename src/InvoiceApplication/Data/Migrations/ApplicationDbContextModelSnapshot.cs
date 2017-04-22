@@ -13,8 +13,48 @@ namespace InvoiceApplication.Data.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.1")
+                .HasAnnotation("ProductVersion", "1.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("InvoiceApplication.AppSettings", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Address");
+
+                    b.Property<string>("City");
+
+                    b.Property<string>("CommerceNumber");
+
+                    b.Property<string>("CompanyName");
+
+                    b.Property<string>("CompanyNumber");
+
+                    b.Property<string>("Country");
+
+                    b.Property<string>("Email");
+
+                    b.Property<string>("Logo");
+
+                    b.Property<string>("Password");
+
+                    b.Property<string>("Phone");
+
+                    b.Property<int>("Port");
+
+                    b.Property<string>("PostalCode");
+
+                    b.Property<string>("SMTP");
+
+                    b.Property<bool>("UseLogo");
+
+                    b.Property<string>("Website");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Settings");
+                });
 
             modelBuilder.Entity("InvoiceApplication.Models.ApplicationUser", b =>
                 {
@@ -26,7 +66,7 @@ namespace InvoiceApplication.Data.Migrations
                         .IsConcurrencyToken();
 
                     b.Property<string>("Email")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
 
@@ -39,10 +79,10 @@ namespace InvoiceApplication.Data.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("NormalizedUserName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("PasswordHash");
 
@@ -57,7 +97,7 @@ namespace InvoiceApplication.Data.Migrations
                     b.Property<string>("Type");
 
                     b.Property<string>("UserName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -205,10 +245,10 @@ namespace InvoiceApplication.Data.Migrations
                         .IsConcurrencyToken();
 
                     b.Property<string>("Name")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("NormalizedName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 

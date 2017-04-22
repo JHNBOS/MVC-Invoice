@@ -1,13 +1,27 @@
-﻿@using Microsoft.Extensions.Options
-@inject IOptionsSnapshot<AppSettings> settings
+﻿@using System.Diagnostics
+@using InvoiceApplication.Data
+@inject ApplicationDbContext _context
 
 @{
     User user = null;
-
     if (SessionHelper.IsExists(Context.Session, "User"))
     {
         user = (User)Context.Session.Get<User>("User");
     }
+
+    AppSettings settings = null;
+    if (SessionHelper.IsExists(Context.Session, "Settings"))
+    {
+        Debug.WriteLine("Settings exists");
+        settings = SessionHelper.Get<AppSettings>(Context.Session, "Settings");
+    }
+
+    if (!SessionHelper.IsExists(Context.Session, "Settings"))
+    {
+        settings = _context.Settings.Single(s => s.ID == 1);
+        SessionHelper.Set(Context.Session, "Settings", settings);
+    }
+
 }
 
 <!DOCTYPE html>
@@ -15,7 +29,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - @settings.Value.Name</title>
+    <title>@ViewData["Title"] - @settings.CompanyName</title>
 
     @RenderSection("HEAD", required: false)
 
@@ -51,24 +65,24 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                @if (settings.Value.Logo != "" && settings.Value.UseLogo == true && user != null)
+                @if (settings.Logo != "" && settings.UseLogo == true && user != null)
                 {
-                    <a asp-area="" asp-controller="Home" asp-action="Index" asp-route-email="@(user.Email)" class="navbar-brand"><img src="~/images/@(settings.Value.Logo)" style="max-height:45px;text-align:center;margin-top:0px;" /></a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" asp-route-email="@(user.Email)" class="navbar-brand"><img src="~/images/@(settings.Logo)" style="max-height:45px;text-align:center;margin-top:0px;" /></a>
                 }
                 
-                @if (settings.Value.Logo != "" && settings.Value.UseLogo == true && user == null)
+                @if (settings.Logo != "" && settings.UseLogo == true && user == null)
                 {
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand"><img src="~/images/@(settings.Value.Logo)" style="max-height:45px;text-align:center;margin-top:0px;" /></a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand"><img src="~/images/@(settings.Logo)" style="max-height:45px;text-align:center;margin-top:0px;" /></a>
                 }
 
-                @if(settings.Value.UseLogo == false && user != null)
+                @if(settings.UseLogo == false && user != null)
                 {
-                    <a asp-area="" asp-controller="Home" asp-action="Index" asp-route-email="@(user.Email)" class="navbar-brand" style="padding-top:15px;font-size:25px;font-weight:normal;">@settings.Value.Name</a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" asp-route-email="@(user.Email)" class="navbar-brand" style="padding-top:15px;font-size:25px;font-weight:normal;">@settings.CompanyName</a>
                 }
 
-                @if (settings.Value.UseLogo == false && user == null)
+                @if (settings.UseLogo == false && user == null)
                 {
-                    <a  asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand" style="padding-top:15px;font-size:25px;font-weight:normal;">@settings.Value.Name</a>
+                    <a  asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand" style="padding-top:15px;font-size:25px;font-weight:normal;">@settings.CompanyName</a>
                 }
 
             </div>
@@ -105,7 +119,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p class="text-center">&copy; 2017 - @settings.Value.Name</p>
+            <p class="text-center">&copy; 2017 - @settings.CompanyName</p>
         </footer>
     </div>
 

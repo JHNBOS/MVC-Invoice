@@ -9,6 +9,9 @@ using InvoiceApplication.Data;
 using InvoiceApplication.Models;
 using InvoiceApplication.Services;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Runtime.Remoting.Messaging;
 
 namespace InvoiceApplication
 {
@@ -23,14 +26,13 @@ namespace InvoiceApplication
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile("settings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
 
             if (env.IsDevelopment())
             {
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
-                builder.AddUserSecrets();
+                builder.AddUserSecrets("asp-net_1234");
             }
 
             Configuration = builder.Build();
@@ -46,16 +48,9 @@ namespace InvoiceApplication
             if (conn.Contains("%CONTENTROOTPATH%"))
             {
                 conn = conn.Replace("%CONTENTROOTPATH%", _contentRootPath);
-
             }
 
             services.AddOptions();
-
-            // Configure using a sub-section of the appsettings.json file.
-            services.Configure<AppSettings>(option => Configuration.GetSection("AppSettings").Bind(option));
-            services.AddSingleton(Configuration.GetSection("AppSettings"));
-            services.AddSingleton(Configuration);
-            services.AddSingleton<ISettingsService, SettingsService>();        
 
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -69,23 +64,18 @@ namespace InvoiceApplication
             services.AddSession();
             services.AddMvc();
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IOptionsMonitor<AppSettings> monitor)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
-            monitor.OnChange(vals =>
-            {
-                loggerFactory
-                    .CreateLogger<IOptionsMonitor<AppSettings>>()
-                    .LogDebug($"Config changed: {string.Join(", ", vals)}");
-            });
 
             if (env.IsDevelopment())
             {
@@ -100,6 +90,9 @@ namespace InvoiceApplication
 
             app.UseStaticFiles();
             app.UseSession();
+
+            //Get Session
+            RequestContextManager.Instance = new RequestContextManager(app.ApplicationServices.GetService<IHttpContextAccessor>());
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
 

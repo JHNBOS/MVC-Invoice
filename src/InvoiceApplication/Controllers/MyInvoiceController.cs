@@ -15,13 +15,13 @@ namespace InvoiceApplication.Controllers
     public class MyInvoiceController : Controller
     {
         private ApplicationDbContext _context;
-        private ISettingsService _settings;
+        private AppSettings _settings;
         private IHostingEnvironment _env;
 
-        public MyInvoiceController(ApplicationDbContext context, ISettingsService settingsService, IHostingEnvironment env)
+        public MyInvoiceController(ApplicationDbContext context, IHostingEnvironment env)
         {
             _context = context;
-            _settings = settingsService;
+            _settings = _context.Settings.Single(s => s.ID == 1);
             _env = env;
         }
 
@@ -281,7 +281,7 @@ namespace InvoiceApplication.Controllers
         //POST: MyInvoice/PDF/5
         public FileStreamResult PDF(int id)
         {
-            PDF pdf = new PDF(_context, _settings, _env);
+            PDF pdf = new PDF(_context, _env);
             FileStreamResult fs = pdf.CreatePDF(id, HttpContext);
 
             return fs;

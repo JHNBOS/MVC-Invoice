@@ -1,11 +1,15 @@
-@using Microsoft.Extensions.Options
-
+@using static InvoiceApplication.Models.AppSettings
 @model User
-@inject IOptionsSnapshot<AppSettings> settings
 
 @{
     ViewData["Title"] = "Register";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    AppSettings settings = null;
+    if (SessionHelper.IsExists(Context.Session, "Settings"))
+    {
+        settings = SessionHelper.Get<AppSettings>(Context.Session, "Settings");
+    }
 }
 
 <div class="container">
@@ -14,7 +18,7 @@
 
         <div class="panel-heading">
             <div class="panel-title text-center">
-                <h1 class="title">@settings.Value.Name</h1>
+                <h1 class="title">@settings.CompanyName</h1>
                 <hr style="width:35%;border-top:2px solid #fff;" />
             </div>
         </div>

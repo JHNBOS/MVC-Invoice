@@ -1,15 +1,27 @@
-﻿@using Microsoft.Extensions.Options
-@inject IOptionsMonitor<AppSettings> settings
-
+﻿@using System.Diagnostics
+@using InvoiceApplication.Data
+@inject ApplicationDbContext _context
 
 @{
     ViewData["Title"] = "Home Page";
 
     User user = null;
-
     if (SessionHelper.IsExists(Context.Session, "User"))
     {
         user = (User)Context.Session.Get<User>("User");
+    }
+
+    AppSettings settings = null;
+    if (SessionHelper.IsExists(Context.Session, "Settings"))
+    {
+        Debug.WriteLine("Settings exists");
+        settings = SessionHelper.Get<AppSettings>(Context.Session, "Settings");
+    }
+
+    if (!SessionHelper.IsExists(Context.Session, "Settings"))
+    {
+        settings = _context.Settings.Single(s => s.ID == 1);
+        SessionHelper.Set(Context.Session, "Settings", settings);
     }
 
     var count = ViewBag.invoiceList.Count;
@@ -80,7 +92,7 @@
 
             var noUserText = "With this application it is possible to view and pay your invoices"
                             + "<br /><br />"
-                            + "To use this website, you must login using the credentials sent to you by @settings.CurrentValue.Name.";
+                            + "To use this website, you must login using the credentials sent to you by @settings.CompanyName.";
 
             var adminText = "<div class='row'>"
                             + "<div class='col-md-12 text-center'>"
