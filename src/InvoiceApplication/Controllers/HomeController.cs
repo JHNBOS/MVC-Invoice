@@ -57,8 +57,8 @@ namespace InvoiceApplication.Controllers
             try
             {
                 invoiceList = _context.Invoices.Include(inv => inv.Debtor).Where(inv => inv.Debtor.Email == email && inv.Paid == false && inv.Type != "Concept").ToList();
-                paid = _context.Invoices.Include(inv => inv.Debtor).Where(inv => inv.Debtor.Email == email && inv.Paid == true).ToList().Count;
-                unpaid = _context.Invoices.Include(inv => inv.Debtor).Where(inv => inv.Debtor.Email == email && inv.Paid == false).ToList().Count;
+                paid = _context.Invoices.Include(inv => inv.Debtor).Where(inv => inv.Debtor.Email == email && inv.Paid == true && inv.Type == "Final").ToList().Count;
+                unpaid = _context.Invoices.Include(inv => inv.Debtor).Where(inv => inv.Debtor.Email == email && inv.Paid == false && inv.Type == "Final").ToList().Count;
 
                 ViewBag.paid = paid;
                 ViewBag.unpaid = unpaid;
@@ -89,14 +89,36 @@ namespace InvoiceApplication.Controllers
         {
             int total = 0;
             int paid = 0;
+            int unpaid = 0;
+            decimal totalAmount = 0;
+            decimal totalPaid = 0;
 
             try
             {
-                total = _context.Invoices.Count();
-                paid = _context.Invoices.Where(s => s.Paid == true).Count();
+                List<Invoice> invoices = _context.Invoices.ToList();
+
+                total = invoices.Count();
+                paid = invoices.Where(s => s.Paid == true && s.Type == "Final").Count();
+                unpaid = invoices.Where(s => s.Paid == false && s.Type == "Final").Count();
+                
+                foreach(var inv in invoices.Where(s => s.Paid == true).ToList())
+                {
+                    totalPaid += inv.Total;
+                }
+
+                foreach (var inv in invoices.Where(s => s.Type == "Final").ToList())
+                {
+                    totalAmount += inv.Total;
+                }
 
                 int percent = (100 * paid) / total;
-                ViewBag.totalPaid = percent;
+
+                ViewBag.total = percent;
+                ViewBag.totalPaidCount = paid;
+                ViewBag.totalUnPaidCount = unpaid;
+
+                ViewBag.totalPaid = totalPaid;
+                ViewBag.totalAmount = totalAmount;
             }
             catch (Exception ex)
             {

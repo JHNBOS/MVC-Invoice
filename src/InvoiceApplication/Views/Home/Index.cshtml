@@ -72,14 +72,34 @@
 <br />
 <br />
 
-<!-- Bottom Row -->
-<div class="row">
-    <div class="col-sm-3"></div>
-    <div class="col-sm-6 text-center">
-        <div id="chartdiv" style="width:100%;height:400px;background-color:#d3d3d3;display:none;"></div>
+@if (user != null && user.AccountType == "Client")
+{
+    <!-- Bottom Row Client -->
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6 text-center">
+            <div id="chartdiv" style="width:100%;height:400px;background-color:#d3d3d3;display:none;"></div>
+        </div>
+        <div class="col-sm-3"></div>
     </div>
-    <div class="col-sm-3"></div>
-</div>
+}
+
+
+@if (user != null && user.AccountType == "Admin")
+{
+    <!-- Bottom Row Admin -->
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-5 text-center">
+            <div id="admin_chartdiv" style="width:100%;height:400px;background-color:#d3d3d3;display:none;"></div>
+        </div>
+        <div class="col-sm-5">
+            <div id="admin_chartdiv2" style="width:100%;height:400px;background-color:#d3d3d3;display:none;"></div>
+        </div>
+        <div class="col-sm-1"></div>
+    </div>
+}
+
 
 @section Scripts{
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
@@ -106,8 +126,9 @@
 
             if (current != "" && account == "Admin")
             {
-                $("#chartdiv").show();
-                 showAdminChart();
+                $("#admin_chartdiv").show();
+                $("#admin_chartdiv2").show();
+                showAdminChart();
             }
 
             if (current == "" || current == null) {
@@ -158,6 +179,7 @@
                         "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
                         "innerRadius": 0,
                         "labelRadius": 21,
+                        "startDuration": 4,
                         "radius": 100,
                         "baseColor": "#0063D3",
                         "hoverAlpha": 0.62,
@@ -188,74 +210,164 @@
                                 "column-1": unpaidArray
                             }
                         ]
-                    });
+                });
         }
 
         function showAdminChart() {
 
-            var p = @(ViewBag.totalPaid);
+            var total = @(ViewBag.total);
+            var paidCount = @(ViewBag.totalPaidCount);
+            var unpaidCount = @(ViewBag.totalUnPaidCount);
 
-            AmCharts.makeChart("chartdiv", {
-                "type": "gauge",
-                "faceBorderColor": "#000000",
-                "marginBottom": 20,
-                "marginTop": 40,
-                "startDuration": 6,
-                "accessibleTitle": "",
-                "creditsPosition": "bottom-right",
-                "fontSize": 13,
-                "theme": "light",
-                "arrows": [
-                    {
-                        "id": "GaugeArrow-1",
-                        "innerRadius": "35%",
-                        "value": p
-                    }
-                ],
-                "axes": [
-                    {
-                        "axisThickness": 1,
-                        "bottomText": p + " %",
-                        "bottomTextYOffset": -20,
-                        "endValue": 100,
-                        "id": "GaugeAxis-1",
-                        "valueInterval": 10,
-                        "bands": [
-                            {
-                                "alpha": 0.7,
-                                "color": "#00CC00",
-                                "endValue": 33,
-                                "id": "GaugeBand-1",
-                                "startValue": 0
+            totalPaid = @(ViewBag.totalPaid);
+            totalAmount = @(ViewBag.totalAmount);
+
+            var totalAmountFormatted = AmCharts.formatNumber(totalAmount, {
+                precision: -1,
+                decimalSeparator: ",",
+                thousandsSeparator: "."
+            }, 2);
+
+            AmCharts.makeChart("admin_chartdiv",
+                {
+                    "type": "serial",
+                    "categoryField": "category",
+                    "decimalSeparator": ",",
+                    "thousandsSeparator": ".",
+                    "rotate": true,
+                    "startDuration": 3,
+                    "creditsPosition": "bottom-left",
+                    "theme": "light",
+                    "precision": 2,
+                    "usePrefixes": false,
+                    "categoryAxis": {
+                        "autoRotateCount": 0,
+                        "gridPosition": "start",
+                        "autoGridCount": false,
+                        "labelsEnabled": false,
+                        "title": "Currently Paid",
+                        "size": 10
+                    },
+                    "trendLines": [],
+                    "graphs": [
+                        {
+                            "fillAlphas": 1,
+                            "id": "AmGraph-1",
+                            "title": "graph 1",
+                            "precision": 2,
+                            "type": "column",
+                            "valueField": "graph 1",
+                            "balloonText": "Currently Paid: €[[graph 1]]",
+                            "balloonFunction": function (item, graph) {
+                                var result = graph.balloonText;
+                                for (var key in item.dataContext) {
+                                    if (item.dataContext.hasOwnProperty(key) && !isNaN(item.dataContext[key])) {
+                                        var formatted = AmCharts.formatNumber(item.dataContext[key], {
+                                            precision: -1,
+                                            decimalSeparator: ",",
+                                            thousandsSeparator: "."
+                                        }, 2);
+                                        result = result.replace("[[" + key + "]]", formatted);
+                                    }
+                                }
+                                return result;
                             },
-                            {
-                                "alpha": 0.7,
-                                "color": "#ffac29",
-                                "endValue": 66,
-                                "id": "GaugeBand-2",
-                                "startValue": 33
-                            },
-                            {
-                                "alpha": 0.7,
-                                "color": "#ea3838",
-                                "endValue": 100,
-                                "id": "GaugeBand-3",
-                                "innerRadius": "95%",
-                                "startValue": 66
-                            }
-                        ]
-                    }
-                ],
-                "allLabels": [],
-                "balloon": {},
-                "titles": [
-                    {
-                        "id": "percentage_title",
-                        "text": "Percentage of Invoices Paid"
-                    }
-                ]
-            });
+                        }
+                    ],
+                    "guides": [
+                        {
+                            "above": true,
+                            "balloonText": "Total Amount: €" + totalAmountFormatted,
+                            "position": "top",
+                            "boldLabel": true,
+                            "angle": 0,
+                            "dashLength": 0,
+                            "id": "Guide-1",
+                            "inside": true,
+                            "label": "Total Amount",
+                            "labelRotation": 90,
+                            "lineAlpha": 1,
+                            "lineColor": "#FFFF00",
+                            "lineThickness": 3,
+                            "value": totalAmount
+                        }
+                    ],
+                    "valueAxes": [
+                        {
+                            "id": "ValueAxis-1",
+                            "maximum": totalAmount,
+                            "minimum": (totalPaid - (totalPaid / 3)),
+                            "precision": 2,
+                            "unit": "€",
+                            "labelsEnabled": false,
+                            "unitPosition": "left",
+                            "title": "",
+                            "titleBold": false
+                        }
+                    ],
+                    "allLabels": [],
+                    "balloon": {},
+                    "titles": [
+                        {
+                            "id": "Title-1",
+                            "size": 10,
+                            "text": "Current amount of paid invoices"
+                        }
+                    ],
+                    "dataProvider": [
+                        {
+                            "category": "category 1",
+                            "graph 1": totalPaid
+                        }
+                    ]
+                }
+            );
+
+            AmCharts.makeChart("admin_chartdiv2",
+                {
+                    "type": "pie",
+                    "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
+                    "innerRadius": 3,
+                    "labelRadius": 16,
+                    "radius": 90,
+                    "maxLabelWidth": 198,
+                    "pullOutDuration": 2,
+                    "pullOutEffect": "elastic",
+                    "startDuration": 2,
+                    "startEffect": "easeOutSine",
+                    "titleField": "category",
+                    "valueField": "column-1",
+                    "creditsPosition": "bottom-right",
+                    "theme": "light",
+                    "allLabels": [],
+                    "balloon": {},
+                    "legend": {
+                        "enabled": true,
+                        "align": "center",
+                        "markerType": "circle",
+                    },
+                    "titles": [
+                        {
+                            "id": "Title-1",
+                            "size": 10,
+                            "text": "Percentages of paid/unpaid invoices"
+                        }
+                    ],
+                    "dataProvider": [
+                        {
+                            "category": "Paid",
+                            "column-1": paidCount
+                        },
+                        {
+                            "category": "Unpaid",
+                            "column-1": unpaidCount
+                        }
+                    ]
+                });
+
         }
+
+
 
     </script>
 }

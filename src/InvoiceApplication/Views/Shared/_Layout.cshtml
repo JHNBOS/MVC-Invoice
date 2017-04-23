@@ -66,22 +66,22 @@
 
                 @if (settings.Logo != "" && settings.UseLogo == true && user != null)
                 {
-                    <a asp-area="" asp-controller="Home" asp-action="Index" asp-route-email="@(user.Email)" class="navbar-brand"><img src="~/images/@(settings.Logo)" style="height:70%;text-align:center;margin-top:6px;" /></a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" asp-route-email="@(user.Email)" class="navbar-brand"><img src="~/images/@(settings.Logo)" class="img-responsive" /></a>
                 }
                 
                 @if (settings.Logo != "" && settings.UseLogo == true && user == null)
                 {
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand"><img src="~/images/@(settings.Logo)" style="height:70%;text-align:center;margin-top:6px;" /></a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand"><img src="~/images/@(settings.Logo)" class="img-responsive" /></a>
                 }
 
                 @if(settings.UseLogo == false && user != null)
                 {
-                    <a asp-area="" asp-controller="Home" asp-action="Index" asp-route-email="@(user.Email)" class="navbar-brand" style="padding-top:15px;font-size:25px;font-weight:normal;">@settings.CompanyName</a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" asp-route-email="@(user.Email)" class="navbar-brand navtext">@settings.CompanyName</a>
                 }
 
                 @if (settings.UseLogo == false && user == null)
                 {
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand" style="padding-top:15px;font-size:25px;font-weight:normal;">@settings.CompanyName</a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand navtext">@settings.CompanyName</a>
                 }
 
             </div>
