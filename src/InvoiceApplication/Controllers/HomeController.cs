@@ -113,7 +113,7 @@ namespace InvoiceApplication.Controllers
 
                 int percent = (100 * paid) / total;
 
-                ViewBag.total = percent;
+                ViewBag.totalPercentage = percent;
                 ViewBag.totalPaidCount = paid;
                 ViewBag.totalUnPaidCount = unpaid;
 

@@ -188,7 +188,7 @@
                         "valueField": "column-1",
                         "decimalSeparator": ",",
                         "percentPrecision": 1,
-                        "theme": "default",
+                        "theme": "light",
                         "thousandsSeparator": ".",
                         "allLabels": [],
                         "creditsPosition": "bottom-right",
@@ -215,7 +215,7 @@
 
         function showAdminChart() {
 
-            var total = @(ViewBag.total);
+            var total = @(ViewBag.totalPercentage);
             var paidCount = @(ViewBag.totalPaidCount);
             var unpaidCount = @(ViewBag.totalUnPaidCount);
 
