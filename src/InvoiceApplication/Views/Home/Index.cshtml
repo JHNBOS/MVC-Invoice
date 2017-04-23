@@ -32,9 +32,11 @@
     <!-- amCharts javascript code -->
     <script type="text/javascript" src="http://www.amcharts.com/lib/3/amcharts.js"></script>
     <script type="text/javascript" src="http://www.amcharts.com/lib/3/pie.js"></script>
+    <script type="text/javascript" src="http://cdn.amcharts.com/lib/3/gauge.js"></script>
     <script type="text/javascript" src="http://www.amcharts.com/lib/3/serial.js"></script>
     <script type="text/javascript" src="http://www.amcharts.com/lib/3/themes/light.js"></script>
     <script type="text/javascript" src="http://www.amcharts.com/lib/3/themes/dark.js"></script>
+    <script type="text/javascript" src="http://www.amcharts.com/lib/3/themes/black.js"></script>
     <script src="https://www.amcharts.com/lib/3/plugins/export/export.js" type="text/javascript"></script>
     <link href="https://www.amcharts.com/lib/3/plugins/export/export.css" rel="stylesheet" type="text/css">
 }
@@ -73,7 +75,7 @@
 <!-- Bottom Row -->
 <div class="row">
     <div class="col-sm-3"></div>
-    <div class="col-sm-6">
+    <div class="col-sm-6 text-center">
         <div id="chartdiv" style="width:100%;height:400px;background-color:#d3d3d3;display:none;"></div>
     </div>
     <div class="col-sm-3"></div>
@@ -84,50 +86,40 @@
 
     <script>
         $(document).ready(function () {
-            showChart();
-            setText();
+            var current = null;
+            var account = null;
+
+            @if (user != null)
+            {
+                <text>
+                    current = "@user.Email";
+                    account = "@user.AccountType";
+                </text>
+            }
+
+            if (current != "" && account == "Client")
+            {
+                setText();
+                $("#chartdiv").show();
+                showClientChart();
+            }
+
+            if (current != "" && account == "Admin")
+            {
+                $("#chartdiv").show();
+                 showAdminChart();
+            }
+
+            if (current == "" || current == null) {
+                var noUserText = "With this application it is possible to view and pay your invoices"
+                            + "<br /><br />"
+                            + "To use this website, you must login using the credentials sent to you by @settings.CompanyName.";
+                $("#invoiceText").html(noUserText);
+            }
+
         });
 
         function setText(){
-
-            var noUserText = "With this application it is possible to view and pay your invoices"
-                            + "<br /><br />"
-                            + "To use this website, you must login using the credentials sent to you by @settings.CompanyName.";
-
-            var adminText = "<div class='row'>"
-                            + "<div class='col-md-12 text-center'>"
-                            + "<h3>Let's Start</h3>"
-                            + "<br />"
-                            + "<p>"
-                                + "by adding new debtors to your list to start sending invoices to them..."
-                            + "</p>"
-                            + "<p>"
-                                + "<a href='@Url.Action("Index", "Invoice")' class='btn btn-primary btn-link' style='width:150px;height:35px;font-weight:600;'>Add new debtor</a>"
-                            + "</p>"
-                            + "<br />"
-                            + "<p>"
-                                + "...or start by creating a new invoice for one of your debtors."
-                            + "</p>"
-                            + "<p>"
-                                + "<a href='@Url.Action("Index", "Invoice")' class='btn btn-primary btn-link' style='width:150px;height:35px;font-weight:600;'>Create Invoice</a>";
-                            + "</p>"
-                            + "</div>";
-
-            //Set text when no user logged in
-            @if (user == null)
-            {
-                <text>
-                    $("#invoiceText").html(noUserText);
-                </text>
-            }
-
-            @if (user != null && user.AccountType == "Admin")
-            {
-                <text>
-                    $("#invoiceText").html(adminText);
-                </text>
-            }
-
             //Set text according to items inside invoices
             @if (user != null && user.AccountType == "Client" && (count == 0 || ViewBag.invoiceList == null))
             {
@@ -141,7 +133,6 @@
             {
                 <text>
                     $("#invoiceText").html("You have 1 unpaid invoice." + "<br />" + "To be paid: &euro; @(ViewBag.total)");
-                    $("#chartdiv").show();
                 </text>
             }
 
@@ -150,14 +141,13 @@
             {
                 <text>
                     $("#invoiceText").html("You have @(count) unpaid invoices." + "<br />" + "To be paid: &euro;  @(ViewBag.total)");
-                    $("#chartdiv").show();
                 </text>
             }
         };
 
 
         /* BEGIN OF SCRIPT FOR CHART */
-        function showChart(){
+        function showClientChart(){
 
             var paidArray = @(ViewBag.paid);
             var unpaidArray = @(ViewBag.unpaid);
@@ -198,9 +188,74 @@
                                 "column-1": unpaidArray
                             }
                         ]
+                    });
+        }
+
+        function showAdminChart() {
+
+            var p = @(ViewBag.totalPaid);
+
+            AmCharts.makeChart("chartdiv", {
+                "type": "gauge",
+                "faceBorderColor": "#000000",
+                "marginBottom": 20,
+                "marginTop": 40,
+                "startDuration": 6,
+                "accessibleTitle": "",
+                "creditsPosition": "bottom-right",
+                "fontSize": 13,
+                "theme": "light",
+                "arrows": [
+                    {
+                        "id": "GaugeArrow-1",
+                        "innerRadius": "35%",
+                        "value": p
                     }
-                );
-        };
+                ],
+                "axes": [
+                    {
+                        "axisThickness": 1,
+                        "bottomText": p + " %",
+                        "bottomTextYOffset": -20,
+                        "endValue": 100,
+                        "id": "GaugeAxis-1",
+                        "valueInterval": 10,
+                        "bands": [
+                            {
+                                "alpha": 0.7,
+                                "color": "#00CC00",
+                                "endValue": 33,
+                                "id": "GaugeBand-1",
+                                "startValue": 0
+                            },
+                            {
+                                "alpha": 0.7,
+                                "color": "#ffac29",
+                                "endValue": 66,
+                                "id": "GaugeBand-2",
+                                "startValue": 33
+                            },
+                            {
+                                "alpha": 0.7,
+                                "color": "#ea3838",
+                                "endValue": 100,
+                                "id": "GaugeBand-3",
+                                "innerRadius": "95%",
+                                "startValue": 66
+                            }
+                        ]
+                    }
+                ],
+                "allLabels": [],
+                "balloon": {},
+                "titles": [
+                    {
+                        "id": "percentage_title",
+                        "text": "Percentage of Invoices Paid"
+                    }
+                ]
+            });
+        }
 
     </script>
 }

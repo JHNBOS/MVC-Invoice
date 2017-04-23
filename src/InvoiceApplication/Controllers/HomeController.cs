@@ -25,6 +25,8 @@ namespace InvoiceApplication.Controllers
                 GetInvoices(email);
             }
 
+            GetPaidInvoices();
+
             return View();
         }
 
@@ -37,8 +39,6 @@ namespace InvoiceApplication.Controllers
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
-
             return View();
         }
 
@@ -83,6 +83,25 @@ namespace InvoiceApplication.Controllers
             }
 
             return total;
+        }
+
+        private void GetPaidInvoices()
+        {
+            int total = 0;
+            int paid = 0;
+
+            try
+            {
+                total = _context.Invoices.Count();
+                paid = _context.Invoices.Where(s => s.Paid == true).Count();
+
+                int percent = (100 * paid) / total;
+                ViewBag.totalPaid = percent;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
         }
 
 

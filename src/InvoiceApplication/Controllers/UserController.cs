@@ -326,22 +326,41 @@ namespace InvoiceApplication.Controllers
                     Debug.WriteLine(ex);
                 }
 
-                //Update Settings
-                _settings.Email  = (AppSettings.Email);
-                _settings.Password = (AppSettings.Password);
-                _settings.SMTP = (AppSettings.SMTP);
-                _settings.Port = (AppSettings.Port);
-                _settings.CompanyName = (AppSettings.CompanyName);
-                _settings.Website = (AppSettings.Website);
-                _settings.Phone = (AppSettings.Phone);
-                _settings.Address = (AppSettings.Address);
-                _settings.PostalCode = (AppSettings.PostalCode);
-                _settings.City = (AppSettings.City);
-                _settings.Country= (AppSettings.Country);
-                _settings.CompanyNumber = (AppSettings.CompanyNumber);
-                _settings.CommerceNumber = (AppSettings.CommerceNumber);
-                _settings.UseLogo = (AppSettings.UseLogo);
+                _settings.Address = AppSettings.Address;
+                _settings.PostalCode = AppSettings.PostalCode;
+                _settings.City = AppSettings.City;
+                _settings.Country = AppSettings.Country;
 
+                _settings.CompanyName = AppSettings.CompanyName;
+                _settings.CompanyNumber = AppSettings.CompanyNumber;
+                _settings.CommerceNumber = AppSettings.CommerceNumber;
+
+                if (AppSettings.Logo != null)
+                {
+                    _settings.Logo = AppSettings.Logo;
+                }
+
+                _settings.UseLogo = AppSettings.UseLogo;
+
+                _settings.Website = AppSettings.Website;
+                _settings.Phone = AppSettings.Phone;
+
+                _settings.Email = AppSettings.Email;
+                _settings.Password = AppSettings.Password;
+                _settings.SMTP = AppSettings.SMTP;
+                _settings.Port = AppSettings.Port;
+
+                //Update Settings
+                _context.Update(_settings);
+                _context.SaveChanges();
+
+                //Remove session variable
+                SessionHelper.Set(this.HttpContext.Session, "Settings", null);
+                _settings = null;
+
+                //Set new session variable
+                _settings = _context.Settings.Single(s => s.ID == 1);
+                SessionHelper.Set(this.HttpContext.Session, "Settings", _settings);
 
                 User currentUser = SessionHelper.Get<User>(this.HttpContext.Session, "User");
                 return RedirectToAction("Index", "Home", new { email = currentUser.Email });

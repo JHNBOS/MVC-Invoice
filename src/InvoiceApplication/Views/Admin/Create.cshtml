@@ -1,11 +1,24 @@
-@using Microsoft.Extensions.Options
-
 @model User
-@inject IOptionsMonitor<AppSettings> settings
+@using System.Diagnostics
+@using InvoiceApplication.Data
+@inject ApplicationDbContext _context
 
 @{
-    ViewData["Title"] = "Register Administrator";
+    ViewData["Title"] = "Register";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    AppSettings settings = null;
+    if (SessionHelper.IsExists(Context.Session, "Settings"))
+    {
+        settings = SessionHelper.Get<AppSettings>(Context.Session, "Settings");
+    }
+
+    if (!SessionHelper.IsExists(Context.Session, "Settings"))
+    {
+        settings = _context.Settings.Single(s => s.ID == 1);
+        SessionHelper.Set(Context.Session, "Settings", settings);
+    }
+
 }
 
 <div class="container">
@@ -14,7 +27,8 @@
 
         <div class="panel-heading">
             <div class="panel-title text-center">
-                <h1 class="title">@settings.CurrentValue.Name</h1>
+                <h1 class="title">@settings.CompanyName</h1>
+                <h3>Register</h3>
                 <hr style="width:35%;border-top:2px solid #fff;" />
             </div>
         </div>

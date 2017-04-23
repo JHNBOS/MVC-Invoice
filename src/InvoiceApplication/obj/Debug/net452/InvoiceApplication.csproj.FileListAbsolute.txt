@@ -138,3 +138,4 @@ C:\GitHub\MVC-Invoice\src\InvoiceApplication\obj\Debug\net452\UserSecretsAssembl
 C:\GitHub\MVC-Invoice\src\InvoiceApplication\obj\Debug\net452\InvoiceApplication.AssemblyInfo.cs
 C:\GitHub\MVC-Invoice\src\InvoiceApplication\obj\Debug\net452\InvoiceApplication.exe
 C:\GitHub\MVC-Invoice\src\InvoiceApplication\obj\Debug\net452\InvoiceApplication.pdb
+C:\GitHub\MVC-Invoice\src\InvoiceApplication\obj\Debug\net452\InvoiceApplication.csprojResolveAssemblyReference.cache

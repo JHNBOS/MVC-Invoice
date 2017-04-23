@@ -1,17 +1,54 @@
-﻿@{
+﻿@using System.Diagnostics
+@using InvoiceApplication.Data
+@inject ApplicationDbContext _context
+
+@{
     ViewData["Title"] = "Contact";
+
+    User user = null;
+    if (SessionHelper.IsExists(Context.Session, "User"))
+    {
+        user = (User)Context.Session.Get<User>("User");
+    }
+
+    AppSettings settings = null;
+    if (SessionHelper.IsExists(Context.Session, "Settings"))
+    {
+        settings = SessionHelper.Get<AppSettings>(Context.Session, "Settings");
+    }
+
+    if (!SessionHelper.IsExists(Context.Session, "Settings"))
+    {
+        settings = _context.Settings.Single(s => s.ID == 1);
+        SessionHelper.Set(Context.Session, "Settings", settings);
+    }
+
 }
-<h2>@ViewData["Title"].</h2>
-<h3>@ViewData["Message"]</h3>
+
+<h2>@ViewData["Title"]</h2>
+<h3>
+    Would you like to contact us? 
+    <br />
+    Please use the contact information below.
+</h3>
+
+<br />
 
 <address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
+    <strong>
+        @settings.Address <br />
+        @settings.PostalCode, @settings.City <br />
+        @settings.Country <br />
+    </strong>
+   
+    <br />
 
-<address>
-    <strong>Support:</strong> <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
+    <abbr title="Phone"><strong>P:</strong></abbr>
+    @settings.Phone
+
+    <br />
+
+    <abbr title="Email"><strong>E:</strong></abbr>
+    @settings.Email
+
 </address>
