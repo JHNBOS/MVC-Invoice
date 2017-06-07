@@ -206,6 +206,18 @@
                             </div>
                         </div>
 
+                        <!--BANK ACCOUNT NUMBER-->
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Bank Account Number</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-building fa-lg" aria-hidden="true"></i></span>
+                                    <input type="text" asp-for="BankAccountNumber" class="form-control" id="bankaccount" placeholder="Enter bank account number" />
+                                    <span asp-validation-for="BankAccountNumber" class="text-danger" />
+                                </div>
+                            </div>
+                        </div>
+
                         <!--BANK NAME-->
                         <div class="form-group">
                             <label class="col-md-2 control-label">Name of Bank</label>

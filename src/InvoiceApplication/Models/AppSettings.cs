@@ -19,6 +19,7 @@ namespace InvoiceApplication.Models
         public string RegNumber { get; set; }
         public string FinancialNumber { get; set; }
         public string EUFinancialNumber { get; set; }
+        public string BankAccountNumber { get; set; }
         public string BankName { get; set; }
 
         //Company Contact Info

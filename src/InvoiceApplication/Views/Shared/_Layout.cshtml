@@ -98,7 +98,13 @@
 
                     @if (user != null && user.AccountType == "Admin")
                     {
-                        <li><a asp-area="" asp-controller="Debtor" asp-action="Index">Debtors</a></li>
+                        <li class="dropdown">
+                            <a href = "#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Debtors<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-area="" asp-controller="Debtor" asp-action="Index">Persons</a></li>
+                                <li><a asp-area="" asp-controller="Debtor" asp-action="Company">Companies</a></li>
+                            </ul>
+                        </li>
                         <li><a asp-area="" asp-controller="Product" asp-action="Index">Products</a></li>
                         <li><a asp-area="" asp-controller="Invoice" asp-action="Index">Invoices</a></li>
                     }

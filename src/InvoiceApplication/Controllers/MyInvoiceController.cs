@@ -281,8 +281,19 @@ namespace InvoiceApplication.Controllers
         //POST: MyInvoice/PDF/5
         public FileStreamResult PDF(int id)
         {
+            var invoice = _context.Invoices.SingleOrDefault(m => m.InvoiceNumber == id);
+            
             PDF pdf = new PDF(_context, _env);
-            FileStreamResult fs = pdf.CreatePDF(id, HttpContext);
+            FileStreamResult fs = null;
+
+            if (String.IsNullOrEmpty(invoice.CompanyID.ToString()))
+            {
+                fs = pdf.CreateDebtorPDF(id, HttpContext);
+            }
+            else
+            {
+                fs = pdf.CreateCompanyPDF(id, HttpContext);
+            }
 
             return fs;
         }

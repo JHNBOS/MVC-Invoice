@@ -332,8 +332,11 @@ namespace InvoiceApplication.Controllers
                 _settings.Country = AppSettings.Country;
 
                 _settings.CompanyName = AppSettings.CompanyName;
-                _settings.CompanyNumber = AppSettings.CompanyNumber;
-                _settings.CommerceNumber = AppSettings.CommerceNumber;
+                _settings.RegNumber = AppSettings.RegNumber;
+                _settings.FinancialNumber = AppSettings.FinancialNumber;
+                _settings.EUFinancialNumber = AppSettings.EUFinancialNumber;
+                _settings.BankName = AppSettings.BankName;
+                _settings.Prefix = AppSettings.Prefix;
 
                 if (AppSettings.Logo != null)
                 {

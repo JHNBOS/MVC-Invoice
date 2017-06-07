@@ -22,6 +22,7 @@ namespace InvoiceApplication.Data
         }
 
         public DbSet<Debtor> Debtors { get; set; }
+        public DbSet<Company> Companies { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<InvoiceItem> InvoiceItems { get; set; }

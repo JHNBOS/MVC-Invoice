@@ -13,6 +13,9 @@ namespace InvoiceApplication.Models
         [Display(Name = "Debtor")]
         public int DebtorID { get; set; }
 
+        [Display(Name = "Company")]
+        public int CompanyID { get; set; }
+
         [DataType(DataType.Date)]
         [Display(Name = "Invoice Date")]
         public DateTime CreatedOn { get; set; }
@@ -30,6 +33,7 @@ namespace InvoiceApplication.Models
         public bool Paid { get; set; }
 
         public virtual Debtor Debtor { get; set; }
+        public virtual Company Company { get; set; }
         public virtual List<InvoiceItem> InvoiceItems { get; set; }
     }
 }
