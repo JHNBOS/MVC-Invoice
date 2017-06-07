@@ -8785,9 +8785,6 @@
       "originalTargetFrameworks": [
         "net452"
       ],
-      "files": {
-        "lib/net452/InvoiceApplication.dll": "C:\\GitHub\\MVC-Invoice\\src\\InvoiceApplication\\bin\\placeholder\\net452\\InvoiceApplication.dll"
-      },
       "frameworks": {
         "net452": {
           "projectReferences": {}
@@ -8797,77 +8794,23 @@
     "frameworks": {
       "net452": {
         "dependencies": {
+          "Microsoft.Extensions.Configuration.EnvironmentVariables": {
+            "target": "Package",
+            "version": "1.0.2"
+          },
           "BundlerMinifier.Core": {
             "target": "Package",
             "version": "2.4.337"
-          },
-          "FontAwesome": {
-            "target": "Package",
-            "version": "4.7.0"
           },
           "MailKit": {
             "target": "Package",
             "version": "1.14.2"
           },
-          "Microsoft.ApplicationInsights": {
-            "target": "Package",
-            "version": "2.1.0"
-          },
-          "Microsoft.AspNetCore.Authentication.Cookies": {
-            "target": "Package",
-            "version": "1.0.2"
-          },
-          "Microsoft.AspNetCore.Diagnostics": {
-            "target": "Package",
-            "version": "1.0.2"
-          },
-          "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
-            "target": "Package",
-            "version": "1.0.2"
-          },
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
             "target": "Package",
             "version": "1.0.2"
           },
-          "Microsoft.AspNetCore.Mvc": {
-            "target": "Package",
-            "version": "1.0.3"
-          },
-          "Microsoft.AspNetCore.Routing": {
-            "target": "Package",
-            "version": "1.0.3"
-          },
-          "Microsoft.AspNetCore.Server.IISIntegration": {
-            "target": "Package",
-            "version": "1.0.2"
-          },
-          "Microsoft.AspNetCore.Server.Kestrel": {
-            "target": "Package",
-            "version": "1.0.3"
-          },
-          "Microsoft.AspNetCore.Session": {
-            "target": "Package",
-            "version": "1.0.2"
-          },
-          "Microsoft.AspNetCore.StaticFiles": {
-            "target": "Package",
-            "version": "1.0.2"
-          },
-          "Microsoft.EntityFrameworkCore.SqlServer": {
-            "target": "Package",
-            "version": "1.0.3"
-          },
-          "Microsoft.EntityFrameworkCore.SqlServer.Design": {
-            "suppressParent": "All",
-            "target": "Package",
-            "version": "1.0.3"
-          },
-          "Microsoft.EntityFrameworkCore.Tools": {
-            "suppressParent": "All",
-            "target": "Package",
-            "version": "1.0.0"
-          },
-          "Microsoft.Extensions.Configuration.EnvironmentVariables": {
+          "Microsoft.AspNetCore.Authentication.Cookies": {
             "target": "Package",
             "version": "1.0.2"
           },
@@ -8875,33 +8818,26 @@
             "target": "Package",
             "version": "1.0.2"
           },
-          "Microsoft.Extensions.Configuration.UserSecrets": {
-            "target": "Package",
-            "version": "1.0.2"
-          },
-          "Microsoft.Extensions.Logging": {
-            "target": "Package",
-            "version": "1.0.2"
-          },
-          "Microsoft.Extensions.Logging.Console": {
-            "target": "Package",
-            "version": "1.0.2"
-          },
           "Microsoft.Extensions.Logging.Debug": {
             "target": "Package",
             "version": "1.0.2"
           },
-          "Microsoft.Extensions.Options": {
+          "Microsoft.ApplicationInsights": {
             "target": "Package",
-            "version": "1.1.1"
+            "version": "2.1.0"
           },
-          "Microsoft.Extensions.Options.ConfigurationExtensions": {
+          "Microsoft.AspNetCore.Server.Kestrel": {
             "target": "Package",
-            "version": "1.0.2"
+            "version": "1.0.3"
           },
-          "Microsoft.VisualStudio.Web.BrowserLink": {
+          "System.Runtime.Serialization.Json": {
             "target": "Package",
-            "version": "1.0.1"
+            "version": "4.0.2"
+          },
+          "Microsoft.EntityFrameworkCore.Tools": {
+            "suppressParent": "All",
+            "target": "Package",
+            "version": "1.0.0"
           },
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
             "suppressParent": "All",
@@ -8912,17 +8848,78 @@
             "target": "Package",
             "version": "1.32.3057"
           },
+          "Microsoft.AspNetCore.Diagnostics": {
+            "target": "Package",
+            "version": "1.0.2"
+          },
+          "Microsoft.AspNetCore.Server.IISIntegration": {
+            "target": "Package",
+            "version": "1.0.2"
+          },
           "System.Drawing.Primitives": {
             "target": "Package",
             "version": "4.3.0"
           },
-          "System.Runtime.Serialization.Json": {
+          "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
             "target": "Package",
-            "version": "4.0.2"
+            "version": "1.0.2"
           },
           "System.Runtime.WindowsRuntime": {
             "target": "Package",
             "version": "4.0.11"
+          },
+          "Microsoft.VisualStudio.Web.BrowserLink": {
+            "target": "Package",
+            "version": "1.0.1"
+          },
+          "Microsoft.Extensions.Configuration.UserSecrets": {
+            "target": "Package",
+            "version": "1.0.2"
+          },
+          "Microsoft.Extensions.Options.ConfigurationExtensions": {
+            "target": "Package",
+            "version": "1.0.2"
+          },
+          "Microsoft.EntityFrameworkCore.SqlServer": {
+            "target": "Package",
+            "version": "1.0.3"
+          },
+          "Microsoft.Extensions.Options": {
+            "target": "Package",
+            "version": "1.1.1"
+          },
+          "Microsoft.EntityFrameworkCore.SqlServer.Design": {
+            "suppressParent": "All",
+            "target": "Package",
+            "version": "1.0.3"
+          },
+          "Microsoft.Extensions.Logging.Console": {
+            "target": "Package",
+            "version": "1.0.2"
+          },
+          "Microsoft.AspNetCore.Mvc": {
+            "target": "Package",
+            "version": "1.0.3"
+          },
+          "Microsoft.AspNetCore.Session": {
+            "target": "Package",
+            "version": "1.0.2"
+          },
+          "Microsoft.Extensions.Logging": {
+            "target": "Package",
+            "version": "1.0.2"
+          },
+          "FontAwesome": {
+            "target": "Package",
+            "version": "4.7.0"
+          },
+          "Microsoft.AspNetCore.StaticFiles": {
+            "target": "Package",
+            "version": "1.0.2"
+          },
+          "Microsoft.AspNetCore.Routing": {
+            "target": "Package",
+            "version": "1.0.3"
           }
         }
       }

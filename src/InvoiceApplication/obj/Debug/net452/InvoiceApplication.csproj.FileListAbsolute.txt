@@ -139,3 +139,4 @@ C:\GitHub\MVC-Invoice\src\InvoiceApplication\obj\Debug\net452\InvoiceApplication
 C:\GitHub\MVC-Invoice\src\InvoiceApplication\obj\Debug\net452\InvoiceApplication.exe
 C:\GitHub\MVC-Invoice\src\InvoiceApplication\obj\Debug\net452\InvoiceApplication.pdb
 C:\GitHub\MVC-Invoice\src\InvoiceApplication\obj\Debug\net452\InvoiceApplication.csprojResolveAssemblyReference.cache
+C:\GitHub\MVC-Invoice\src\InvoiceApplication\bin\Debug\net452\InvoiceDB.mdf
