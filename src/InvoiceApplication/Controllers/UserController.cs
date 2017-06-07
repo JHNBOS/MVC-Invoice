@@ -24,7 +24,7 @@ namespace InvoiceApplication.Controllers
         {
             _context = context;
             _env = env;
-            _settings = _context.Settings.Single(s => s.ID == 1);
+            _settings = _context.Settings.SingleOrDefault();
         }
 
         /*----------------------------------------------------------------------*/
