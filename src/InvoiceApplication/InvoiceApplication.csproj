@@ -76,7 +76,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="InvoiceDB.mdf" />
+    <EmbeddedResource Include="InvoiceDB.mdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
