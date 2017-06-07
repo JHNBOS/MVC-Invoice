@@ -26,6 +26,7 @@ namespace InvoiceApplication.Controllers
         /*----------------------------------------------------------------------*/
         //DATABASE ACTION METHODS
 
+        //Get all invoices
         private async Task<List<Invoice>> GetInvoices()
         {
             List<Invoice> invoiceList = await _context.Invoices.Include(s => s.Debtor)
@@ -71,6 +72,7 @@ namespace InvoiceApplication.Controllers
             return itemList;
         }
 
+        //Create new invoice
         private async Task CreateInvoice(Invoice invoice, string pids, string amounts, string total)
         {
             string[] pidArray = null;
@@ -130,6 +132,7 @@ namespace InvoiceApplication.Controllers
             }
         }
 
+        //Update Invoice
         private async Task UpdateInvoice(Invoice invoice, string pids, string amounts, string total)
         {
             bool isEmpty = false;
@@ -205,7 +208,6 @@ namespace InvoiceApplication.Controllers
                         await _context.SaveChangesAsync();
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -213,6 +215,7 @@ namespace InvoiceApplication.Controllers
             }
         }
 
+        //Delete invoice
         private async Task DeleteInvoice(int id)
         {
             Invoice invoice = await GetInvoice(id);
