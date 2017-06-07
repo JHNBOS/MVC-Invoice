@@ -223,7 +223,7 @@ namespace InvoiceApplication.Controllers
         // POST: Debtor/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DebtorID,Address,BankAccount,City,Country,Email,FirstName,LastName,Phone,PostalCode")] Debtor debtor)
+        public async Task<IActionResult> Create([Bind("DebtorID,IdNumber,Address,BankAccount,City,Country,Email,FirstName,LastName,Phone,PostalCode")] Debtor debtor)
         {
             if (ModelState.IsValid)
             {
@@ -256,7 +256,7 @@ namespace InvoiceApplication.Controllers
         // POST: Debtor/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DebtorID,Address,BankAccount,City,Country,Email,FirstName,LastName,Phone,PostalCode")] Debtor debtor)
+        public async Task<IActionResult> Edit(int id, [Bind("DebtorID,IdNumber,Address,BankAccount,City,Country,Email,FirstName,LastName,Phone,PostalCode")] Debtor debtor)
         {
             if (id != debtor.DebtorID)
             {

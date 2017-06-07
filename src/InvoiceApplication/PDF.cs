@@ -99,6 +99,7 @@ namespace InvoiceApplication
             string phone = settings.Phone;
             string btw = settings.CommerceNumber;
             string kvk = settings.CompanyNumber;
+            string prefix = settings.Prefix;
 
             string[] words = fname.Split(' ');
 
@@ -146,7 +147,7 @@ namespace InvoiceApplication
             tf.DrawString("Invoice Date:", textFont, XBrushes.Black, new XRect(leftMargin, topMargin + 268, 100, 20), XStringFormats.TopLeft);
 
             //invoice info
-            tf.DrawString(selected.InvoiceNumber.ToString(), textFont, XBrushes.Black, new XRect(leftMargin + 95, topMargin + 255, 100, 20), XStringFormats.TopLeft);
+            tf.DrawString(prefix + selected.InvoiceNumber.ToString(), textFont, XBrushes.Black, new XRect(leftMargin + 95, topMargin + 255, 100, 20), XStringFormats.TopLeft);
             tf.DrawString(selected.CreatedOn.ToString("dd-MM-yyyy"), textFont, XBrushes.Black, new XRect(leftMargin + 95, topMargin + 268, 100, 20), XStringFormats.TopLeft);
 
             /*------------------------------------------*/

@@ -23,6 +23,7 @@
 
                 <div class="row main">
                     <div class="col-sm-7 col-md-7" style="padding-right:0px !important;">
+
                         <!--COMPANY INFO-->
                         <!--NAME-->
                         <div class="form-group">
@@ -167,27 +168,64 @@
 
                 <div class="row main">
                     <div class="col-sm-7 col-md-7" style="padding-right:0px !important;">
+
                         <!--COMPANY INFO-->
-                        <!--COMMERCENUMBER-->
+                        <!--REGISTRATION NUMBER-->
                         <div class="form-group">
-                            <label asp-for="CommerceNumber" class="col-md-2 control-label">Commerce Number</label>
+                            <label asp-for="RegNumber" class="col-md-2 control-label">Registration Number</label>
                             <div class="col-md-10">
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-building fa-lg" aria-hidden="true"></i></span>
-                                    <input type="text" asp-for="CommerceNumber" class="form-control" id="taxnumber" placeholder="Enter company taxnumber" />
-                                    <span asp-validation-for="CommerceNumber" class="text-danger" />
+                                    <input type="text" asp-for="RegNumber" class="form-control" id="regnumber" placeholder="Enter company's registration number" />
+                                    <span asp-validation-for="RegNumber" class="text-danger" />
                                 </div>
                             </div>
                         </div>
 
-                        <!--COMPANYNUMBER-->
+                        <!--NATIONAL FISCAL NUMBER-->
                         <div class="form-group">
-                            <label class="col-md-2 control-label">Company nr.</label>
+                            <label class="col-md-2 control-label">National Fiscal Number</label>
                             <div class="col-md-10">
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-building fa-lg" aria-hidden="true"></i></span>
-                                    <input type="text" asp-for="CompanyNumber" class="form-control" id="companynumber" placeholder="Enter companynumber" />
-                                    <span asp-validation-for="CompanyNumber" class="text-danger" />
+                                    <input type="text" asp-for="FinancialNumber " class="form-control" id="financenumber" placeholder="Enter national fiscal number" />
+                                    <span asp-validation-for="FinancialNumber " class="text-danger" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--EU FISCAL NUMBER-->
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">EU Fiscal Number</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-building fa-lg" aria-hidden="true"></i></span>
+                                    <input type="text" asp-for="EUFinancialNumber" class="form-control" id="eufinancenumber" placeholder="Enter EU fiscal number" />
+                                    <span asp-validation-for="EUFinancialNumber" class="text-danger" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--BANK NAME-->
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Name of Bank</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-building fa-lg" aria-hidden="true"></i></span>
+                                    <input type="text" asp-for="BankName" class="form-control" id="bankname" placeholder="Enter name of bank" />
+                                    <span asp-validation-for="BankName" class="text-danger" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--INVOICE PREFIX-->
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Invoice Prefix</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-building fa-lg" aria-hidden="true"></i></span>
+                                    <input type="text" asp-for="Prefix" class="form-control" id="prefix" placeholder="Enter prefix" />
+                                    <span asp-validation-for="Prefix" class="text-danger" />
                                 </div>
                             </div>
                         </div>

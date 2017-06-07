@@ -16,8 +16,10 @@ namespace InvoiceApplication.Models
 
         //Company Info
         public string CompanyName { get; set; }
-        public string CompanyNumber { get; set; }
-        public string CommerceNumber { get; set; }
+        public string RegNumber { get; set; }
+        public string FinancialNumber { get; set; }
+        public string EUFinancialNumber { get; set; }
+        public string BankName { get; set; }
 
         //Company Contact Info
         public string Website { get; set; }
@@ -38,5 +40,8 @@ namespace InvoiceApplication.Models
         //Logo
         public string Logo { get; set; }
         public bool UseLogo { get; set; }
+
+        //Invoice Prefix
+        public string Prefix { get; set; }
     }
 }

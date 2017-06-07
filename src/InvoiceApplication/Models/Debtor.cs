@@ -16,6 +16,10 @@ namespace InvoiceApplication.Models
         public string LastName { get; set; }
 
         [Required]
+        [Display(Name = "Personal ID Number")]
+        public string IdNumber { get; set; }
+
+        [Required]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
@@ -38,7 +42,6 @@ namespace InvoiceApplication.Models
         [Required]
         public string Country { get; set; }
 
-
         public string FullName
         {
             get
@@ -46,7 +49,5 @@ namespace InvoiceApplication.Models
                 return FirstName + " " + LastName;
             }
         }
-
-
     }
 }

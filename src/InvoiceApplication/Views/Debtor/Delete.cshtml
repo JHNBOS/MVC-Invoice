@@ -23,6 +23,18 @@
                 <!--LEFT COLUMN-->
                 <div class="col-sm-6 col-md-6">
 
+                    <!--PERSONAL ID NUMBER-->
+                    <div class="form-group">
+                        <label asp-for="IdNumber" class="col-md-2 control-label"></label>
+                        <div class="col-md-10">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-id-card-o fa-lg" aria-hidden="true"></i></span>
+                                <input type="text" asp-for="IdNumber" class="form-control" id="idnumber" placeholder="Enter personal id number" />
+                                <span asp-validation-for="IdNumber" class="text-danger" />
+                            </div>
+                        </div>
+                    </div>
+
                     <!--FIRST NAME-->
                     <div class="form-group">
                         <label asp-for="FirstName" class="col-md-2 control-label"></label>
